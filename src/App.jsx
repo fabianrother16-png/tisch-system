@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BookOpen, Bell, Receipt, Star, ChevronRight, Check, ArrowLeft, Utensils } from 'lucide-react';
 
 const SUPABASE_URL = 'https://mljuvibendzmxbyelpcu.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_GdKIuto0lKMpPXHtJDOKvw_UvjCm4gU';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sanV2aWJlbmR6bXhieWVscGN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NjU5MTYsImV4cCI6MjEwMjA0MTkxNn0.lxNfqIvcmyx99jzRpluoZGWbm_qK-3QfEk8zMbKWYZA';
 
 const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap');`;
 
