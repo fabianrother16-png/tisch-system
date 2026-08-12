@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Routes, Route, useParams } from 'react-router-dom';
-import { BookOpen, Bell, Receipt, Star, ChevronRight, Check, ArrowLeft, Utensils, Clock, Volume2, VolumeX, TrendingUp, Search, Leaf, ShoppingBag, X, Plus, Minus, Trash2 } from 'lucide-react';
+import { BookOpen, Bell, Receipt, Star, ChevronRight, Check, ArrowLeft, Utensils, Clock, Volume2, VolumeX, TrendingUp, Search, Leaf, ShoppingBag, X, Plus, Minus, Trash2, Sparkles, Shuffle, RotateCcw } from 'lucide-react';
 
 const SUPABASE_URL = 'https://mljuvibendzmxbyelpcu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sanV2aWJlbmR6bXhieWVscGN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NjU5MTYsImV4cCI6MjEwMjA0MTkxNn0.lxNfqIvcmyx99jzRpluoZGWbm_qK-3QfEk8zMbKWYZA';
@@ -36,6 +36,20 @@ const GlobalStyles = () => (
       .row-press:active { background: rgba(201,162,75,0.08) !important; }
       .btn-press:active { transform: scale(0.97); }
       .urgent-pulse { animation: pulse-urgent 1.6s ease-in-out infinite; }
+      @keyframes orb-idle-pulse { 0%,100% { box-shadow: 0 0 0 0 var(--orb-glow); transform: scale(1); } 50% { box-shadow: 0 0 0 14px transparent; transform: scale(1.03); } }
+      @keyframes orb-charge { 0% { transform: scale(1); box-shadow: 0 0 0 0 var(--orb-glow); } 100% { transform: scale(1.22); box-shadow: 0 0 50px 14px var(--orb-glow); } }
+      @keyframes orb-burst-ring { 0% { transform: scale(0.6); opacity: 0.9; } 100% { transform: scale(3.2); opacity: 0; } }
+      @keyframes orb-burst-shrink { 0% { transform: scale(1.22); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+      @keyframes card-pop { 0% { transform: scale(0.55); opacity: 0; } 62% { transform: scale(1.06); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+      @keyframes sparkle-fly { 0% { transform: translate(0,0) scale(1); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; } }
+      .orb-idle { animation: orb-idle-pulse 2.2s ease-in-out infinite; }
+      .orb-charging { animation: orb-charge 1s cubic-bezier(.4,0,.6,1) forwards; }
+      .orb-burst-ring { animation: orb-burst-ring 0.6s ease-out forwards; }
+      .orb-burst-shrink { animation: orb-burst-shrink 0.4s ease-in forwards; }
+      .card-pop { animation: card-pop 0.55s cubic-bezier(.34,1.56,.64,1) forwards; }
+      .sparkle { animation: sparkle-fly 0.7s ease-out forwards; }
+      .tab-scroll::-webkit-scrollbar { display: none; }
+      .tab-scroll { scrollbar-width: none; -ms-overflow-style: none; }
     `}</style>
   </>
 );
@@ -102,6 +116,28 @@ function HubSeite() {
 
   const accent = restaurant?.primary_color || '#c9a24b';
 
+  const [cart, setCart] = useState({});
+  const addToCart = (item) => {
+    setCart((prev) => {
+      const existing = prev[item.id];
+      return { ...prev, [item.id]: { item, qty: (existing?.qty || 0) + 1 } };
+    });
+  };
+  const changeQty = (id, delta) => {
+    setCart((prev) => {
+      const entry = prev[id];
+      if (!entry) return prev;
+      const qty = entry.qty + delta;
+      if (qty <= 0) {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      }
+      return { ...prev, [id]: { ...entry, qty } };
+    });
+  };
+  const removeFromCart = (id) => setCart((prev) => { const n = { ...prev }; delete n[id]; return n; });
+
   return (
     <div style={{ background: '#15120d', minHeight: '100vh', fontFamily: "'Work Sans', sans-serif" }}>
       <GlobalStyles />
@@ -112,7 +148,9 @@ function HubSeite() {
       ) : screen === 'hub' ? (
         <HubScreen restaurant={restaurant} accent={accent} onNavigate={setScreen} />
       ) : screen === 'menu' ? (
-        <MenuScreen menu={menu} accent={accent} onBack={() => setScreen('hub')} />
+        <MenuScreen menu={menu} accent={accent} onBack={() => setScreen('hub')} cart={cart} addToCart={addToCart} changeQty={changeQty} removeFromCart={removeFromCart} />
+      ) : screen === 'aipick' ? (
+        <AIPickScreen menu={menu} accent={accent} onBack={() => setScreen('hub')} addToCart={addToCart} />
       ) : (
         <ActionScreen type={screen} restaurant={restaurant} table={table} accent={accent} onBack={() => setScreen('hub')} />
       )}
@@ -123,6 +161,7 @@ function HubSeite() {
 function HubScreen({ restaurant, accent, onNavigate }) {
   const items = [
     { key: 'menu', icon: BookOpen, title: 'Speisekarte', sub: 'Entdecken & genießen' },
+    { key: 'aipick', icon: Sparkles, title: 'Was soll ich essen?', sub: 'Lass dich überraschen' },
     { key: 'kellner', icon: Bell, title: 'Kellner rufen', sub: 'Wir sind für Sie da' },
     { key: 'rechnung', icon: Receipt, title: 'Rechnung anfordern', sub: 'Wir bringen Ihre Rechnung' },
     { key: 'bewertung', icon: Star, title: 'Bewertung abgeben', sub: 'Ihre Meinung zählt' },
@@ -162,11 +201,10 @@ function HubScreen({ restaurant, accent, onNavigate }) {
 
 const CATEGORY_ORDER = ['Frühstück', 'Mittag & Abend', 'Dessert', 'Getränke'];
 
-function MenuScreen({ menu, accent, onBack }) {
+function MenuScreen({ menu, accent, onBack, cart, addToCart, changeQty, removeFromCart }) {
   const [activeTab, setActiveTab] = useState(null);
   const [query, setQuery] = useState('');
   const [onlyVeggie, setOnlyVeggie] = useState(false);
-  const [cart, setCart] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
 
   const presentCats = CATEGORY_ORDER.filter((c) => menu.some((m) => (m.haupt_kategorie || 'Mittag & Abend') === c));
@@ -185,25 +223,6 @@ function MenuScreen({ menu, accent, onBack }) {
     return acc;
   }, {});
 
-  const addToCart = (item) => {
-    setCart((prev) => {
-      const existing = prev[item.id];
-      return { ...prev, [item.id]: { item, qty: (existing?.qty || 0) + 1 } };
-    });
-  };
-  const changeQty = (id, delta) => {
-    setCart((prev) => {
-      const entry = prev[id];
-      if (!entry) return prev;
-      const qty = entry.qty + delta;
-      if (qty <= 0) {
-        const next = { ...prev };
-        delete next[id];
-        return next;
-      }
-      return { ...prev, [id]: { ...entry, qty } };
-    });
-  };
   const cartEntries = Object.values(cart);
   const cartCount = cartEntries.reduce((s, e) => s + e.qty, 0);
   const cartTotal = cartEntries.reduce((s, e) => s + e.qty * Number(e.item.preis || 0), 0);
@@ -217,19 +236,22 @@ function MenuScreen({ menu, accent, onBack }) {
       ) : (
         <>
           {/* Hauptkategorie-Reiter */}
-          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 18, paddingBottom: 2 }}>
-            {presentCats.map((c) => (
-              <button key={c} onClick={() => setActiveTab(c)} className="btn-press"
-                style={{
-                  flexShrink: 0, padding: '9px 16px', borderRadius: 999, fontSize: 12.5, fontWeight: 500,
-                  border: `1px solid ${tab === c ? accent : '#2a241b'}`,
-                  background: tab === c ? withAlpha(accent, 0.12) : 'transparent',
-                  color: tab === c ? accent : '#8a7c5f', cursor: 'pointer', whiteSpace: 'nowrap',
-                  fontFamily: "'Work Sans', sans-serif",
-                }}>
-                {c}
-              </button>
-            ))}
+          <div style={{ position: 'relative', marginBottom: 18 }}>
+            <div className="tab-scroll" style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 2 }}>
+              {presentCats.map((c) => (
+                <button key={c} onClick={() => setActiveTab(c)} className="btn-press"
+                  style={{
+                    flexShrink: 0, padding: '9px 16px', borderRadius: 999, fontSize: 12.5, fontWeight: 500,
+                    border: `1px solid ${tab === c ? accent : '#2a241b'}`,
+                    background: tab === c ? withAlpha(accent, 0.12) : 'transparent',
+                    color: tab === c ? accent : '#8a7c5f', cursor: 'pointer', whiteSpace: 'nowrap',
+                    fontFamily: "'Work Sans', sans-serif",
+                  }}>
+                  {c}
+                </button>
+              ))}
+            </div>
+            <div style={{ position: 'absolute', top: 0, right: 0, bottom: 2, width: 28, background: 'linear-gradient(to right, transparent, #15120d)', pointerEvents: 'none' }} />
           </div>
 
           {/* Suche */}
@@ -329,7 +351,7 @@ function MenuScreen({ menu, accent, onBack }) {
                     <button onClick={() => changeQty(item.id, -1)} className="btn-press" style={{ width: 26, height: 26, borderRadius: 7, border: '1px solid #2a241b', background: 'none', color: accent, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Minus size={12} /></button>
                     <div style={{ color: '#f3ede0', fontSize: 13, minWidth: 14, textAlign: 'center' }}>{qty}</div>
                     <button onClick={() => changeQty(item.id, 1)} className="btn-press" style={{ width: 26, height: 26, borderRadius: 7, border: '1px solid #2a241b', background: 'none', color: accent, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Plus size={12} /></button>
-                    <button onClick={() => setCart((prev) => { const n = { ...prev }; delete n[item.id]; return n; })} className="btn-press" style={{ background: 'none', border: 'none', color: '#6b6252', cursor: 'pointer' }}><Trash2 size={14} /></button>
+                    <button onClick={() => removeFromCart(item.id)} className="btn-press" style={{ background: 'none', border: 'none', color: '#6b6252', cursor: 'pointer' }}><Trash2 size={14} /></button>
                   </div>
                 ))}
                 <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #2a241b', paddingTop: 14, marginTop: 4 }}>
@@ -344,6 +366,224 @@ function MenuScreen({ menu, accent, onBack }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+const AI_LINES = [
+  'Die Bernstein-KI hat entschieden…',
+  'Analysiere deinen Appetit…',
+  'Berechne die perfekte Wahl…',
+];
+
+function pickWeighted(items) {
+  const pool = [];
+  items.forEach((it) => pool.push(it, ...(it.beliebt ? [it, it] : [])));
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function MysteryOrb({ accent, onComplete }) {
+  const [phase, setPhase] = useState('idle'); // idle | charging | bursting
+
+  const startCharge = () => {
+    if (phase !== 'idle') return;
+    setPhase('charging');
+    setTimeout(() => setPhase('bursting'), 1000);
+    setTimeout(() => onComplete(), 1550);
+  };
+
+  const orbGlow = withAlpha(accent, 0.35);
+
+  return (
+    <div style={{ textAlign: 'center', paddingTop: 10 }}>
+      <div style={{ position: 'relative', width: 140, height: 140, margin: '0 auto 22px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {phase === 'bursting' && (
+          <div className="orb-burst-ring" style={{ position: 'absolute', width: 90, height: 90, borderRadius: '50%', border: `2px solid ${accent}`, '--orb-glow': orbGlow }} />
+        )}
+        <button
+          onClick={startCharge}
+          className={phase === 'idle' ? 'orb-idle btn-press' : phase === 'charging' ? 'orb-charging' : 'orb-burst-shrink'}
+          style={{
+            width: 90, height: 90, borderRadius: '50%', border: `1px solid ${accent}`,
+            background: `radial-gradient(circle, ${withAlpha(accent,0.18)}, transparent 70%)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: phase === 'idle' ? 'pointer' : 'default',
+            '--orb-glow': orbGlow,
+          }}>
+          <Sparkles size={30} color={accent} />
+        </button>
+      </div>
+      {phase === 'idle' && (
+        <div style={{ color: '#a89a7d', fontSize: 13.5 }}>Tippen und überraschen lassen</div>
+      )}
+      {phase !== 'idle' && (
+        <div style={{ color: '#8a7c5f', fontSize: 13 }}>{AI_LINES[0]}</div>
+      )}
+    </div>
+  );
+}
+
+function SparkleBurst({ accent }) {
+  const particles = Array.from({ length: 12 }, (_, i) => {
+    const angle = (i / 12) * Math.PI * 2 + Math.random() * 0.3;
+    const dist = 70 + Math.random() * 50;
+    return { dx: Math.cos(angle) * dist, dy: Math.sin(angle) * dist, delay: Math.random() * 0.15 };
+  });
+  return (
+    <div style={{ position: 'absolute', top: '50%', left: '50%', width: 0, height: 0, pointerEvents: 'none' }}>
+      {particles.map((p, i) => (
+        <span key={i} className="sparkle" style={{
+          position: 'absolute', width: 5, height: 5, borderRadius: '50%', background: accent,
+          '--dx': `${p.dx}px`, '--dy': `${p.dy}px`, animationDelay: `${p.delay}s`,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+function AIPickScreen({ menu, accent, onBack, addToCart }) {
+  const [step, setStep] = useState('intro'); // intro | q1 | q2 | q3 | orb | result
+  const [answers, setAnswers] = useState({});
+  const [result, setResult] = useState(null);
+  const [added, setAdded] = useState(false);
+
+  const pickFromAnswers = (finalAnswers) => {
+    let pool = menu;
+    if (finalAnswers.art === 'suess') {
+      pool = menu.filter((m) => m.haupt_kategorie === 'Dessert');
+    } else if (finalAnswers.art === 'herzhaft') {
+      pool = menu.filter((m) => m.haupt_kategorie === 'Mittag & Abend' || m.haupt_kategorie === 'Frühstück');
+    }
+    if (finalAnswers.veggie === 'ja') {
+      const veg = pool.filter((m) => m.vegetarisch);
+      if (veg.length > 0) pool = veg;
+    }
+    if (finalAnswers.hunger === 'klein') {
+      const sorted = [...pool].sort((a, b) => Number(a.preis) - Number(b.preis));
+      pool = sorted.slice(0, Math.max(1, Math.ceil(sorted.length / 2)));
+    } else if (finalAnswers.hunger === 'gross') {
+      const sorted = [...pool].sort((a, b) => Number(b.preis) - Number(a.preis));
+      pool = sorted.slice(0, Math.max(1, Math.ceil(sorted.length / 2)));
+    }
+    if (pool.length === 0) pool = menu;
+    return pickWeighted(pool);
+  };
+
+  const revealFromQuiz = (finalAnswers) => {
+    setResult(pickFromAnswers(finalAnswers));
+    setAdded(false);
+    setStep('result');
+  };
+
+  const revealSurprise = () => {
+    setResult(pickWeighted(menu));
+    setAdded(false);
+    setStep('result');
+  };
+
+  const reasonText = () => {
+    const bits = [];
+    if (answers.art === 'suess') bits.push('auf etwas Süßes');
+    if (answers.art === 'herzhaft') bits.push('auf etwas Herzhaftes');
+    if (answers.veggie === 'ja') bits.push('vegetarisch sein soll');
+    if (answers.hunger === 'klein') bits.push('du eher kleinen Hunger hast');
+    if (answers.hunger === 'gross') bits.push('du richtig Hunger hast');
+    if (bits.length === 0) return 'Weil es einfach ein Gästeliebling ist.';
+    return `Weil du Lust ${bits.join(' und ')} hast – das hier trifft's genau.`;
+  };
+
+  return (
+    <div style={{ maxWidth: 440, margin: '0 auto', padding: '28px 24px 60px', minHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+      <BackHeader title="Was soll ich essen?" accent={accent} onBack={onBack} />
+
+      {step === 'intro' && (
+        <div style={{ textAlign: 'center', paddingTop: 20 }}>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', border: `1px solid ${withAlpha(accent,0.4)}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 22px' }}>
+            <Sparkles size={24} color={accent} />
+          </div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, color: '#f3ede0', marginBottom: 8 }}>Unentschlossen?</div>
+          <div style={{ color: '#8a7c5f', fontSize: 13, marginBottom: 34, lineHeight: 1.6 }}>
+            Beantworte 3 kurze Fragen und die Bernstein-KI findet dein perfektes Gericht. Oder lass dich einfach direkt überraschen.
+          </div>
+          <button onClick={() => setStep('q1')} className="btn-press"
+            style={{ width: '100%', padding: '15px', borderRadius: 10, border: `1px solid ${accent}`, background: withAlpha(accent,0.1), color: accent, fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: "'Work Sans', sans-serif", marginBottom: 28 }}>
+            Quiz starten
+          </button>
+          <div style={{ borderTop: '1px solid #221d15', paddingTop: 26 }}>
+            <div style={{ fontSize: 10.5, letterSpacing: '0.12em', color: '#5c5344', textTransform: 'uppercase', marginBottom: 16 }}>Oder</div>
+            <MysteryOrb accent={accent} onComplete={revealSurprise} />
+          </div>
+        </div>
+      )}
+
+      {step === 'q1' && (
+        <QuizStep accent={accent} question="Süß oder herzhaft?" options={[
+          { label: 'Herzhaft', value: 'herzhaft' },
+          { label: 'Süß', value: 'suess' },
+          { label: 'Egal', value: 'egal' },
+        ]} onPick={(v) => { setAnswers((a) => ({ ...a, art: v })); setStep('q2'); }} />
+      )}
+
+      {step === 'q2' && (
+        <QuizStep accent={accent} question="Vegetarisch?" options={[
+          { label: 'Ja, bitte', value: 'ja' },
+          { label: 'Egal', value: 'egal' },
+        ]} onPick={(v) => { setAnswers((a) => ({ ...a, veggie: v })); setStep('q3'); }} />
+      )}
+
+      {step === 'q3' && (
+        <QuizStep accent={accent} question="Wie hungrig bist du?" options={[
+          { label: 'Kleiner Happen', value: 'klein' },
+          { label: 'Normaler Hunger', value: 'mittel' },
+          { label: 'Richtig hungrig', value: 'gross' },
+        ]} onPick={(v) => { const final = { ...answers, hunger: v }; setAnswers(final); setStep('orb'); }} />
+      )}
+
+      {step === 'orb' && (
+        <div style={{ paddingTop: 50 }}>
+          <MysteryOrb accent={accent} onComplete={() => revealFromQuiz(answers)} />
+        </div>
+      )}
+
+      {step === 'result' && result && (
+        <div className="card-pop" key={result.id} style={{ textAlign: 'center', paddingTop: 10, position: 'relative' }}>
+          <SparkleBurst accent={accent} />
+          <div style={{ fontSize: 10.5, letterSpacing: '0.14em', color: accent, textTransform: 'uppercase', marginBottom: 16 }}>Die Empfehlung für dich</div>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', border: `1px solid ${withAlpha(accent,0.4)}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 18px' }}>
+            <Sparkles size={20} color={accent} />
+          </div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, color: '#f3ede0', fontWeight: 600, marginBottom: 8 }}>{result.name}</div>
+          {result.beschreibung && <div style={{ color: '#8a7c5f', fontSize: 13, marginBottom: 10, lineHeight: 1.6 }}>{result.beschreibung}</div>}
+          {result.preis && <div style={{ color: accent, fontSize: 15, marginBottom: 20 }}>{Number(result.preis).toFixed(2)} €</div>}
+          <div style={{ background: '#1a1610', border: '1px solid #2a241b', borderRadius: 10, padding: '12px 16px', fontSize: 12, color: '#a89a7d', marginBottom: 26, lineHeight: 1.6 }}>
+            {reasonText()}
+          </div>
+
+          <button onClick={() => { addToCart(result); setAdded(true); }} disabled={added} className="btn-press"
+            style={{ width: '100%', padding: '14px', borderRadius: 10, border: `1px solid ${accent}`, background: added ? withAlpha(accent,0.2) : withAlpha(accent,0.1), color: accent, fontSize: 14, fontWeight: 500, cursor: added ? 'default' : 'pointer', fontFamily: "'Work Sans', sans-serif", marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            {added ? <><Check size={15} /> Zur Merkliste hinzugefügt</> : <><Plus size={15} /> Zur Merkliste hinzufügen</>}
+          </button>
+          <button onClick={() => { setStep(answers.art ? 'q1' : 'intro'); setResult(null); }} className="btn-press"
+            style={{ width: '100%', padding: '13px', borderRadius: 10, border: '1px solid #2a241b', background: 'transparent', color: '#8a7c5f', fontSize: 13, cursor: 'pointer', fontFamily: "'Work Sans', sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <RotateCcw size={13} /> Nochmal
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function QuizStep({ question, options, onPick, accent }) {
+  return (
+    <div style={{ paddingTop: 10 }}>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, color: '#f3ede0', marginBottom: 24, textAlign: 'center' }}>{question}</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {options.map((o) => (
+          <button key={o.value} onClick={() => onPick(o.value)} className="btn-press"
+            style={{ padding: '15px', borderRadius: 10, border: '1px solid #2a241b', background: '#1a1610', color: '#f3ede0', fontSize: 14, cursor: 'pointer', fontFamily: "'Work Sans', sans-serif", textAlign: 'center' }}>
+            {o.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
