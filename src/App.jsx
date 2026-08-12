@@ -55,7 +55,7 @@ function withAlpha(hex, alpha) {
 export default function App() {
   return (
     <Routes>
-      <Route path="/:slug/personal" element={<StaffDashboard />} />
+      <Route path="/:slug/personal" element={<StaffDashboardGate />} />
       <Route path="/:slug/:table" element={<HubSeite />} />
       <Route path="*" element={<Landing />} />
     </Routes>
@@ -84,7 +84,7 @@ function HubSeite() {
   useEffect(() => {
     (async () => {
       try {
-        const restaurants = await sb(`restaurants?slug=eq.${slug}&select=*`);
+        const restaurants = await sb(`restaurants?slug=eq.${slug}&select=id,slug,name,review_link,primary_color`);
         if (restaurants.length === 0) {
           setError('Restaurant nicht gefunden.');
           return;
@@ -288,6 +288,81 @@ function playChime() {
   } catch (e) {}
 }
 
+function StaffDashboardGate() {
+  const { slug } = useParams();
+  const [unlocked, setUnlocked] = useState(() => sessionStorage.getItem(`staff_unlocked_${slug}`) === '1');
+
+  if (!unlocked) {
+    return (
+      <StaffLogin
+        slug={slug}
+        onSuccess={() => {
+          sessionStorage.setItem(`staff_unlocked_${slug}`, '1');
+          setUnlocked(true);
+        }}
+      />
+    );
+  }
+  return <StaffDashboard />;
+}
+
+function StaffLogin({ slug, onSuccess }) {
+  const [password, setPassword] = useState('');
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState(false);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setChecking(true);
+    setError(false);
+    try {
+      const result = await sb('rpc/verify_staff_login', {
+        method: 'POST',
+        body: JSON.stringify({ p_slug: slug, p_password: password }),
+      });
+      if (result === true) {
+        onSuccess();
+      } else {
+        setError(true);
+      }
+    } catch (e2) {
+      setError(true);
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  return (
+    <div style={{ background: '#15120d', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Work Sans', sans-serif", padding: 20 }}>
+      <GlobalStyles />
+      <form onSubmit={submit} style={{ width: '100%', maxWidth: 320, textAlign: 'center' }}>
+        <div style={{ width: 56, height: 56, borderRadius: '50%', border: '1px solid #4a3f2e', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+          <Bell size={20} color="#c9a24b" />
+        </div>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, color: '#f3ede0', marginBottom: 6 }}>Personal-Login</div>
+        <div style={{ fontSize: 12, color: '#8a7c5f', marginBottom: 26 }}>Nur für autorisiertes Personal</div>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Passwort"
+          autoFocus
+          style={{
+            width: '100%', padding: '13px 16px', borderRadius: 10, border: `1px solid ${error ? '#7a3a30' : '#2a241b'}`,
+            background: '#1a1610', color: '#f3ede0', fontSize: 14, marginBottom: 14, outline: 'none',
+            fontFamily: "'Work Sans', sans-serif",
+          }}
+        />
+        {error && <div style={{ color: '#d6503c', fontSize: 12, marginBottom: 14 }}>Falsches Passwort.</div>}
+        <button type="submit" disabled={checking || !password} className="btn-press"
+          style={{ width: '100%', padding: '13px 16px', borderRadius: 10, border: '1px solid #c9a24b', background: 'rgba(201,162,75,0.1)', color: '#c9a24b', fontSize: 14, fontWeight: 500, cursor: 'pointer', opacity: checking || !password ? 0.5 : 1, fontFamily: "'Work Sans', sans-serif" }}>
+          {checking ? 'Prüfe…' : 'Anmelden'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 function StaffDashboard() {
   const { slug } = useParams();
   const [restaurant, setRestaurant] = useState(null);
@@ -318,7 +393,7 @@ function StaffDashboard() {
   useEffect(() => {
     (async () => {
       try {
-        const restaurants = await sb(`restaurants?slug=eq.${slug}&select=*`);
+        const restaurants = await sb(`restaurants?slug=eq.${slug}&select=id,slug,name,review_link,primary_color`);
         if (restaurants.length > 0) {
           setRestaurant(restaurants[0]);
           await loadCalls(restaurants[0].id);
