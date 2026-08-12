@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Routes, Route, useParams } from 'react-router-dom';
-import { BookOpen, Bell, Receipt, Star, ChevronRight, Check, ArrowLeft, Utensils, Clock, Volume2, VolumeX, TrendingUp } from 'lucide-react';
+import { BookOpen, Bell, Receipt, Star, ChevronRight, Check, ArrowLeft, Utensils, Clock, Volume2, VolumeX, TrendingUp, Search, Leaf, ShoppingBag, X, Plus, Minus, Trash2 } from 'lucide-react';
 
 const SUPABASE_URL = 'https://mljuvibendzmxbyelpcu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sanV2aWJlbmR6bXhieWVscGN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NjU5MTYsImV4cCI6MjEwMjA0MTkxNn0.lxNfqIvcmyx99jzRpluoZGWbm_qK-3QfEk8zMbKWYZA';
@@ -160,32 +160,189 @@ function HubScreen({ restaurant, accent, onNavigate }) {
   );
 }
 
+const CATEGORY_ORDER = ['Frühstück', 'Mittag & Abend', 'Dessert', 'Getränke'];
+
 function MenuScreen({ menu, accent, onBack }) {
-  const grouped = menu.reduce((acc, item) => {
+  const [activeTab, setActiveTab] = useState(null);
+  const [query, setQuery] = useState('');
+  const [onlyVeggie, setOnlyVeggie] = useState(false);
+  const [cart, setCart] = useState({});
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const presentCats = CATEGORY_ORDER.filter((c) => menu.some((m) => (m.haupt_kategorie || 'Mittag & Abend') === c));
+  const tab = activeTab || presentCats[0];
+
+  const filtered = menu.filter((item) => {
+    if ((item.haupt_kategorie || 'Mittag & Abend') !== tab) return false;
+    if (onlyVeggie && !item.vegetarisch) return false;
+    if (query && !(`${item.name} ${item.beschreibung || ''}`.toLowerCase().includes(query.toLowerCase()))) return false;
+    return true;
+  });
+
+  const grouped = filtered.reduce((acc, item) => {
     const cat = item.kategorie || 'Weitere';
     (acc[cat] = acc[cat] || []).push(item);
     return acc;
   }, {});
+
+  const addToCart = (item) => {
+    setCart((prev) => {
+      const existing = prev[item.id];
+      return { ...prev, [item.id]: { item, qty: (existing?.qty || 0) + 1 } };
+    });
+  };
+  const changeQty = (id, delta) => {
+    setCart((prev) => {
+      const entry = prev[id];
+      if (!entry) return prev;
+      const qty = entry.qty + delta;
+      if (qty <= 0) {
+        const next = { ...prev };
+        delete next[id];
+        return next;
+      }
+      return { ...prev, [id]: { ...entry, qty } };
+    });
+  };
+  const cartEntries = Object.values(cart);
+  const cartCount = cartEntries.reduce((s, e) => s + e.qty, 0);
+  const cartTotal = cartEntries.reduce((s, e) => s + e.qty * Number(e.item.preis || 0), 0);
+
   return (
-    <div style={{ maxWidth: 440, margin: '0 auto', padding: '28px 24px 60px' }}>
+    <div style={{ maxWidth: 440, margin: '0 auto', padding: '28px 24px 100px' }}>
       <BackHeader title="Speisekarte" accent={accent} onBack={onBack} />
+
       {menu.length === 0 ? (
         <div style={{ color: '#6b6252', fontSize: 13.5, textAlign: 'center', padding: '40px 0' }}>Die Speisekarte wird gerade eingerichtet.</div>
       ) : (
-        Object.entries(grouped).map(([cat, items]) => (
-          <div key={cat} style={{ marginBottom: 30 }}>
-            <div style={{ fontSize: 11, letterSpacing: '0.12em', color: accent, textTransform: 'uppercase', marginBottom: 14 }}>{cat}</div>
-            {items.map((item) => (
-              <div key={item.id} style={{ marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #221d15' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-                  <div style={{ color: '#f3ede0', fontSize: 15, fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{item.name}</div>
-                  {item.preis && (<div style={{ color: accent, fontSize: 14, whiteSpace: 'nowrap' }}>{Number(item.preis).toFixed(2)} €</div>)}
-                </div>
-                {item.beschreibung && (<div style={{ color: '#8a7c5f', fontSize: 12.5, marginTop: 4, lineHeight: 1.5 }}>{item.beschreibung}</div>)}
-              </div>
+        <>
+          {/* Hauptkategorie-Reiter */}
+          <div style={{ display: 'flex', gap: 8, overflowX: 'auto', marginBottom: 18, paddingBottom: 2 }}>
+            {presentCats.map((c) => (
+              <button key={c} onClick={() => setActiveTab(c)} className="btn-press"
+                style={{
+                  flexShrink: 0, padding: '9px 16px', borderRadius: 999, fontSize: 12.5, fontWeight: 500,
+                  border: `1px solid ${tab === c ? accent : '#2a241b'}`,
+                  background: tab === c ? withAlpha(accent, 0.12) : 'transparent',
+                  color: tab === c ? accent : '#8a7c5f', cursor: 'pointer', whiteSpace: 'nowrap',
+                  fontFamily: "'Work Sans', sans-serif",
+                }}>
+                {c}
+              </button>
             ))}
           </div>
-        ))
+
+          {/* Suche */}
+          <div style={{ position: 'relative', marginBottom: 12 }}>
+            <Search size={15} color="#5c5344" style={{ position: 'absolute', left: 13, top: 12 }} />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Gericht suchen…"
+              style={{
+                width: '100%', padding: '10px 14px 10px 36px', borderRadius: 10, border: '1px solid #2a241b',
+                background: '#1a1610', color: '#f3ede0', fontSize: 13, outline: 'none', fontFamily: "'Work Sans', sans-serif",
+              }}
+            />
+          </div>
+
+          {/* Filter */}
+          <button onClick={() => setOnlyVeggie((v) => !v)} className="btn-press"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 13px', borderRadius: 999, marginBottom: 22,
+              border: `1px solid ${onlyVeggie ? accent : '#2a241b'}`, background: onlyVeggie ? withAlpha(accent, 0.12) : 'transparent',
+              color: onlyVeggie ? accent : '#8a7c5f', fontSize: 12, cursor: 'pointer', fontFamily: "'Work Sans', sans-serif",
+            }}>
+            <Leaf size={12} /> Nur Vegetarisch
+          </button>
+
+          {Object.keys(grouped).length === 0 ? (
+            <div style={{ color: '#6b6252', fontSize: 13, textAlign: 'center', padding: '30px 0' }}>Keine Treffer.</div>
+          ) : (
+            Object.entries(grouped).map(([cat, items]) => (
+              <div key={cat} style={{ marginBottom: 30 }}>
+                <div style={{ fontSize: 11, letterSpacing: '0.12em', color: accent, textTransform: 'uppercase', marginBottom: 14 }}>{cat}</div>
+                {items.map((item) => {
+                  const inCart = cart[item.id]?.qty || 0;
+                  return (
+                    <div key={item.id} style={{ display: 'flex', gap: 12, marginBottom: 16, paddingBottom: 16, borderBottom: '1px solid #221d15' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                          <div style={{ color: '#f3ede0', fontSize: 15, fontFamily: "'Cormorant Garamond', serif", fontWeight: 600 }}>{item.name}</div>
+                          {item.beliebt && <Star size={11} color={accent} fill={accent} />}
+                          {item.vegetarisch && <Leaf size={11} color="#7a9e7a" />}
+                        </div>
+                        {item.beschreibung && (<div style={{ color: '#8a7c5f', fontSize: 12.5, marginTop: 4, lineHeight: 1.5 }}>{item.beschreibung}</div>)}
+                        {item.preis && (<div style={{ color: accent, fontSize: 13.5, marginTop: 6 }}>{Number(item.preis).toFixed(2)} €</div>)}
+                      </div>
+                      <button onClick={() => addToCart(item)} className="btn-press"
+                        style={{
+                          alignSelf: 'center', width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+                          border: `1px solid ${inCart ? accent : '#2a241b'}`, background: inCart ? withAlpha(accent, 0.12) : 'transparent',
+                          color: accent, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
+                        }}>
+                        <Plus size={15} />
+                        {inCart > 0 && (
+                          <span style={{ position: 'absolute', top: -6, right: -6, background: accent, color: '#15120d', fontSize: 10, fontWeight: 700, borderRadius: 999, width: 17, height: 17, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{inCart}</span>
+                        )}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            ))
+          )}
+        </>
+      )}
+
+      {cartCount > 0 && !cartOpen && (
+        <button onClick={() => setCartOpen(true)} className="btn-press"
+          style={{
+            position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', maxWidth: 392, width: 'calc(100% - 48px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderRadius: 12,
+            background: accent, border: 'none', cursor: 'pointer', boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#15120d', fontWeight: 600, fontSize: 13.5 }}>
+            <ShoppingBag size={16} /> {cartCount} {cartCount === 1 ? 'Artikel' : 'Artikel'} gemerkt
+          </div>
+          <div style={{ color: '#15120d', fontWeight: 700, fontSize: 13.5 }}>{cartTotal.toFixed(2)} €</div>
+        </button>
+      )}
+
+      {cartOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'flex-end', zIndex: 50 }} onClick={() => setCartOpen(false)}>
+          <div onClick={(e) => e.stopPropagation()} style={{ background: '#1a1610', borderTopLeftRadius: 18, borderTopRightRadius: 18, width: '100%', maxWidth: 440, margin: '0 auto', padding: '22px 22px 30px', maxHeight: '75vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: '#f3ede0' }}>Meine Auswahl</div>
+              <button onClick={() => setCartOpen(false)} className="btn-press" style={{ background: 'none', border: 'none', color: '#8a7c5f', cursor: 'pointer' }}><X size={18} /></button>
+            </div>
+            {cartEntries.length === 0 ? (
+              <div style={{ color: '#6b6252', fontSize: 13, textAlign: 'center', padding: '20px 0' }}>Noch nichts ausgewählt.</div>
+            ) : (
+              <>
+                {cartEntries.map(({ item, qty }) => (
+                  <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ color: '#f3ede0', fontSize: 14 }}>{item.name}</div>
+                      <div style={{ color: '#8a7c5f', fontSize: 12 }}>{Number(item.preis).toFixed(2)} € · {qty}x</div>
+                    </div>
+                    <button onClick={() => changeQty(item.id, -1)} className="btn-press" style={{ width: 26, height: 26, borderRadius: 7, border: '1px solid #2a241b', background: 'none', color: accent, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Minus size={12} /></button>
+                    <div style={{ color: '#f3ede0', fontSize: 13, minWidth: 14, textAlign: 'center' }}>{qty}</div>
+                    <button onClick={() => changeQty(item.id, 1)} className="btn-press" style={{ width: 26, height: 26, borderRadius: 7, border: '1px solid #2a241b', background: 'none', color: accent, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Plus size={12} /></button>
+                    <button onClick={() => setCart((prev) => { const n = { ...prev }; delete n[item.id]; return n; })} className="btn-press" style={{ background: 'none', border: 'none', color: '#6b6252', cursor: 'pointer' }}><Trash2 size={14} /></button>
+                  </div>
+                ))}
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #2a241b', paddingTop: 14, marginTop: 4 }}>
+                  <div style={{ color: '#f3ede0', fontSize: 15, fontWeight: 600 }}>Gesamt</div>
+                  <div style={{ color: accent, fontSize: 15, fontWeight: 600 }}>{cartTotal.toFixed(2)} €</div>
+                </div>
+                <div style={{ color: '#5c5344', fontSize: 11, marginTop: 12, lineHeight: 1.5 }}>
+                  Dies ist nur eine Merkliste zur Übersicht. Ihre Bestellung geben Sie weiterhin beim Personal auf.
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
