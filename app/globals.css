@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------------------------------------------------------------------------
+   Globale Basis-Styles
+   ------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-sand-50 text-charcoal antialiased;
+}
+
+::selection {
+  @apply bg-terracotta-200 text-charcoal;
+}
+
+/* Wiederkehrende Utility-Klassen, die in mehreren Komponenten gebraucht werden */
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-5 sm:px-8 lg:px-10;
+  }
+
+  .section-padding {
+    @apply py-16 sm:py-20 lg:py-28;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-terracotta-500 px-6 py-3.5
+      text-sm font-semibold text-white shadow-soft transition-colors duration-200
+      hover:bg-terracotta-600 focus-visible:outline focus-visible:outline-2
+      focus-visible:outline-offset-2 focus-visible:outline-terracotta-500;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-600/30 bg-white/70
+      px-6 py-3.5 text-sm font-semibold text-slate-700 backdrop-blur transition-colors duration-200
+      hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2
+      focus-visible:outline-slate-500;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-terracotta-500;
+  }
+
+  /* Dezentes Fliesenmuster als wiederverwendbarer Hintergrund-Baustein */
+  .tile-pattern {
+    background-image: linear-gradient(rgba(62, 91, 112, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(62, 91, 112, 0.08) 1px, transparent 1px);
+    background-size: 42px 42px;
+  }
+}
