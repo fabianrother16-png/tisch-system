@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Routes, Route, useParams } from 'react-router-dom';
 import { BookOpen, Bell, Receipt, Star, ChevronRight, Check, ArrowLeft, Utensils, Clock, Volume2, VolumeX, TrendingUp, Search, Leaf, ShoppingBag, X, Plus, Minus, Trash2, Sparkles, Shuffle, RotateCcw } from 'lucide-react';
+import JohannesHandwerk from './pages/johannes-handwerk/index.jsx';
 
 const SUPABASE_URL = 'https://mljuvibendzmxbyelpcu.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1sanV2aWJlbmR6bXhieWVscGN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY0NjU5MTYsImV4cCI6MjEwMjA0MTkxNn0.lxNfqIvcmyx99jzRpluoZGWbm_qK-3QfEk8zMbKWYZA';
@@ -69,6 +70,7 @@ function withAlpha(hex, alpha) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/johannes-handwerk" element={<JohannesHandwerk />} />
       <Route path="/:slug/personal" element={<StaffDashboardGate />} />
       <Route path="/:slug/:table" element={<HubSeite />} />
       <Route path="*" element={<Landing />} />
