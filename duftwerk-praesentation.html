@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="dark" />
 <meta name="theme-color" content="#0a1613" />
 <title>DUFTWERK — Stellplatz-Vermietung für Duft-Automaten</title>
-<meta name="description" content="DUFTWERK mietet 1–3 m² in Ihrem Restaurant, Ihrer Bar oder Ihrem Club und zahlt Ihnen dafür 150–400 € feste Miete im Monat. Kein Aufwand, kein Risiko." />
+<meta name="description" content="DUFTWERK mietet 1–3 m² in Ihrem Restaurant, Ihrer Bar oder Ihrem Club: mehr Gäste, bessere Bewertungen, eine feste Miete — ohne Investition und ohne Aufwand für Sie." />
 
 <!-- Progressive Enhancement: Web-Fonts. Fällt bei fehlendem Internet automatisch auf die
      System-/Fallback-Schriften in --font-display / --font-body zurück. -->
@@ -224,9 +224,19 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
 .particle{ position:absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--copper-light); opacity: .5; animation: floaty 7s ease-in-out infinite; }
 @keyframes floaty{ 0%,100%{ transform: translateY(0) translateX(0); opacity:.3; } 50%{ transform: translateY(-20px) translateX(7px); opacity:.7; } }
 
-.machine-wrap{ position: relative; width: min(300px, 76vw); }
+.machine-wrap{ position: relative; width: min(300px, 76vw); perspective: 1400px; }
+/* Der Automat steht bewusst leicht schräg im Raum statt frontal wie ein Icon —
+   näher an einem echten Produktfoto als an einer flachen Illustration. */
+.machine-tilt{
+  transform: rotateY(-11deg) rotateX(4deg) rotateZ(-2deg);
+  transform-style: preserve-3d;
+  transition: transform .5s var(--ease);
+  filter: drop-shadow(18px 22px 26px rgba(0,0,0,0.45));
+}
+.hero-visual:hover .machine-tilt{ transform: rotateY(-8deg) rotateX(3deg) rotateZ(-1.5deg); }
+@media (prefers-reduced-motion: reduce){ .machine-tilt{ transition: none; } }
 .machine-badge{
-  position:absolute; top: 4%; left: -8%;
+  position:absolute; z-index: 2; top: 0%; left: -14%;
   background: var(--surface-2); border: 1px solid var(--line-strong);
   border-radius: var(--radius-signature);
   padding: .7rem 1.1rem .7rem .7rem;
@@ -268,27 +278,6 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
 }
 
 /* ==========================================================================
-   4. PRODUCT FACTS
-   ========================================================================== */
-.facts{ padding: 5.5rem 0; }
-.facts-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
-.fact-chip{
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  padding: 1.4rem 1.3rem;
-  display:flex; flex-direction:column; gap: .8rem;
-  transition: transform .25s var(--ease), border-color .25s var(--ease);
-}
-.fact-chip:hover{ transform: translateY(-3px); border-color: var(--line-strong); }
-.fact-chip .fi{ width: 40px; height:40px; border-radius: 11px; background: linear-gradient(155deg, rgba(193,124,78,0.2), rgba(193,124,78,0.05)); border: 1px solid var(--line-strong); display:flex; align-items:center; justify-content:center; color: var(--copper-light); }
-.fact-chip .fi .icon{ width:20px; height:20px; }
-.fact-chip b{ font-family: var(--font-display); font-size: .96rem; color: var(--ink); font-weight:700; }
-.fact-chip span{ font-size: .82rem; color: var(--ink-dimmer); }
-
-@media (max-width: 1080px){ .facts-grid{ grid-template-columns: repeat(2,1fr); } }
-@media (max-width: 560px){ .facts-grid{ grid-template-columns: 1fr 1fr; } }
-
-/* ==========================================================================
    5. ANGEBOT
    ========================================================================== */
 .offer{ padding: 5.5rem 0; background: var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
@@ -302,11 +291,8 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
   box-shadow: var(--shadow-2);
 }
 .offer-card .kicker{ font-family: var(--font-display); font-size: .8rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color: var(--ink-dimmer); }
-.offer-card h3{ font-size: 1.5rem; margin: .35rem 0 1.2rem; }
-.offer-price{ display:flex; align-items:baseline; gap: .6rem; margin-bottom: .3rem; }
-.offer-price .amount{ font-family: var(--font-display); font-size: clamp(2.4rem, 1.8rem + 2vw, 3.2rem); color: var(--copper-light); font-weight:800; }
-.offer-price .unit{ font-size: 1rem; color: var(--ink-dim); font-weight:600; }
-.offer-card .sub{ font-size: .88rem; color: var(--ink-dimmer); margin-bottom: 1.8rem; }
+.offer-card h3{ font-size: 1.5rem; margin: .35rem 0 .6rem; }
+.offer-card .sub{ font-size: .95rem; color: var(--ink-dim); margin-bottom: 1.8rem; max-width: 46ch; }
 
 .offer-list{ display:grid; grid-template-columns: 1fr 1fr; gap: .8rem 1.2rem; margin-bottom: 2rem; }
 .offer-list li{ display:flex; gap:.55rem; font-size: .87rem; color: var(--ink-dim); align-items:flex-start; }
@@ -322,31 +308,13 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
 .contrast-box .cb-head strong{ font-family: var(--font-display); font-size: .96rem; }
 .contrast-box p{ font-size: .87rem; margin:0; }
 
-.estimator{ background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); padding: 1.6rem 1.7rem; }
-.estimator .e-head{ font-family: var(--font-display); font-size: .96rem; font-weight:700; margin-bottom: .3rem; }
-.estimator .e-sub{ font-size: .8rem; color: var(--ink-dimmer); margin-bottom: 1.1rem; }
-.tier-group{ display:flex; flex-direction:column; gap: .5rem; margin-bottom: 1.2rem; }
-.tier-btn{
-  display:flex; justify-content:space-between; align-items:center; gap: 1rem;
-  width:100%; text-align:left;
-  background: var(--bg-alt-2); border: 1px solid var(--line);
-  border-radius: 12px; padding: .75rem 1rem;
-  color: var(--ink-dim); font-size: .85rem; font-weight:600;
-  cursor:pointer; transition: border-color .2s var(--ease), background .2s var(--ease), color .2s var(--ease);
-}
-.tier-btn strong{ color: var(--ink); font-weight:700; }
-.tier-btn[aria-pressed="true"]{ border-color: var(--copper); background: rgba(193,124,78,0.1); color: var(--ink); }
-.tier-result{ display:flex; align-items:baseline; justify-content:space-between; border-top: 1px solid var(--line); padding-top: 1rem; }
-.tier-result .label{ font-size: .82rem; color: var(--ink-dimmer); }
-.tier-result .value{ font-family: var(--font-display); font-size: 1.6rem; color: var(--copper-light); font-weight:800; }
-
 @media (max-width: 980px){ .offer-grid{ grid-template-columns: 1fr; } .offer-list{ grid-template-columns: 1fr; } }
 
 /* ==========================================================================
    6. VORTEILE
    ========================================================================== */
 .benefits{ padding: 5.5rem 0; }
-.benefits-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
+.benefits-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
 .benefit-card{
   border: 1px solid var(--line); border-radius: var(--radius-md);
   padding: 1.6rem 1.4rem;
@@ -464,6 +432,10 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
     <symbol id="icon-chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
     <symbol id="icon-shield-off" viewBox="0 0 24 24"><path d="M12 3.2 19.5 6.4v5.1c0 5-3.2 8.6-7.5 9.3-4.3-.7-7.5-4.3-7.5-9.3V6.4L12 3.2z"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></symbol>
     <symbol id="icon-scale" viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><path d="M5 7h14"/><path d="M5 7 2.5 13a2.5 2.5 0 0 0 5 0L5 7z"/><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0L19 7z"/></symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.6 2.7-6.2 6-6.2s6 2.6 6 6.2"/><circle cx="17.3" cy="8.6" r="2.6"/><path d="M14.8 20c.2-2.8 1.9-4.8 4.2-5.6"/></symbol>
+    <symbol id="icon-flag" viewBox="0 0 24 24"><line x1="6" y1="21" x2="6" y2="4"/><path d="M6 4.5h12l-3 4 3 4H6"/></symbol>
+    <symbol id="icon-star" viewBox="0 0 24 24"><path d="M12 3.5l2.5 5.2 5.7.7-4.2 4 1 5.7L12 16.3l-5 2.8 1-5.7-4.2-4 5.7-.7L12 3.5z"/></symbol>
+    <symbol id="icon-heart" viewBox="0 0 24 24"><path d="M12 20s-6.8-4.3-9.1-8.6C1.4 8 2.7 5.2 5.6 5.2c1.8 0 3.2 1 3.9 2.4.7-1.4 2.1-2.4 3.9-2.4 2.9 0 4.2 2.8 2.7 6.2C18.8 15.7 12 20 12 20z"/></symbol>
   </defs>
 </svg>
 
@@ -484,9 +456,8 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
     </a>
 
     <nav class="nav-links" id="navLinks" aria-label="Hauptnavigation">
-      <a href="#produkt">Produkt</a>
-      <a href="#angebot">Angebot</a>
       <a href="#vorteile">Vorteile</a>
+      <a href="#angebot">Angebot</a>
       <a href="#ablauf">Ablauf</a>
       <a href="#faq">FAQ</a>
       <a href="#kontakt">Kontakt</a>
@@ -511,7 +482,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
     <div class="hero-copy" data-reveal>
       <div class="eyebrow">Für Restaurants, Bars &amp; Clubs</div>
       <h1>Ihre Fläche. Unser Automat. Ihre feste Miete.</h1>
-      <p class="lede">DUFTWERK mietet 1–3&nbsp;m² in Ihrem Betrieb — z.&nbsp;B. an der Garderobe oder auf dem Weg zur Toilette. Sie erhalten dafür jeden Monat eine feste Miete. Lieferung, Wartung, Befüllung: alles von uns.</p>
+      <p class="lede">DUFTWERK mietet 1–3&nbsp;m² in Ihrem Betrieb — z.&nbsp;B. an der Garderobe oder auf dem Weg zur Toilette. Mehr Erlebnis für Ihre Gäste, eine feste Miete für Sie. Lieferung, Wartung, Befüllung: alles von uns.</p>
 
       <div class="hero-actions">
         <a href="#kontakt" class="btn btn-primary">Jetzt Angebot sichern<svg class="icon"><use href="#icon-arrow-right"/></svg></a>
@@ -519,10 +490,10 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
       </div>
 
       <div class="hero-stats">
-        <div class="hs"><b class="tnum">150–400&nbsp;€</b><span>Miete / Monat</span></div>
         <div class="hs"><b class="tnum">1–3&nbsp;m²</b><span>Stellfläche</span></div>
         <div class="hs"><b class="tnum">0&nbsp;€</b><span>Investition</span></div>
-        <div class="hs"><b class="tnum">100%</b><span>Wartung durch uns</span></div>
+        <div class="hs"><b class="tnum">0</b><span>Aufwand für Sie</span></div>
+        <div class="hs"><b>Vorreiter</b><span>in Deutschland</span></div>
       </div>
     </div>
 
@@ -537,9 +508,10 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
       <div class="machine-wrap">
         <div class="machine-badge">
           <span class="dot"><svg class="icon"><use href="#icon-check"/></svg></span>
-          <span><strong class="tnum">150–400&nbsp;€/Monat</strong><span>garantiert, unabhängig vom Umsatz</span></span>
+          <span><strong>Einer der Ersten in Deutschland</strong><span>kaum ein Betrieb hat diesen Automaten</span></span>
         </div>
 
+        <div class="machine-tilt">
         <svg viewBox="0 0 320 520" role="img" aria-label="Illustration eines DUFTWERK Duft-Automaten mit vier Sprühdüsen, Bedienbildschirm und Zahlungsmodul">
           <defs>
             <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
@@ -554,6 +526,11 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
           </defs>
 
           <ellipse cx="160" cy="497" rx="112" ry="15" fill="url(#shadowGrad)"/>
+
+          <!-- Gehäusetiefe: Deckel- und Seitenfläche, damit der Korpus auch ohne
+               CSS-Rotation schon als Körper statt als flache Karte liest -->
+          <polygon points="66,28 254,28 270,14 82,14" fill="#213f36" stroke="#c17c4e" stroke-width="1" stroke-opacity="0.5"/>
+          <polygon points="254,28 270,14 270,450 254,464" fill="#081310" stroke="#8a5936" stroke-width="1" stroke-opacity="0.5"/>
 
           <!-- Gehäuse -->
           <rect x="66" y="28" width="188" height="436" rx="24" fill="url(#bodyGrad)" stroke="#c17c4e" stroke-width="1.8"/>
@@ -621,6 +598,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
           <rect x="86" y="454" width="20" height="9" rx="3" fill="#8a5936"/>
           <rect x="214" y="454" width="20" height="9" rx="3" fill="#8a5936"/>
         </svg>
+        </div>
       </div>
     </div>
   </div>
@@ -629,32 +607,10 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
 <!-- FACTSTRIP -->
 <section class="factstrip" data-reveal>
   <div class="container factstrip-grid">
-    <div class="fs"><b class="tnum">~2 Sek.</b><span>pro Sprühvorgang</span></div>
-    <div class="fs"><b class="tnum">1–3 m²</b><span>Platzbedarf</span></div>
-    <div class="fs"><b class="tnum">150–400 €</b><span>feste Monatsmiete</span></div>
-    <div class="fs"><b class="tnum">0 €</b><span>Investition &amp; Aufwand</span></div>
-  </div>
-</section>
-
-<!-- PRODUKT-FACTS -->
-<section class="facts">
-  <div class="container">
-    <div class="section-head" data-reveal>
-      <div class="eyebrow">Der Automat</div>
-      <h2>Ein Automat, den Gäste wirklich nutzen</h2>
-      <p>Robust, hygienisch, ohne Wartezeit — gebaut für den Alltag in Gastronomie und Nightlife.</p>
-    </div>
-
-    <div class="facts-grid">
-      <div class="fact-chip" data-reveal style="--d:0"><div class="fi"><svg class="icon"><use href="#icon-clock"/></svg></div><b>~2 Sekunden</b><span>pro Sprühvorgang</span></div>
-      <div class="fact-chip" data-reveal style="--d:40"><div class="fi"><svg class="icon"><use href="#icon-payment"/></svg></div><b>Karte &amp; Bargeld</b><span>beide Zahlwege inklusive</span></div>
-      <div class="fact-chip" data-reveal style="--d:80"><div class="fi"><svg class="icon"><use href="#icon-ruler"/></svg></div><b>1–3 m²</b><span>kompakte Stellfläche</span></div>
-      <div class="fact-chip" data-reveal style="--d:120"><div class="fi"><svg class="icon"><use href="#icon-flower"/></svg></div><b>Mehrere Düfte</b><span>direkt am Gerät wählbar</span></div>
-      <div class="fact-chip" data-reveal style="--d:0"><div class="fi"><svg class="icon"><use href="#icon-tank"/></svg></div><b>Großer Tank</b><span>tausende Sprühvorgänge</span></div>
-      <div class="fact-chip" data-reveal style="--d:40"><div class="fi"><svg class="icon"><use href="#icon-chart"/></svg></div><b>Digital erfasst</b><span>Nutzung in Echtzeit</span></div>
-      <div class="fact-chip" data-reveal style="--d:80"><div class="fi"><svg class="icon"><use href="#icon-spray"/></svg></div><b>Hygienekopf</b><span>wartungsarm &amp; sauber</span></div>
-      <div class="fact-chip" data-reveal style="--d:120"><div class="fi"><svg class="icon"><use href="#icon-shield"/></svg></div><b>Diebstahlsicher</b><span>robustes Gehäuse</span></div>
-    </div>
+    <div class="fs"><b class="tnum">Mehr</b><span>Gäste durch den Automaten</span></div>
+    <div class="fs"><b class="tnum">Bessere</b><span>Bewertungen auf Google</span></div>
+    <div class="fs"><b class="tnum">0 €</b><span>Investition für Sie</span></div>
+    <div class="fs"><b class="tnum">0</b><span>Aufwand für Sie</span></div>
   </div>
 </section>
 
@@ -663,16 +619,15 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
   <div class="container">
     <div class="section-head" data-reveal>
       <div class="eyebrow">Unser Angebot</div>
-      <h2>Eine einfache Vereinbarung. Ein fester Betrag.</h2>
-      <p>Sie stellen die Fläche. Wir zahlen Ihnen dafür — unabhängig davon, wie oft der Automat genutzt wird.</p>
+      <h2>Eine einfache Vereinbarung.</h2>
+      <p>Sie stellen die Fläche. Wir übernehmen den Rest — und zahlen Ihnen dafür eine feste Miete.</p>
     </div>
 
     <div class="offer-grid">
       <div class="offer-card" data-reveal>
         <div class="kicker">Stellplatz-Vermietung</div>
         <h3>DUFTWERK mietet Ihre Fläche</h3>
-        <div class="offer-price"><span class="amount tnum">150–400 €</span><span class="unit">/ Monat</span></div>
-        <p class="sub">Richtwert — abhängig von Lage und Gästefrequenz Ihres Betriebs.</p>
+        <p class="sub">Eine garantierte, feste Miete für 1–3&nbsp;m² Fläche — Details klären wir gerne persönlich, passend zu Ihrem Betrieb.</p>
 
         <ul class="offer-list">
           <li><svg class="icon"><use href="#icon-check"/></svg>1–3 m² Fläche, z.&nbsp;B. Garderobe oder Flur zur Toilette</li>
@@ -685,27 +640,18 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
           <li><svg class="icon"><use href="#icon-check"/></svg>Kein Bargeld-Handling für Sie</li>
         </ul>
 
-        <a href="#kontakt" class="btn btn-primary">Jetzt Stellplatz vermieten<svg class="icon"><use href="#icon-arrow-right"/></svg></a>
+        <a href="#kontakt" class="btn btn-primary">Jetzt individuelles Angebot<svg class="icon"><use href="#icon-arrow-right"/></svg></a>
       </div>
 
       <div class="offer-side">
         <div class="contrast-box" data-reveal style="--d:80">
           <div class="cb-head"><svg class="icon"><use href="#icon-scale"/></svg><strong>Fest statt variabel</strong></div>
-          <p>Andere Modelle zahlen nur, wenn der Automat läuft. Wir zahlen Ihre Miete garantiert — jeden Monat, unabhängig von Sprühvorgängen.</p>
+          <p>Andere Modelle zahlen nur, wenn der Automat läuft. Wir zahlen Ihre Miete garantiert — jeden Monat, unabhängig davon, wie oft er genutzt wird.</p>
         </div>
 
-        <div class="estimator" data-reveal style="--d:140">
-          <div class="e-head">Was ist realistisch für Sie?</div>
-          <div class="e-sub">Wählen Sie Ihren Betriebstyp</div>
-          <div class="tier-group" role="group" aria-label="Betriebstyp wählen">
-            <button type="button" class="tier-btn" data-rent="150" data-label="Kleinere Bar, überschaubare Öffnungszeiten">Kleiner Betrieb</button>
-            <button type="button" class="tier-btn" aria-pressed="true" data-rent="275" data-label="Restaurant mit regelmäßigem Gästestrom">Mittlerer Betrieb</button>
-            <button type="button" class="tier-btn" data-rent="400" data-label="Club, Eventlocation, Wochenend-Hotspot">Stark frequentiert</button>
-          </div>
-          <div class="tier-result">
-            <span class="label" id="tierLabel">Restaurant mit regelmäßigem Gästestrom</span>
-            <span class="value tnum" id="tierValue">275&nbsp;€</span>
-          </div>
+        <div class="contrast-box" data-reveal style="--d:140">
+          <div class="cb-head"><svg class="icon"><use href="#icon-check"/></svg><strong>Einer der Ersten sein</strong></div>
+          <p>Noch hat kaum ein Betrieb in Deutschland einen Duft-Automaten wie diesen — ein Alleinstellungsmerkmal, über das Gäste reden und das in Bewertungen auftaucht.</p>
         </div>
       </div>
     </div>
@@ -718,12 +664,15 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
     <div class="section-head" data-reveal>
       <div class="eyebrow">Ihr Vorteil</div>
       <h2>Was das für Sie bedeutet</h2>
+      <p>Kein Verkaufsgespräch über Technik — sondern darüber, was der Automat für Ihren Betrieb tut.</p>
     </div>
     <div class="benefits-grid">
-      <div class="benefit-card" data-reveal style="--d:0"><div class="bi"><svg class="icon"><use href="#icon-payout"/></svg></div><b>Garantiertes Einkommen</b><span>Fest, planbar, jeden Monat</span></div>
-      <div class="benefit-card" data-reveal style="--d:60"><div class="bi"><svg class="icon"><use href="#icon-shield-off"/></svg></div><b>0 € Risiko</b><span>Umsatzschwankungen sind unser Problem</span></div>
-      <div class="benefit-card" data-reveal style="--d:120"><div class="bi"><svg class="icon"><use href="#icon-wrench"/></svg></div><b>0 Aufwand</b><span>Kein Personal, keine Wartung, kein Bargeld</span></div>
-      <div class="benefit-card" data-reveal style="--d:180"><div class="bi"><svg class="icon"><use href="#icon-flower"/></svg></div><b>Mehr Gästeerlebnis</b><span>Kleines Extra, große Wirkung</span></div>
+      <div class="benefit-card" data-reveal style="--d:0"><div class="bi"><svg class="icon"><use href="#icon-users"/></svg></div><b>Mehr Gäste</b><span>Ein Hingucker, den kaum ein Betrieb in Deutschland hat</span></div>
+      <div class="benefit-card" data-reveal style="--d:40"><div class="bi"><svg class="icon"><use href="#icon-flag"/></svg></div><b>Einer der Ersten</b><span>Alleinstellungsmerkmal, mit dem Sie sich abheben</span></div>
+      <div class="benefit-card" data-reveal style="--d:80"><div class="bi"><svg class="icon"><use href="#icon-star"/></svg></div><b>Bessere Bewertungen</b><span>Ein Extra, das in Google-Rezensionen auffällt</span></div>
+      <div class="benefit-card" data-reveal style="--d:120"><div class="bi"><svg class="icon"><use href="#icon-heart"/></svg></div><b>Zufriedenere Gäste</b><span>Bessere Erfahrung bei Ihnen — das spricht sich rum</span></div>
+      <div class="benefit-card" data-reveal style="--d:160"><div class="bi"><svg class="icon"><use href="#icon-shield-off"/></svg></div><b>0 € Investition</b><span>Keine Anschaffungskosten, kein Risiko</span></div>
+      <div class="benefit-card" data-reveal style="--d:200"><div class="bi"><svg class="icon"><use href="#icon-wrench"/></svg></div><b>0 Aufwand</b><span>Lieferung, Wartung, Befüllung: alles von uns</span></div>
     </div>
   </div>
 </section>
@@ -759,7 +708,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
       </div>
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">Wie viel verdiene ich?<svg class="icon chev"><use href="#icon-chevron"/></svg></button>
-        <div class="faq-a"><p>150–400 € pro Monat, abhängig von Lage und Frequenz Ihres Betriebs — fest vereinbart, unabhängig vom Automaten-Umsatz.</p></div>
+        <div class="faq-a"><p>Das hängt von Lage und Gästefrequenz Ihres Betriebs ab. Nach dem kostenlosen Standortcheck erhalten Sie ein individuelles, schriftliches Angebot.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q" aria-expanded="false">Wer kümmert sich um Wartung und Befüllung?<svg class="icon chev"><use href="#icon-chevron"/></svg></button>
@@ -824,7 +773,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
       <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="3" width="34" height="34" rx="10" fill="none" stroke="#8a5936" stroke-width="1.6"/><path d="M20 11c3.6 4.6 7.5 9.6 7.5 13.6a7.5 7.5 0 1 1-15 0c0-4 3.9-9 7.5-13.6z" fill="#8a5936"/></svg>
       <span>DUFTWERK — Stellplatz-Vermietung für Duft-Automaten</span>
     </div>
-    <span class="footer-note">150–400&nbsp;€ / Monat · 0&nbsp;€ Investition</span>
+    <span class="footer-note">0&nbsp;€ Investition · individuelles Angebot</span>
   </div>
 </footer>
 
@@ -854,7 +803,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
   });
 
   /* Active Nav Link on Scroll */
-  var sections = ['produkt','angebot','vorteile','ablauf','faq','kontakt'].map(function(id){ return document.getElementById(id); }).filter(Boolean);
+  var sections = ['vorteile','angebot','ablauf','faq','kontakt'].map(function(id){ return document.getElementById(id); }).filter(Boolean);
   var navAnchors = Array.prototype.slice.call(navLinks.querySelectorAll('a'));
   if('IntersectionObserver' in window && sections.length){
     var navObserver = new IntersectionObserver(function(entries){
@@ -880,19 +829,6 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
   } else {
     revealEls.forEach(function(el){ el.classList.add('in-view'); });
   }
-
-  /* Betriebstyp-Schätzer */
-  var tierButtons = document.querySelectorAll('.tier-btn');
-  var tierValue = document.getElementById('tierValue');
-  var tierLabel = document.getElementById('tierLabel');
-  tierButtons.forEach(function(btn){
-    btn.addEventListener('click', function(){
-      tierButtons.forEach(function(b){ b.setAttribute('aria-pressed', 'false'); });
-      btn.setAttribute('aria-pressed', 'true');
-      tierValue.textContent = btn.getAttribute('data-rent') + ' €';
-      tierLabel.textContent = btn.getAttribute('data-label');
-    });
-  });
 
   /* FAQ Accordion */
   document.querySelectorAll('.faq-item').forEach(function(item){
