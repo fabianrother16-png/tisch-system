@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#120e0b" />
+<title>DUFTWERK — Duft-Automat für Gastronomie, Bar &amp; Club</title>
+<meta name="description" content="DUFTWERK: hochwertige Duft-Verkaufsautomaten für Restaurants, Bars und Clubs. Zusätzliche Einnahmen ohne Personalaufwand — zur Vermietung, Finanzierung oder zum Kauf." />
+
+<!-- Progressive Enhancement: Web-Fonts. Fällt bei fehlendem Internet automatisch auf die
+     System-/Fallback-Schriften in der CSS-Variable --font-serif / --font-sans zurück. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap">
+
+<style>
+/* ==========================================================================
+   0. GRUNDLAGEN / DESIGN TOKENS
+   ========================================================================== */
+:root{
+  --font-serif: 'Playfair Display', Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --bg:        #120e0b;
+  --bg-alt:    #17120e;
+  --bg-alt-2:  #1c160f;
+  --surface:   #1f1810;
+  --surface-2: #251c13;
+  --surface-3: #2b2116;
+
+  --line:        rgba(201,164,90,0.16);
+  --line-strong: rgba(201,164,90,0.34);
+
+  --gold:       #c9a45a;
+  --gold-light: #e7cd93;
+  --gold-dark:  #93763c;
+  --gold-glow:  rgba(201,164,90,0.35);
+
+  --wine:       #7c2c3a;
+  --wine-light: #a94c5c;
+
+  --cream:        #f5efe2;
+  --cream-dim:    #cdc2a9;
+  --cream-dimmer: #93886f;
+
+  --success: #7cb389;
+
+  --shadow-1: 0 20px 50px -22px rgba(0,0,0,0.65);
+  --shadow-2: 0 30px 80px -30px rgba(0,0,0,0.75);
+
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  --container: 1180px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  *, *::before, *::after{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
+
+body{
+  margin:0;
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img, svg{ display:block; max-width:100%; }
+a{ color: inherit; text-decoration: none; }
+ul{ margin:0; padding:0; list-style:none; }
+button{ font-family: inherit; }
+
+h1,h2,h3,h4{
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+  color: var(--cream);
+  letter-spacing: 0.2px;
+}
+
+p{ margin: 0 0 1em; color: var(--cream-dim); }
+
+.container{
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+section{ position: relative; }
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 1rem;
+}
+.eyebrow::before{
+  content:"";
+  width: 22px; height: 1.5px;
+  background: var(--gold);
+  display:inline-block;
+}
+
+.section-head{
+  max-width: 720px;
+  margin-bottom: 3rem;
+}
+.section-head.center{ margin-left:auto; margin-right:auto; text-align:center; }
+.section-head h2{ font-size: clamp(1.7rem, 1.1rem + 2.4vw, 2.6rem); }
+.section-head p{ font-size: 1.05rem; }
+
+.note{
+  font-size: 0.82rem;
+  color: var(--cream-dimmer);
+}
+.note.center{ text-align:center; }
+
+/* Buttons */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.55rem;
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  border: 1.5px solid transparent;
+  cursor:pointer;
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
+  white-space: nowrap;
+}
+.btn svg{ width:18px; height:18px; }
+.btn-primary{
+  background: linear-gradient(135deg, var(--gold-light), var(--gold) 55%, var(--gold-dark));
+  color: #201509;
+  box-shadow: 0 14px 30px -12px var(--gold-glow);
+}
+.btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 18px 38px -12px var(--gold-glow); }
+.btn-secondary{
+  background: transparent;
+  border-color: var(--line-strong);
+  color: var(--cream);
+}
+.btn-secondary:hover{ border-color: var(--gold); color: var(--gold-light); transform: translateY(-2px); }
+.btn-ghost{
+  background: rgba(245,239,226,0.06);
+  color: var(--cream);
+  border-color: transparent;
+}
+.btn-ghost:hover{ background: rgba(245,239,226,0.1); }
+.btn-block{ width:100%; }
+.btn:active{ transform: translateY(0); }
+
+/* Icon sprite helper */
+.icon{ width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex-shrink:0; }
+
+/* Reveal-on-scroll */
+[data-reveal]{
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .8s var(--ease), transform .8s var(--ease);
+}
+[data-reveal].in-view{ opacity: 1; transform: translateY(0); }
+[data-reveal="fade"]{ transform: none; }
+[data-reveal].in-view[style]{ }
+
+/* stagger via CSS var set inline by JS */
+[data-reveal]{ transition-delay: calc(var(--d, 0) * 1ms); }
+
+/* ==========================================================================
+   1. NAVIGATION
+   ========================================================================== */
+.nav{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid transparent;
+  transition: border-color .3s var(--ease), padding .3s var(--ease);
+}
+/* Der Weichzeichner sitzt bewusst auf einem Pseudo-Element statt direkt auf
+   .nav: backdrop-filter/filter auf .nav würde sonst einen eigenen Containing
+   Block für dessen fixed-positionierte Nachfahren (das mobile Menü) bilden
+   und das Menü relativ zur (niedrigen) Nav-Leiste statt zum Viewport verankern. */
+.nav::before{
+  content:"";
+  position:absolute; inset:0;
+  z-index:-1;
+  background: rgba(18,14,11,0.7);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  transition: background .3s var(--ease);
+}
+.nav.scrolled{ border-bottom-color: var(--line); }
+.nav.scrolled::before{ background: rgba(18,14,11,0.92); }
+.nav-inner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 1.5rem;
+  padding: 1.15rem 0;
+  transition: padding .3s var(--ease);
+}
+.nav.scrolled .nav-inner{ padding: 0.75rem 0; }
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:.65rem;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--cream);
+  letter-spacing: 0.02em;
+}
+.brand-mark{ width: 34px; height: 34px; }
+.brand small{
+  display:block;
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-top: 1px;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap: 2rem;
+}
+.nav-links a{
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--cream-dim);
+  position: relative;
+  padding: 0.3rem 0;
+  transition: color .2s var(--ease);
+}
+.nav-links a::after{
+  content:"";
+  position:absolute; left:0; right:100%; bottom:-2px;
+  height: 1.5px; background: var(--gold);
+  transition: right .25s var(--ease);
+}
+.nav-links a:hover, .nav-links a.active{ color: var(--cream); }
+.nav-links a:hover::after, .nav-links a.active::after{ right:0; }
+
+.nav-cta{ display:flex; align-items:center; gap: 1rem; }
+.nav-cta .btn{ padding: 0.7rem 1.3rem; font-size: 0.88rem; }
+
+.nav-toggle{
+  display:none;
+  width: 42px; height: 42px;
+  align-items:center; justify-content:center;
+  background: rgba(245,239,226,0.06);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--cream);
+  cursor:pointer;
+}
+.nav-toggle .icon{ width:20px; height:20px; }
+.nav-toggle .icon-close{ display:none; }
+body.nav-open .nav-toggle .icon-menu{ display:none; }
+body.nav-open .nav-toggle .icon-close{ display:block; }
+
+@media (max-width: 980px){
+  .nav-links{
+    position: fixed; inset: 68px 0 0 0;
+    z-index: 200;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: #14100c;
+    padding: 1rem 1.5rem 2rem;
+    border-top: 1px solid var(--line);
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s var(--ease), transform .25s var(--ease);
+    overflow-y:auto;
+  }
+  body.nav-open .nav-links{ opacity:1; transform: translateY(0); pointer-events:auto; }
+  .nav-links a{ padding: 1rem 0; border-bottom: 1px solid var(--line); font-size: 1.05rem; }
+  .nav-cta .btn-secondary{ display:none; }
+  .nav-toggle{ display:flex; }
+}
+
+/* ==========================================================================
+   2. HERO
+   ========================================================================== */
+.hero{
+  padding: 4.5rem 0 5rem;
+  overflow: clip;
+  position: relative;
+}
+.hero::before{
+  content:"";
+  position:absolute; top:-10%; right:-10%; width:60%; height:70%;
+  background: radial-gradient(circle, var(--gold-glow), transparent 65%);
+  opacity: .35;
+  filter: blur(20px);
+  pointer-events:none;
+}
+.hero-inner{
+  display:grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 3rem;
+  align-items:center;
+}
+.hero-copy h1{
+  font-size: clamp(2.1rem, 1.2rem + 3.6vw, 3.5rem);
+  margin-bottom: 0.6em;
+}
+.hero-copy .lede{
+  font-size: 1.12rem;
+  max-width: 46ch;
+  color: var(--cream-dim);
+}
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 1rem;
+  margin: 2rem 0 1.75rem;
+}
+.hero-trust{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 1.4rem 1.9rem;
+}
+.hero-trust li{
+  display:flex;
+  align-items:center;
+  gap: .55rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--cream-dim);
+}
+.hero-trust .icon{ width:18px; height:18px; color: var(--gold); }
+
+.hero-visual{
+  position: relative;
+  display:flex;
+  justify-content:center;
+}
+.hero-visual .particles{ position:absolute; inset:0; pointer-events:none; }
+.particle{
+  position:absolute;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  opacity: .55;
+  filter: blur(0.4px);
+  animation: floaty 7s ease-in-out infinite;
+}
+@keyframes floaty{
+  0%,100%{ transform: translateY(0) translateX(0); opacity:.35; }
+  50%{ transform: translateY(-22px) translateX(8px); opacity:.75; }
+}
+.machine-wrap{ position: relative; width: min(320px, 78vw); }
+.machine-badge{
+  position:absolute;
+  top: 8%;
+  left: -4%;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: .6rem 1rem .6rem .6rem;
+  display:flex; align-items:center; gap:.6rem;
+  box-shadow: var(--shadow-1);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.machine-badge .dot{
+  width: 30px; height:30px; border-radius:50%;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  display:flex; align-items:center; justify-content:center;
+  color:#201509;
+}
+.machine-badge .dot .icon{ width:16px; height:16px; }
+.machine-badge strong{ display:block; font-size:.78rem; color:var(--cream); }
+.machine-badge span{ display:block; font-size:.72rem; color: var(--cream-dimmer); }
+.machine-badge.flash{ transform: scale(1.05); box-shadow: 0 0 0 3px var(--gold-glow), var(--shadow-1); }
+
+.mist-drop{ animation: mist 2.6s ease-in-out infinite; transform-origin: center; }
+.mist-1{ animation-delay: 0s; }
+.mist-2{ animation-delay: .5s; }
+.mist-3{ animation-delay: 1s; }
+@keyframes mist{
+  0%{ opacity:0; transform: translateY(0) scale(.6); }
+  35%{ opacity:.8; }
+  100%{ opacity:0; transform: translateY(-14px) scale(1.15); }
+}
+.pulse-dot{ animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.25; } }
+
+@media (max-width: 980px){
+  .hero-inner{ grid-template-columns: 1fr; }
+  .hero-visual{ order:-1; margin-bottom: 1rem; }
+  .machine-wrap{ width: min(260px, 62vw); }
+}
+
+/* ==========================================================================
+   3. STATS BAR
+   ========================================================================== */
+.stats{
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-alt);
+}
+.stats-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.stat{
+  padding: 2.1rem 1.5rem;
+  text-align:center;
+  border-right: 1px solid var(--line);
+}
+.stat:last-child{ border-right:none; }
+.stat .num{
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 1rem + 1.6vw, 2.1rem);
+  color: var(--gold-light);
+  display:block;
+  margin-bottom:.2rem;
+}
+.stat .lbl{ font-size: .84rem; color: var(--cream-dimmer); }
+
+@media (max-width: 780px){
+  .stats-grid{ grid-template-columns: repeat(2,1fr); }
+  .stat{ border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .stat:nth-child(2n){ border-right:none; }
+}
+
+/* ==========================================================================
+   4. FEATURES
+   ========================================================================== */
+.features{ padding: 6rem 0; }
+.features-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.4rem;
+}
+.feature-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 1.9rem 1.6rem;
+  transition: transform .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.feature-card:hover{
+  transform: translateY(-4px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-1);
+}
+.feature-icon{
+  width: 50px; height:50px;
+  border-radius: 14px;
+  background: linear-gradient(155deg, rgba(201,164,90,0.18), rgba(201,164,90,0.05));
+  border: 1px solid var(--line-strong);
+  display:flex; align-items:center; justify-content:center;
+  color: var(--gold-light);
+  margin-bottom: 1.1rem;
+}
+.feature-card h3{ font-family: var(--font-sans); font-size: 1.03rem; font-weight: 700; margin-bottom:.5rem; }
+.feature-card p{ font-size: .92rem; margin:0; }
+
+@media (max-width: 1080px){ .features-grid{ grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 560px){ .features-grid{ grid-template-columns: 1fr; } }
+
+/* ==========================================================================
+   5. BENEFITS
+   ========================================================================== */
+.benefits{ padding: 6rem 0; background: var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.benefits-inner{ display:grid; grid-template-columns: 0.85fr 1.15fr; gap: 3.5rem; align-items:center; }
+.benefits-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
+.benefit{ display:flex; gap: 1rem; }
+.benefit .num{
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--gold);
+  flex-shrink:0;
+  width: 2.2rem;
+}
+.benefit h3{ font-family: var(--font-sans); font-size: 1rem; margin-bottom:.35rem; }
+.benefit p{ font-size: .9rem; margin:0; }
+
+.benefits-side{ position:relative; }
+.benefits-side .quote-card{
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 2.4rem;
+  box-shadow: var(--shadow-1);
+}
+.benefits-side .quote-card .icon-lg{ width:40px; height:40px; color: var(--gold); margin-bottom: 1.2rem; }
+.benefits-side .quote-card p{ font-family: var(--font-serif); font-size: 1.25rem; color: var(--cream); font-style: italic; line-height:1.5; }
+.benefits-side .quote-card .who{ margin-top: 1.4rem; font-family: var(--font-sans); font-size:.82rem; color: var(--cream-dimmer); font-style: normal; }
+
+@media (max-width: 980px){
+  .benefits-inner{ grid-template-columns: 1fr; }
+  .benefits-side{ order:-1; }
+}
+@media (max-width: 560px){ .benefits-grid{ grid-template-columns: 1fr; } }
+
+/* ==========================================================================
+   6. ZAHLEN & MARGE
+   ========================================================================== */
+.numbers{ padding: 6rem 0; }
+.numbers-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; margin-bottom: 2rem; }
+.price-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+}
+.price-card h3{ font-family: var(--font-sans); font-size: 1rem; margin-bottom: 1.2rem; color: var(--gold-light); }
+.price-row{ display:flex; justify-content:space-between; align-items:baseline; padding: .85rem 0; border-bottom: 1px solid var(--line); gap: 1rem; }
+.price-row:last-child{ border-bottom:none; }
+.price-row .lbl{ font-size: .92rem; color: var(--cream-dim); }
+.price-row .val{ font-family: var(--font-serif); font-size: 1.15rem; color: var(--cream); white-space:nowrap; }
+.price-row.total .val{ color: var(--gold-light); }
+
+.share-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 2rem;
+}
+.share-card h3{ font-family: var(--font-sans); font-size: 1rem; margin-bottom: 1.3rem; color: var(--gold-light); }
+.share-item{ margin-bottom: 1.3rem; }
+.share-item:last-child{ margin-bottom:0; }
+.share-item .top{ display:flex; justify-content:space-between; font-size:.88rem; margin-bottom:.4rem; }
+.share-item .top strong{ color: var(--cream); }
+.share-item .top span{ color: var(--gold-light); font-weight:700; }
+.share-bar{ height: 8px; border-radius: 999px; background: rgba(245,239,226,0.08); overflow:hidden; }
+.share-bar i{
+  display:block; height:100%; border-radius:999px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+  width:0;
+  transition: width 1.1s var(--ease);
+}
+.share-item.is-highlight strong{ color: var(--gold-light); }
+
+.example-box{
+  background: linear-gradient(155deg, var(--surface-3), var(--surface-2));
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 2.4rem;
+  display:grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2.5rem;
+  align-items:center;
+}
+.example-box h3{ font-family: var(--font-sans); font-size: 1.05rem; margin-bottom:.7rem; color: var(--gold-light); }
+.example-box p{ font-size: .95rem; margin:0; }
+.example-steps{ display:flex; flex-direction:column; gap: .75rem; }
+.example-steps .row{
+  display:flex; justify-content:space-between; align-items:center;
+  background: rgba(0,0,0,0.18);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .85rem 1.1rem;
+  font-size: .88rem;
+}
+.example-steps .row.result{
+  border-color: var(--line-strong);
+  background: rgba(201,164,90,0.08);
+}
+.example-steps .row .v{ font-family: var(--font-serif); font-weight:700; color: var(--cream); }
+.example-steps .row.result .v{ color: var(--gold-light); font-size: 1.05rem; }
+
+@media (max-width: 900px){
+  .numbers-grid{ grid-template-columns: 1fr; }
+  .example-box{ grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   7. MODELLE
+   ========================================================================== */
+.models{ padding: 6rem 0; background: var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.models-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  align-items:start;
+  margin-bottom: 3rem;
+}
+.model-card{
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem 2rem 2.4rem;
+  position:relative;
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+}
+.model-card:hover{ transform: translateY(-4px); }
+.model-card.featured{
+  background: linear-gradient(165deg, var(--surface-3), var(--surface-2));
+  border-color: var(--gold);
+  box-shadow: var(--shadow-2), 0 0 0 1px var(--gold-glow);
+  transform: scale(1.045);
+  z-index: 2;
+}
+.model-card.featured:hover{ transform: scale(1.045) translateY(-4px); }
+.model-badge{
+  position:absolute; top: -14px; left: 2rem;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold));
+  color: #201509;
+  font-size: .72rem; font-weight: 800; letter-spacing:.05em; text-transform:uppercase;
+  padding: .4rem .85rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 18px -6px rgba(0,0,0,.5);
+}
+.model-head{ margin-bottom: 1.4rem; }
+.model-head .tag{ font-size: .76rem; color: var(--cream-dimmer); text-transform:uppercase; letter-spacing:.08em; font-weight:700; }
+.model-head h3{ font-family: var(--font-serif); font-size: 1.55rem; margin: .3rem 0 .5rem; }
+.model-head .price{ font-family: var(--font-serif); font-size: 1.05rem; color: var(--gold-light); }
+.model-head .price small{ font-family: var(--font-sans); color: var(--cream-dimmer); font-size:.78rem; }
+.model-list{ margin: 1.4rem 0 1.8rem; display:flex; flex-direction:column; gap:.75rem; }
+.model-list li{ display:flex; gap:.6rem; font-size: .89rem; color: var(--cream-dim); align-items:flex-start; }
+.model-list .icon{ width:17px; height:17px; color: var(--gold); margin-top:2px; }
+.model-card .btn{ margin-top: .3rem; }
+
+.compare-wrap{ overflow-x:auto; border-radius: var(--radius-md); border: 1px solid var(--line); }
+table.compare{ width:100%; border-collapse: collapse; min-width: 720px; background: var(--surface); }
+table.compare th, table.compare td{ padding: 1rem 1.3rem; text-align:left; font-size: .88rem; border-bottom: 1px solid var(--line); }
+table.compare thead th{
+  font-family: var(--font-sans); font-size: .76rem; text-transform:uppercase; letter-spacing:.06em;
+  color: var(--cream-dimmer); background: var(--bg-alt-2);
+  border-bottom: 1px solid var(--line-strong);
+}
+table.compare tbody th{ color: var(--cream); font-weight:600; white-space:nowrap; }
+table.compare td{ color: var(--cream-dim); }
+table.compare tbody tr:last-child th, table.compare tbody tr:last-child td{ border-bottom:none; }
+table.compare td.highlight, table.compare th.highlight{ background: rgba(201,164,90,0.08); color: var(--gold-light); font-weight:700; }
+
+@media (max-width: 980px){
+  .models-grid{ grid-template-columns: 1fr; }
+  .model-card.featured{ transform:none; order:-1; }
+  .model-card.featured:hover{ transform: translateY(-4px); }
+}
+
+/* ==========================================================================
+   8. RECHNER
+   ========================================================================== */
+.calc{ padding: 6rem 0; }
+.calc-panel{
+  display:grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow:hidden;
+}
+.calc-inputs{ padding: 2.6rem; border-right: 1px solid var(--line); }
+.calc-inputs h3{ font-family: var(--font-sans); font-size: 1rem; margin-bottom: 1.8rem; color: var(--gold-light); }
+.slider-group{ margin-bottom: 1.9rem; }
+.slider-group:last-child{ margin-bottom:0; }
+.slider-label{ display:flex; justify-content:space-between; font-size:.9rem; margin-bottom:.7rem; }
+.slider-label span:last-child{ font-family: var(--font-serif); color: var(--gold-light); font-weight:700; }
+input[type="range"]{
+  -webkit-appearance:none; appearance:none;
+  width:100%; height: 6px; border-radius: 999px;
+  background: rgba(245,239,226,0.1);
+  outline:none;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width: 20px; height:20px; border-radius:50%;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 2px var(--gold);
+  cursor:pointer;
+}
+input[type="range"]::-moz-range-thumb{
+  width: 18px; height:18px; border-radius:50%;
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 2px var(--gold);
+  cursor:pointer;
+}
+.calc-context{
+  margin-top: 2.2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+  display:flex; flex-direction:column; gap:.55rem;
+}
+.calc-context .row{ display:flex; justify-content:space-between; font-size:.86rem; color: var(--cream-dim); }
+.calc-context .row strong{ color: var(--cream); }
+
+.calc-results{ padding: 2.6rem; display:flex; flex-direction:column; gap: 1.1rem; }
+.result-card{
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem 1.4rem;
+  display:flex; justify-content:space-between; align-items:center; gap: 1rem;
+  background: var(--surface-2);
+  transition: border-color .3s var(--ease);
+}
+.result-card.is-featured{ border-color: var(--gold); background: linear-gradient(155deg, var(--surface-3), var(--surface-2)); }
+.result-card .rc-label{ font-size: .78rem; text-transform:uppercase; letter-spacing:.06em; color: var(--cream-dimmer); font-weight:700; }
+.result-card .rc-name{ font-family: var(--font-serif); font-size: 1.05rem; color: var(--cream); margin-top:.15rem; }
+.result-card .rc-value{ text-align:right; }
+.result-card .rc-value .amount{ font-family: var(--font-serif); font-size: 1.55rem; color: var(--gold-light); display:block; }
+.result-card .rc-value .per{ font-size: .74rem; color: var(--cream-dimmer); }
+
+@media (max-width: 900px){
+  .calc-panel{ grid-template-columns: 1fr; }
+  .calc-inputs{ border-right:none; border-bottom: 1px solid var(--line); }
+}
+
+/* ==========================================================================
+   9. ABLAUF
+   ========================================================================== */
+.process{ padding: 6rem 0; background: var(--bg-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.process-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  position:relative;
+}
+.process-grid::before{
+  content:"";
+  position:absolute; top: 28px; left: 12.5%; right:12.5%; height:1px;
+  background: repeating-linear-gradient(90deg, var(--line-strong) 0 8px, transparent 8px 16px);
+}
+.step{ position:relative; }
+.step-num{
+  width: 56px; height:56px; border-radius:50%;
+  background: var(--surface-2);
+  border: 1.5px solid var(--gold);
+  color: var(--gold-light);
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom: 1.3rem;
+  position:relative; z-index:1;
+}
+.step-num .icon{ width:24px; height:24px; }
+.step h3{ font-family: var(--font-sans); font-size: 1rem; margin-bottom:.5rem; }
+.step p{ font-size: .89rem; margin:0; }
+
+@media (max-width: 900px){
+  .process-grid{ grid-template-columns: 1fr; gap: 2.2rem; }
+  .process-grid::before{ left: 27px; top:0; bottom:0; right:auto; width:1px; height:auto; background: repeating-linear-gradient(180deg, var(--line-strong) 0 8px, transparent 8px 16px); }
+  .step{ display:grid; grid-template-columns: 56px 1fr; gap: 1.2rem; align-items:start; }
+  .step-num{ margin-bottom:0; }
+}
+
+/* ==========================================================================
+   10. CTA / KONTAKT
+   ========================================================================== */
+.cta{ padding: 6.5rem 0; position:relative; overflow:clip; }
+.cta::before{
+  content:"";
+  position:absolute; left:50%; top:0; width:900px; height:900px; transform:translate(-50%,-55%);
+  background: radial-gradient(circle, var(--gold-glow), transparent 62%);
+  opacity:.3; filter: blur(10px); pointer-events:none;
+}
+.cta-head{ text-align:center; max-width: 640px; margin: 0 auto 3rem; }
+.cta-head h2{ font-size: clamp(1.8rem, 1.1rem + 2.6vw, 2.8rem); }
+.cta-actions{ display:flex; justify-content:center; gap: 1rem; flex-wrap:wrap; margin-top: 1.8rem; }
+
+.contact-panel{
+  max-width: 760px; margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 2.8rem;
+  box-shadow: var(--shadow-2);
+}
+.interest-group{ display:flex; flex-wrap:wrap; gap:.7rem; margin-bottom: 1.6rem; }
+.interest-group input{ position:absolute; opacity:0; pointer-events:none; }
+.interest-group label{
+  display:flex; align-items:center; gap:.5rem;
+  padding: .6rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  font-size: .84rem; font-weight:600; color: var(--cream-dim);
+  cursor:pointer;
+  transition: all .2s var(--ease);
+}
+.interest-group label .rec{
+  font-size:.66rem; text-transform:uppercase; letter-spacing:.04em;
+  background: var(--gold); color:#201509; padding:.1rem .4rem; border-radius:6px; font-weight:800;
+}
+.interest-group input:checked + label{
+  border-color: var(--gold); color: var(--cream); background: rgba(201,164,90,0.1);
+}
+.form-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin-bottom: 1.1rem; }
+.field{ display:flex; flex-direction:column; gap:.45rem; }
+.field.full{ grid-column: 1 / -1; }
+.field label{ font-size:.8rem; font-weight:600; color: var(--cream-dim); }
+.field input, .field textarea{
+  background: var(--bg-alt-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  padding: .8rem .95rem;
+  color: var(--cream);
+  font-family: inherit;
+  font-size: .92rem;
+  outline:none;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.field input:focus, .field textarea:focus{ border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+.field textarea{ resize: vertical; min-height: 90px; }
+.form-foot{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-top: 1.4rem; flex-wrap:wrap; }
+.form-note{ font-size:.78rem; color: var(--cream-dimmer); max-width: 32ch; }
+
+.success-panel{ display:none; text-align:center; padding: 2rem 1rem; }
+.success-panel.show{ display:block; }
+.success-panel .icon-lg{ width: 56px; height:56px; color: var(--success); margin: 0 auto 1.2rem; }
+.success-panel h3{ font-family: var(--font-serif); font-size:1.4rem; margin-bottom:.5rem; }
+.success-panel p{ max-width: 40ch; margin: 0 auto; }
+.contact-form.hide{ display:none; }
+
+@media (max-width: 640px){
+  .form-grid{ grid-template-columns: 1fr; }
+  .contact-panel{ padding: 1.8rem; }
+}
+
+/* ==========================================================================
+   11. FOOTER
+   ========================================================================== */
+.site-footer{ padding: 2.4rem 0; border-top: 1px solid var(--line); }
+.footer-inner{ display:flex; align-items:center; justify-content:space-between; gap: 1rem; flex-wrap:wrap; }
+.footer-brand{ display:flex; align-items:center; gap:.6rem; color: var(--cream-dimmer); font-size:.85rem; }
+.footer-brand svg{ width:22px; height:22px; }
+.footer-note{ font-size:.8rem; color: var(--cream-dimmer); }
+
+/* Utility */
+.hidden-sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SVG ICON SPRITE (nur einmal definiert, per <use> referenziert)
+     ============================================================ -->
+<svg class="hidden-sr" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2.2"/></symbol>
+    <symbol id="icon-payment" viewBox="0 0 24 24"><rect x="2" y="5" width="15" height="11" rx="2"/><line x1="2" y1="9.2" x2="17" y2="9.2"/><line x1="5" y1="13" x2="9" y2="13"/><circle cx="18.5" cy="16" r="4.2"/></symbol>
+    <symbol id="icon-ruler" viewBox="0 0 24 24"><rect x="3" y="9" width="18" height="6" rx="1.2"/><line x1="7" y1="9" x2="7" y2="12.2"/><line x1="11" y1="9" x2="11" y2="12.2"/><line x1="15" y1="9" x2="15" y2="12.2"/><line x1="19" y1="9" x2="19" y2="12.2"/></symbol>
+    <symbol id="icon-spray" viewBox="0 0 24 24"><path d="M12 3.2c2.4 3.2 5.5 7.6 5.5 10.6a5.5 5.5 0 1 1-11 0c0-3 3.1-7.4 5.5-10.6z"/></symbol>
+    <symbol id="icon-tank" viewBox="0 0 24 24"><rect x="7" y="4.5" width="10" height="16" rx="2"/><line x1="7" y1="11" x2="17" y2="11"/><rect x="9.5" y="2" width="5" height="2.5" rx="0.6"/></symbol>
+    <symbol id="icon-chart" viewBox="0 0 24 24"><path d="M4 20V4"/><path d="M4 20h16"/><rect x="7" y="12.5" width="3" height="6"/><rect x="12" y="8.5" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></symbol>
+    <symbol id="icon-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.2"/><circle cx="12" cy="6.4" r="2.6"/><circle cx="12" cy="17.6" r="2.6"/><circle cx="6.4" cy="12" r="2.6"/><circle cx="17.6" cy="12" r="2.6"/></symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24"><path d="M12 3.2 19.5 6.4v5.1c0 5-3.2 8.6-7.5 9.3-4.3-.7-7.5-4.3-7.5-9.3V6.4L12 3.2z"/><path d="M9 12l2.2 2.2L15.3 10"/></symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24"><path d="M12 21s7-7.4 7-12.2A7 7 0 1 0 5 8.8C5 13.6 12 21 12 21z"/><circle cx="12" cy="8.6" r="2.4"/></symbol>
+    <symbol id="icon-truck" viewBox="0 0 24 24"><rect x="2" y="7.5" width="12" height="9" rx="1.2"/><path d="M14 10.5h4l3.5 3.5v2.5H14z"/><circle cx="7.3" cy="18.5" r="1.7"/><circle cx="17.5" cy="18.5" r="1.7"/></symbol>
+    <symbol id="icon-wrench" viewBox="0 0 24 24"><path d="M20.5 5.5a4.6 4.6 0 0 1-6 5.9L7 19a2 2 0 0 1-2.8-2.8l7.6-7.5a4.6 4.6 0 0 1 5.9-6l-3.3 3.3 1.4 1.4 3.3-3.3z"/></symbol>
+    <symbol id="icon-payout" viewBox="0 0 24 24"><path d="M18 7.5a6.5 6.5 0 1 0 0 9"/><line x1="4.5" y1="10.5" x2="14" y2="10.5"/><line x1="4.5" y1="13.8" x2="12.6" y2="13.8"/></symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24"><path d="M4 12.5l5.2 5.2L20 6.5"/></symbol>
+    <symbol id="icon-arrow-right" viewBox="0 0 24 24"><line x1="4" y1="12" x2="20" y2="12"/><path d="M14 6l6 6-6 6"/></symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></symbol>
+    <symbol id="icon-quote" viewBox="0 0 24 24"><path d="M7 8c-2 1-3 3-3 5.5A3.5 3.5 0 0 0 7.5 17 3.5 3.5 0 0 0 11 13.5C11 11 9.2 9.3 7 8z"/><path d="M16 8c-2 1-3 3-3 5.5A3.5 3.5 0 0 0 16.5 17 3.5 3.5 0 0 0 20 13.5C20 11 18.2 9.3 16 8z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     NAVIGATION
+     ============================================================ -->
+<header class="nav" id="siteNav">
+  <div class="container nav-inner">
+    <a href="#top" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+        <defs>
+          <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#e7cd93"/>
+            <stop offset="1" stop-color="#93763c"/>
+          </linearGradient>
+        </defs>
+        <rect x="3" y="3" width="34" height="34" rx="9" fill="none" stroke="url(#brandGrad)" stroke-width="1.6"/>
+        <path d="M20 11c3.6 4.6 7.5 9.6 7.5 13.6a7.5 7.5 0 1 1-15 0c0-4 3.9-9 7.5-13.6z" fill="url(#brandGrad)"/>
+      </svg>
+      <span>DUFTWERK<small>Duft-Automaten für Gastronomie</small></span>
+    </a>
+
+    <nav class="nav-links" id="navLinks" aria-label="Hauptnavigation">
+      <a href="#produkt">Produkt</a>
+      <a href="#vorteile">Vorteile</a>
+      <a href="#zahlen">Zahlen &amp; Marge</a>
+      <a href="#modelle">Modelle</a>
+      <a href="#rechner">Rechner</a>
+      <a href="#ablauf">Ablauf</a>
+      <a href="#kontakt">Kontakt</a>
+    </nav>
+
+    <div class="nav-cta">
+      <a href="#modelle" class="btn btn-secondary">Modelle vergleichen</a>
+      <a href="#kontakt" class="btn btn-primary">Angebot anfordern</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="navLinks">
+        <svg class="icon icon-menu"><use href="#icon-menu"/></svg>
+        <svg class="icon icon-close"><use href="#icon-close"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero" id="produkt">
+  <div class="container hero-inner">
+    <div class="hero-copy" data-reveal>
+      <div class="eyebrow">Duft-Automaten für Restaurant, Bar &amp; Club</div>
+      <h1>Ein Automat, der Ihren Gästen ein Erlebnis schenkt — und Ihnen jeden Monat Umsatz.</h1>
+      <p class="lede">DUFTWERK bringt hochwertige Duft-Verkaufsautomaten direkt an Garderobe, Spiegel oder Waschraum Ihres Betriebs. Ihre Gäste zahlen pro Sprühstoß per Karte oder Bargeld — Sie verdienen mit, ganz ohne eigenen Aufwand.</p>
+
+      <div class="hero-actions">
+        <a href="#kontakt" class="btn btn-primary">
+          Jetzt Angebot anfordern
+          <svg class="icon"><use href="#icon-arrow-right"/></svg>
+        </a>
+        <a href="#modelle" class="btn btn-secondary" id="heroSecondaryCta">Vermietung ansehen</a>
+      </div>
+
+      <ul class="hero-trust">
+        <li><svg class="icon"><use href="#icon-check"/></svg>0&nbsp;€ Investition bei Vermietung</li>
+        <li><svg class="icon"><use href="#icon-check"/></svg>Sprühvorgang in ca. 2&nbsp;Sekunden</li>
+        <li><svg class="icon"><use href="#icon-check"/></svg>Karte &amp; Bargeld akzeptiert</li>
+      </ul>
+    </div>
+
+    <div class="hero-visual" data-reveal style="--d:120">
+      <div class="particles" aria-hidden="true">
+        <span class="particle" style="left:8%; top:14%; animation-duration:6.5s;"></span>
+        <span class="particle" style="left:82%; top:22%; animation-duration:8s; animation-delay:.6s;"></span>
+        <span class="particle" style="left:14%; top:70%; animation-duration:7.2s; animation-delay:1.1s;"></span>
+        <span class="particle" style="left:88%; top:64%; animation-duration:6.8s; animation-delay:.3s;"></span>
+        <span class="particle" style="left:50%; top:6%; animation-duration:9s; animation-delay:1.6s;"></span>
+      </div>
+
+      <div class="machine-wrap">
+        <div class="machine-badge" id="heroBadge">
+          <span class="dot"><svg class="icon"><use href="#icon-check"/></svg></span>
+          <span><strong>Empfohlen: Vermietung</strong><span>0&nbsp;€ Investitionsrisiko</span></span>
+        </div>
+
+        <svg viewBox="0 0 320 560" role="img" aria-label="Illustration eines DUFTWERK Duft-Verkaufsautomaten">
+          <defs>
+            <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#2b2116"/>
+              <stop offset="1" stop-color="#14100c"/>
+            </linearGradient>
+            <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#221a12"/>
+              <stop offset="1" stop-color="#0c0906"/>
+            </linearGradient>
+            <radialGradient id="shadowGrad" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#000" stop-opacity="0.55"/>
+              <stop offset="1" stop-color="#000" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <ellipse cx="160" cy="536" rx="118" ry="16" fill="url(#shadowGrad)"/>
+
+          <!-- Gehäuse -->
+          <rect x="58" y="34" width="204" height="470" rx="34" fill="url(#bodyGrad)" stroke="#c9a45a" stroke-width="2"/>
+          <rect x="58" y="34" width="204" height="470" rx="34" fill="none" stroke="#c9a45a" stroke-opacity="0.25" stroke-width="8"/>
+
+          <!-- Markenplakette -->
+          <rect x="98" y="58" width="124" height="30" rx="8" fill="#0d0a07" stroke="#93763c" stroke-width="1"/>
+          <text x="160" y="78" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="13" letter-spacing="2.5" fill="#e7cd93">DUFTWERK</text>
+
+          <!-- Display -->
+          <rect x="98" y="102" width="124" height="86" rx="10" fill="url(#screenGrad)" stroke="#c9a45a" stroke-width="1.4"/>
+          <circle class="pulse-dot" cx="207" cy="114" r="3.2" fill="#c9a45a"/>
+          <path d="M160 122c3.6 4.7 8 11 8 15.4a8 8 0 1 1-16 0c0-4.4 4.4-10.7 8-15.4z" fill="#e7cd93" fill-opacity="0.85"/>
+          <text x="160" y="166" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#cdc2a9" letter-spacing="0.5">Duft wählen</text>
+          <text x="160" y="180" text-anchor="middle" font-family="Playfair Display, Georgia, serif" font-size="12" fill="#e7cd93">ab 2,00&#8201;€</text>
+
+          <!-- Flakon-Vitrine -->
+          <rect x="98" y="200" width="124" height="148" rx="10" fill="#f5efe2" fill-opacity="0.035" stroke="#93763c" stroke-width="1"/>
+          <line x1="98" y1="330" x2="222" y2="330" stroke="#93763c" stroke-width="1" stroke-opacity="0.6"/>
+          <g>
+            <rect x="110" y="284" width="14" height="42" rx="3" fill="#c9a45a" fill-opacity="0.75"/>
+            <rect x="114" y="276" width="6" height="10" rx="1.5" fill="#c9a45a"/>
+            <rect x="132" y="266" width="16" height="60" rx="3" fill="#a94c5c" fill-opacity="0.7"/>
+            <rect x="136" y="257" width="8" height="11" rx="1.5" fill="#a94c5c"/>
+            <rect x="156" y="292" width="14" height="34" rx="3" fill="#f5efe2" fill-opacity="0.5"/>
+            <rect x="160" y="284" width="6" height="10" rx="1.5" fill="#f5efe2" fill-opacity="0.6"/>
+            <rect x="178" y="272" width="16" height="54" rx="3" fill="#e7cd93" fill-opacity="0.8"/>
+            <rect x="182" y="263" width="8" height="11" rx="1.5" fill="#e7cd93"/>
+            <rect x="200" y="288" width="13" height="38" rx="3" fill="#7c2c3a" fill-opacity="0.65"/>
+          </g>
+
+          <!-- Zahlungsmodul -->
+          <rect x="98" y="364" width="58" height="40" rx="7" fill="#0d0a07" stroke="#93763c" stroke-width="1"/>
+          <rect x="107" y="376" width="40" height="6" rx="1.5" fill="#c9a45a" fill-opacity="0.8"/>
+          <rect x="107" y="386" width="22" height="5" rx="1.5" fill="#cdc2a9" fill-opacity="0.6"/>
+
+          <rect x="164" y="364" width="58" height="40" rx="7" fill="#0d0a07" stroke="#93763c" stroke-width="1"/>
+          <circle cx="193" cy="384" r="12.5" fill="none" stroke="#c9a45a" stroke-width="1.4"/>
+          <line x1="186.5" y1="384" x2="199.5" y2="384" stroke="#c9a45a" stroke-width="1.4"/>
+
+          <!-- Sprühkopf & Mist -->
+          <rect x="144" y="422" width="32" height="16" rx="5" fill="#0d0a07" stroke="#c9a45a" stroke-width="1.2"/>
+          <ellipse class="mist-drop mist-1" cx="160" cy="414" rx="3.5" ry="2.2" fill="#e7cd93"/>
+          <ellipse class="mist-drop mist-2" cx="150" cy="410" rx="2.6" ry="1.7" fill="#e7cd93"/>
+          <ellipse class="mist-drop mist-3" cx="170" cy="410" rx="2.6" ry="1.7" fill="#e7cd93"/>
+
+          <!-- Standfüße -->
+          <rect x="88" y="486" width="22" height="10" rx="3" fill="#93763c"/>
+          <rect x="210" y="486" width="22" height="10" rx="3" fill="#93763c"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     STATS BAR
+     ============================================================ -->
+<section class="stats" data-reveal>
+  <div class="container stats-grid">
+    <div class="stat">
+      <span class="num">~2 Sek.</span>
+      <span class="lbl">pro Sprühvorgang</span>
+    </div>
+    <div class="stat">
+      <span class="num">2 Zahlwege</span>
+      <span class="lbl">Karte (kontaktlos) &amp; Bargeld</span>
+    </div>
+    <div class="stat">
+      <span class="num">15–25&nbsp;%</span>
+      <span class="lbl">garantierte Beteiligung bei Vermietung*</span>
+    </div>
+    <div class="stat">
+      <span class="num">0&nbsp;€</span>
+      <span class="lbl">Investition bei Vermietung</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURES
+     ============================================================ -->
+<section class="features">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <div class="eyebrow">Das Produkt</div>
+      <h2>Technik, die überzeugt — für Gäste und Betreiber gleichermaßen</h2>
+      <p>DUFTWERK-Automaten sind speziell für den Alltag in Gastronomie und Nightlife entwickelt: robust, hygienisch und auf maximale Verfügbarkeit an starken Abenden ausgelegt.</p>
+    </div>
+
+    <div class="features-grid">
+      <article class="feature-card" data-reveal style="--d:0">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-clock"/></svg></div>
+        <h3>Sprühvorgang in ca. 2 Sekunden</h3>
+        <p>Ihre Gäste erhalten ihren Wunschduft praktisch ohne Wartezeit — ideal auch bei hohem Andrang an der Garderobe oder vor dem Ausgang.</p>
+      </article>
+      <article class="feature-card" data-reveal style="--d:60">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-payment"/></svg></div>
+        <h3>Karte &amp; Bargeld</h3>
+        <p>Kontaktlose Kartenzahlung und klassischer Bargeldeinwurf sind serienmäßig integriert — jeder Gast zahlt so, wie er möchte.</p>
+      </article>
+      <article class="feature-card" data-reveal style="--d:120">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-ruler"/></svg></div>
+        <h3>Kompakte Standmaße</h3>
+        <p>Mit einer Stellfläche von rund 35 × 35&nbsp;cm passt der Automat neben Garderobe, Spiegel oder auf dem Weg zur Toilette — ohne wertvollen Gastraum zu beanspruchen.</p>
+      </article>
+      <article class="feature-card" data-reveal style="--d:180">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-spray"/></svg></div>
+        <h3>Hygienischer, wartungsarmer Sprühkopf</h3>
+        <p>Der verschleißarme Sprühkopf ist auf Dauerbetrieb ausgelegt, leicht zu reinigen und minimiert Tropfbildung und Verunreinigung.</p>
+      </article>
+      <article class="feature-card" data-reveal style="--d:0">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-tank"/></svg></div>
+        <h3>Großes Tankvolumen</h3>
+        <p>Ein Tank reicht für mehrere Tausend Sprühvorgänge — selbst an umsatzstarken Wochenenden ist ein Nachfüllen zwischen den Terminen selten nötig.</p>
+      </article>
+      <article class="feature-card" data-reveal style="--d:60">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-chart"/></svg></div>
+        <h3>Digitale Umsatzerfassung in Echtzeit</h3>
+        <p>Jeder Sprühvorgang wird digital erfasst. Umsätze und Beteiligungen sind jederzeit transparent nachvollziehbar — ganz ohne manuelles Kassenzählen.</p>
+      </article>
+      <article class="feature-card" data-reveal style="--d:120">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-flower"/></svg></div>
+        <h3>Mehrere Duftrichtungen wählbar</h3>
+        <p>Ihre Gäste wählen direkt am Gerät zwischen mehreren kuratierten Düften — von frisch-citrisch bis warm-orientalisch.</p>
+      </article>
+      <article class="feature-card" data-reveal style="--d:180">
+        <div class="feature-icon"><svg class="icon"><use href="#icon-shield"/></svg></div>
+        <h3>Robust &amp; diebstahlsicher</h3>
+        <p>Verstärktes Metallgehäuse mit abschließbarem Kassen- und Tankfach schützt Einnahmen und Technik zuverlässig vor Manipulation.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     VORTEILE
+     ============================================================ -->
+<section class="benefits" id="vorteile">
+  <div class="container benefits-inner">
+    <div>
+      <div class="eyebrow" data-reveal>Ihr Vorteil</div>
+      <h2 data-reveal style="--d:40">Warum Betreiber auf DUFTWERK setzen</h2>
+      <div class="benefits-grid" style="margin-top:2rem;">
+        <div class="benefit" data-reveal style="--d:0">
+          <span class="num">01</span>
+          <div>
+            <h3>Zusätzliche Einnahmequelle ohne Personalaufwand</h3>
+            <p>Der Automat verkauft rund um die Uhr, ohne dass Ihr Team sich kümmern muss — für Sie entsteht Umsatz einfach nebenbei.</p>
+          </div>
+        </div>
+        <div class="benefit" data-reveal style="--d:80">
+          <span class="num">02</span>
+          <div>
+            <h3>Kein Investitionsrisiko bei Vermietung</h3>
+            <p>Sie zahlen nichts für Anschaffung, Wartung oder Befüllung. Läuft es nicht wie gewünscht, kündigen Sie einfach — ohne Verlust.</p>
+          </div>
+        </div>
+        <div class="benefit" data-reveal style="--d:160">
+          <span class="num">03</span>
+          <div>
+            <h3>Mehr Erlebnis für Ihre Gäste</h3>
+            <p>Ein hochwertiger Duft an Garderobe oder Waschraum ist ein kleines Extra, das im Gedächtnis bleibt — und zum Markenerlebnis Ihres Betriebs passt.</p>
+          </div>
+        </div>
+        <div class="benefit" data-reveal style="--d:240">
+          <span class="num">04</span>
+          <div>
+            <h3>Kein Bargeld-Handling nötig</h3>
+            <p>Dank digitaler Abrechnung müssen Sie sich um keine Münzen oder Scheine kümmern — Ihre Beteiligung wird transparent erfasst und ausgezahlt.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="benefits-side" data-reveal style="--d:120">
+      <div class="quote-card">
+        <svg class="icon-lg"><use href="#icon-quote"/></svg>
+        <p>„Ein Duft-Automat kostet uns nichts, bringt aber jeden Monat verlässlich etwas — und die Gäste an der Garderobe finden ihn einfach gut.“</p>
+        <div class="who">Typische Rückmeldung von Betreibern nach der Testphase</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ZAHLEN & MARGE
+     ============================================================ -->
+<section class="numbers" id="zahlen">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <div class="eyebrow">Zahlen &amp; Marge</div>
+      <h2>Realistische Kalkulation — transparent von Anfang an</h2>
+      <p>Die folgenden Werte sind Richtwerte aus dem laufenden Betrieb vergleichbarer Standorte und dienen zur Orientierung. Ihre tatsächlichen Zahlen hängen von Gästefrequenz, Betriebsart und Standort ab.</p>
+    </div>
+
+    <div class="numbers-grid">
+      <div class="price-card" data-reveal>
+        <h3>Preis pro Sprühvorgang</h3>
+        <div class="price-row">
+          <span class="lbl">Verkaufspreis für den Gast</span>
+          <span class="val">1,50&nbsp;€ – 2,50&nbsp;€</span>
+        </div>
+        <div class="price-row">
+          <span class="lbl">Materialkosten (Duft, Verschleiß)</span>
+          <span class="val">0,20&nbsp;€ – 0,80&nbsp;€</span>
+        </div>
+        <div class="price-row total">
+          <span class="lbl">Bruttomarge pro Sprühvorgang</span>
+          <span class="val">ca. 1,00&nbsp;€ – 2,00&nbsp;€</span>
+        </div>
+        <p class="note" style="margin-top:1rem;">Richtwerte, abhängig von gewähltem Duftsortiment und Preisstellung am Gerät.</p>
+      </div>
+
+      <div class="share-card" data-reveal style="--d:100">
+        <h3>Umsatzbeteiligung des Betreibers je Modell</h3>
+        <div class="share-item is-highlight">
+          <div class="top"><strong>Vermietung / Fernmiete</strong><span>15–25&nbsp;%</span></div>
+          <div class="share-bar"><i data-share="22"></i></div>
+        </div>
+        <div class="share-item">
+          <div class="top"><strong>Finanzierung</strong><span>50–60&nbsp;%</span></div>
+          <div class="share-bar"><i data-share="55"></i></div>
+        </div>
+        <div class="share-item">
+          <div class="top"><strong>Kauf</strong><span>80–90&nbsp;%</span></div>
+          <div class="share-bar"><i data-share="85"></i></div>
+        </div>
+        <p class="note" style="margin-top:1.2rem;">Bei Kauf zzgl. eigener Nachfüllkosten, da Sie die Duftversorgung dann selbst organisieren.</p>
+      </div>
+    </div>
+
+    <div class="example-box" data-reveal>
+      <div>
+        <h3>Rechenbeispiel: Vermietung an einem typischen Standort</h3>
+        <p>Bei durchschnittlicher Frequenz von 30–60 Sprühvorgängen pro geöffnetem Abend ergibt sich bei der Vermietung ein verlässlicher monatlicher Nebenerlös — ganz ohne eigene Investition, Wartung oder Bargeld-Handling.</p>
+      </div>
+      <div class="example-steps">
+        <div class="row"><span>45 Sprühvorgänge / Abend × 24 Öffnungstage</span><span class="v">1.080 / Monat</span></div>
+        <div class="row"><span>bei 2,00&nbsp;€ Verkaufspreis</span><span class="v">2.160&nbsp;€ Umsatz</span></div>
+        <div class="row result"><span>Ihre Beteiligung (20&nbsp;%, Vermietung)</span><span class="v">≈ 432&nbsp;€ / Monat</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MODELLE
+     ============================================================ -->
+<section class="models" id="modelle">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <div class="eyebrow">Ihr Modell</div>
+      <h2>Drei Wege, DUFTWERK in Ihrem Betrieb zu nutzen</h2>
+      <p>Ob ganz ohne Risiko zum Testen oder als langfristige Kapitalanlage — wählen Sie das Modell, das zu Ihrem Betrieb passt. Die meisten Betreiber starten mit der Vermietung.</p>
+    </div>
+
+    <div class="models-grid">
+      <article class="model-card featured" data-reveal id="modelVermietung">
+        <span class="model-badge">Empfohlen · meistgewählt</span>
+        <div class="model-head">
+          <span class="tag">Vermietung / Fernmiete</span>
+          <h3>Ohne Risiko starten</h3>
+          <div class="price">0&nbsp;€ <small>Investition</small></div>
+        </div>
+        <ul class="model-list">
+          <li><svg class="icon"><use href="#icon-check"/></svg>Wir liefern, installieren, warten &amp; befüllen den Automaten für Sie</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>15–25&nbsp;% garantierte Umsatzbeteiligung</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>Kurze Laufzeit, monatlich kündbar</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>Kein Risiko — ideal zum unverbindlichen Testen</li>
+        </ul>
+        <a href="#kontakt" class="btn btn-primary btn-block js-interest" data-interest="vermietung">Vermietung anfragen</a>
+      </article>
+
+      <article class="model-card" data-reveal style="--d:80">
+        <div class="model-head">
+          <span class="tag">Finanzierung</span>
+          <h3>Schrittweise ins Eigentum</h3>
+          <div class="price">Rate <small>monatlich</small></div>
+        </div>
+        <ul class="model-list">
+          <li><svg class="icon"><use href="#icon-check"/></svg>Planbarer Ratenkauf über die vereinbarte Laufzeit</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>Automat geht nach Laufzeitende in Ihr Eigentum über</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>50–60&nbsp;% Umsatzbeteiligung während der Laufzeit</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>Mittlere Kapitalbindung, planbare Kosten</li>
+        </ul>
+        <a href="#kontakt" class="btn btn-secondary btn-block js-interest" data-interest="finanzierung">Finanzierung anfragen</a>
+      </article>
+
+      <article class="model-card" data-reveal style="--d:160">
+        <div class="model-head">
+          <span class="tag">Kauf</span>
+          <h3>Volles Eigentum ab Tag 1</h3>
+          <div class="price">Einmalig <small>Investition</small></div>
+        </div>
+        <ul class="model-list">
+          <li><svg class="icon"><use href="#icon-check"/></svg>Sofortiges, volles Eigentum am Gerät</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>80–90&nbsp;% Umsatzbeteiligung, abzüglich eigener Nachfüllkosten</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>Höchste Marge auf lange Sicht</li>
+          <li><svg class="icon"><use href="#icon-check"/></svg>Volle Freiheit bei Duftauswahl &amp; Branding</li>
+        </ul>
+        <a href="#kontakt" class="btn btn-secondary btn-block js-interest" data-interest="kauf">Kauf anfragen</a>
+      </article>
+    </div>
+
+    <div class="compare-wrap" data-reveal>
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Merkmal</th>
+            <th class="highlight">Vermietung</th>
+            <th>Finanzierung</th>
+            <th>Kauf</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Investition</th><td class="highlight">0&nbsp;€</td><td>monatliche Rate</td><td>einmalig</td></tr>
+          <tr><th scope="row">Eigentum</th><td class="highlight">optional nach Laufzeit</td><td>nach Laufzeitende</td><td>sofort</td></tr>
+          <tr><th scope="row">Wartung &amp; Befüllung</th><td class="highlight">inklusive durch uns</td><td>inklusive während Laufzeit</td><td>in Eigenregie</td></tr>
+          <tr><th scope="row">Umsatzbeteiligung Betreiber</th><td class="highlight">15–25&nbsp;%</td><td>50–60&nbsp;%</td><td>80–90&nbsp;%*</td></tr>
+          <tr><th scope="row">Laufzeit</th><td class="highlight">kurz, monatlich kündbar</td><td>mittel (z.&nbsp;B. 24–36 Monate)</td><td>keine Bindung</td></tr>
+          <tr><th scope="row">Risiko</th><td class="highlight">keins</td><td>gering</td><td>unternehmerisch</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note center" style="margin-top:1rem;">*abzüglich der von Ihnen selbst zu tragenden Nachfüllkosten. Alle Angaben sind Richtwerte.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     RECHNER
+     ============================================================ -->
+<section class="calc" id="rechner">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <div class="eyebrow">Ihr Rechner</div>
+      <h2>Was DUFTWERK für Ihren Betrieb bedeuten kann</h2>
+      <p>Passen Sie die Regler an Ihre Gästefrequenz an und sehen Sie die geschätzte monatliche Beteiligung je Modell — auf Basis der oben genannten Richtwerte.</p>
+    </div>
+
+    <div class="calc-panel" data-reveal>
+      <div class="calc-inputs">
+        <h3>Ihre Angaben</h3>
+
+        <div class="slider-group">
+          <div class="slider-label"><span>Sprühvorgänge pro Abend</span><span id="valSprays">40</span></div>
+          <input type="range" id="sliderSprays" min="10" max="100" step="5" value="40" aria-label="Sprühvorgänge pro Abend">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label"><span>Öffnungstage pro Monat</span><span id="valDays">22</span></div>
+          <input type="range" id="sliderDays" min="10" max="31" step="1" value="22" aria-label="Öffnungstage pro Monat">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-label"><span>Verkaufspreis pro Sprühvorgang</span><span id="valPrice">2,00 €</span></div>
+          <input type="range" id="sliderPrice" min="1.5" max="2.5" step="0.1" value="2.0" aria-label="Verkaufspreis pro Sprühvorgang">
+        </div>
+
+        <div class="calc-context">
+          <div class="row"><span>Sprühvorgänge / Monat</span><strong id="ctxSprays">880</strong></div>
+          <div class="row"><span>Geschätzter Monatsumsatz</span><strong id="ctxRevenue">1.760,00&nbsp;€</strong></div>
+        </div>
+      </div>
+
+      <div class="calc-results">
+        <div class="result-card is-featured">
+          <div>
+            <div class="rc-label">Empfohlen</div>
+            <div class="rc-name">Vermietung (≈20&nbsp;%)</div>
+          </div>
+          <div class="rc-value">
+            <span class="amount" id="resVermietung">352,00&nbsp;€</span>
+            <span class="per">pro Monat · 0&nbsp;€ Investition</span>
+          </div>
+        </div>
+        <div class="result-card">
+          <div>
+            <div class="rc-label">Modell</div>
+            <div class="rc-name">Finanzierung (≈55&nbsp;%)</div>
+          </div>
+          <div class="rc-value">
+            <span class="amount" id="resFinanzierung">968,00&nbsp;€</span>
+            <span class="per">pro Monat · abzgl. Rate</span>
+          </div>
+        </div>
+        <div class="result-card">
+          <div>
+            <div class="rc-label">Modell</div>
+            <div class="rc-name">Kauf (≈85&nbsp;%)</div>
+          </div>
+          <div class="rc-value">
+            <span class="amount" id="resKauf">1.056,00&nbsp;€</span>
+            <span class="per">pro Monat · abzgl. Nachfüllkosten</span>
+          </div>
+        </div>
+        <p class="note" style="margin-top:.4rem;">Alle Ergebnisse sind unverbindliche Richtwerte auf Basis der Kalkulationsspannen aus Abschnitt „Zahlen &amp; Marge“.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ABLAUF
+     ============================================================ -->
+<section class="process" id="ablauf">
+  <div class="container">
+    <div class="section-head center" data-reveal>
+      <div class="eyebrow">So einfach geht's</div>
+      <h2>Von der Anfrage bis zur ersten Auszahlung</h2>
+    </div>
+
+    <div class="process-grid">
+      <div class="step" data-reveal style="--d:0">
+        <div class="step-num"><svg class="icon"><use href="#icon-pin"/></svg></div>
+        <h3>1. Kennenlernen &amp; Standortcheck</h3>
+        <p>Wir besprechen Ihren Betrieb und prüfen den optimalen Standort — z.&nbsp;B. an Garderobe, Spiegel oder auf dem Weg zur Toilette.</p>
+      </div>
+      <div class="step" data-reveal style="--d:80">
+        <div class="step-num"><svg class="icon"><use href="#icon-truck"/></svg></div>
+        <h3>2. Lieferung &amp; Installation</h3>
+        <p>Unser Team liefert den betriebsbereiten Automaten und installiert ihn fachgerecht — meist innerhalb weniger Tage nach Vertragsabschluss.</p>
+      </div>
+      <div class="step" data-reveal style="--d:160">
+        <div class="step-num"><svg class="icon"><use href="#icon-wrench"/></svg></div>
+        <h3>3. Befüllung &amp; Wartung</h3>
+        <p>Bei Vermietung und Finanzierung übernehmen wir Befüllung, Reinigung und technische Wartung — Sie müssen sich um nichts kümmern.</p>
+      </div>
+      <div class="step" data-reveal style="--d:240">
+        <div class="step-num"><svg class="icon"><use href="#icon-payout"/></svg></div>
+        <h3>4. Abrechnung &amp; Auszahlung</h3>
+        <p>Jeder Sprühvorgang wird digital erfasst. Ihre Umsatzbeteiligung wird transparent ausgewiesen und regelmäßig ausgezahlt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CTA / KONTAKT
+     ============================================================ -->
+<section class="cta" id="kontakt">
+  <div class="container">
+    <div class="cta-head" data-reveal>
+      <div class="eyebrow" style="justify-content:center;">Nächster Schritt</div>
+      <h2>Bereit für eine Einnahmequelle, die einfach läuft?</h2>
+      <p>Vereinbaren Sie ein unverbindliches Gespräch oder starten Sie direkt mit einer risikofreien Testphase zur Vermietung.</p>
+    </div>
+
+    <div class="contact-panel" data-reveal>
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="interest-group" role="radiogroup" aria-label="Ihr Interesse">
+          <input type="radio" name="interesse" id="int-vermietung" value="Vermietung" checked>
+          <label for="int-vermietung">Vermietung <span class="rec">Empfohlen</span></label>
+
+          <input type="radio" name="interesse" id="int-finanzierung" value="Finanzierung">
+          <label for="int-finanzierung">Finanzierung</label>
+
+          <input type="radio" name="interesse" id="int-kauf" value="Kauf">
+          <label for="int-kauf">Kauf</label>
+
+          <input type="radio" name="interesse" id="int-gespraech" value="Unverbindliches Gespräch">
+          <label for="int-gespraech">Unverbindliches Gespräch</label>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="fName">Name</label>
+            <input type="text" id="fName" name="name" placeholder="Ihr Name" required>
+          </div>
+          <div class="field">
+            <label for="fBetrieb">Betrieb</label>
+            <input type="text" id="fBetrieb" name="betrieb" placeholder="Name von Restaurant, Bar oder Club" required>
+          </div>
+          <div class="field full">
+            <label for="fKontakt">Telefon oder E-Mail</label>
+            <input type="text" id="fKontakt" name="kontakt" placeholder="Wie erreichen wir Sie am besten?" required>
+          </div>
+          <div class="field full">
+            <label for="fNachricht">Nachricht (optional)</label>
+            <textarea id="fNachricht" name="nachricht" placeholder="Zahl der Standorte, gewünschter Zeitraum, Fragen …"></textarea>
+          </div>
+        </div>
+
+        <div class="form-foot">
+          <p class="form-note">Unverbindlich &amp; kostenlos. Wir melden uns in der Regel innerhalb von 1–2 Werktagen.</p>
+          <button type="submit" class="btn btn-primary">
+            Anfrage senden
+            <svg class="icon"><use href="#icon-arrow-right"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <div class="success-panel" id="successPanel">
+        <svg class="icon-lg"><use href="#icon-check"/></svg>
+        <h3>Vielen Dank für Ihr Interesse!</h3>
+        <p>Wir haben Ihre Angaben notiert und besprechen die Details gerne direkt mit Ihnen im Gespräch.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <rect x="3" y="3" width="34" height="34" rx="9" fill="none" stroke="#93763c" stroke-width="1.6"/>
+        <path d="M20 11c3.6 4.6 7.5 9.6 7.5 13.6a7.5 7.5 0 1 1-15 0c0-4 3.9-9 7.5-13.6z" fill="#93763c"/>
+      </svg>
+      <span>DUFTWERK — Duft-Automaten für Gastronomie &amp; Nightlife</span>
+    </div>
+    <span class="footer-note">Vermietung · Finanzierung · Kauf</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Sticky Nav ---------- */
+  var nav = document.getElementById('siteNav');
+  var onScroll = function(){
+    if(window.scrollY > 12){ nav.classList.add('scrolled'); }
+    else{ nav.classList.remove('scrolled'); }
+  };
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ---------- Mobile Nav Toggle ---------- */
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', function(){
+    var isOpen = document.body.classList.toggle('nav-open');
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
+  });
+  navLinks.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      document.body.classList.remove('nav-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ---------- Active Nav Link on Scroll ---------- */
+  var sections = ['produkt','vorteile','zahlen','modelle','rechner','ablauf','kontakt']
+    .map(function(id){ return document.getElementById(id); })
+    .filter(Boolean);
+  var navAnchors = Array.prototype.slice.call(navLinks.querySelectorAll('a'));
+  if('IntersectionObserver' in window && sections.length){
+    var navObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var id = entry.target.getAttribute('id');
+          navAnchors.forEach(function(a){
+            a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+          });
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    sections.forEach(function(s){ navObserver.observe(s); });
+  }
+
+  /* ---------- Scroll Reveal ---------- */
+  var revealEls = document.querySelectorAll('[data-reveal]');
+  if('IntersectionObserver' in window){
+    var revealObserver = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach(function(el){ revealObserver.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* ---------- Share Bars Animation (Zahlen & Marge) ---------- */
+  var shareBars = document.querySelectorAll('.share-bar i');
+  if('IntersectionObserver' in window && shareBars.length){
+    var shareObserver = new IntersectionObserver(function(entries, obs){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var bar = entry.target;
+          bar.style.width = bar.getAttribute('data-share') + '%';
+          obs.unobserve(bar);
+        }
+      });
+    }, { threshold: 0.4 });
+    shareBars.forEach(function(bar){ shareObserver.observe(bar); });
+  } else {
+    shareBars.forEach(function(bar){ bar.style.width = bar.getAttribute('data-share') + '%'; });
+  }
+
+  /* ---------- Hero: "Vermietung ansehen" -> Karte kurz hervorheben ---------- */
+  var heroSecondary = document.getElementById('heroSecondaryCta');
+  var vermietungCard = document.getElementById('modelVermietung');
+  if(heroSecondary && vermietungCard){
+    heroSecondary.addEventListener('click', function(){
+      window.setTimeout(function(){
+        vermietungCard.style.boxShadow = '0 0 0 3px var(--gold-glow), var(--shadow-2)';
+        window.setTimeout(function(){
+          vermietungCard.style.boxShadow = '';
+        }, 1400);
+      }, 500);
+    });
+  }
+
+  /* ---------- Rechner ---------- */
+  var sliderSprays = document.getElementById('sliderSprays');
+  var sliderDays = document.getElementById('sliderDays');
+  var sliderPrice = document.getElementById('sliderPrice');
+
+  var valSprays = document.getElementById('valSprays');
+  var valDays = document.getElementById('valDays');
+  var valPrice = document.getElementById('valPrice');
+
+  var ctxSprays = document.getElementById('ctxSprays');
+  var ctxRevenue = document.getElementById('ctxRevenue');
+
+  var resVermietung = document.getElementById('resVermietung');
+  var resFinanzierung = document.getElementById('resFinanzierung');
+  var resKauf = document.getElementById('resKauf');
+
+  var MATERIAL_COST = 0.5; // Mittelwert der Spanne 0,20–0,80 €
+  var SHARE_VERMIETUNG = 0.20; // Mittelwert 15–25 %
+  var SHARE_FINANZIERUNG = 0.55; // Mittelwert 50–60 %
+  var SHARE_KAUF = 0.85; // Mittelwert 80–90 %
+
+  function euro(n){
+    return n.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  }
+  function num(n){
+    return n.toLocaleString('de-DE');
+  }
+
+  function updateCalc(){
+    var sprays = parseFloat(sliderSprays.value);
+    var days = parseFloat(sliderDays.value);
+    var price = parseFloat(sliderPrice.value);
+
+    valSprays.textContent = sprays;
+    valDays.textContent = days;
+    valPrice.textContent = price.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+
+    var monthlySprays = sprays * days;
+    var grossRevenue = monthlySprays * price;
+    var materialTotal = monthlySprays * MATERIAL_COST;
+
+    var vermietung = grossRevenue * SHARE_VERMIETUNG;
+    var finanzierung = grossRevenue * SHARE_FINANZIERUNG;
+    var kauf = Math.max(0, grossRevenue * SHARE_KAUF - materialTotal);
+
+    ctxSprays.textContent = num(Math.round(monthlySprays));
+    ctxRevenue.textContent = euro(grossRevenue);
+
+    resVermietung.textContent = euro(vermietung);
+    resFinanzierung.textContent = euro(finanzierung);
+    resKauf.textContent = euro(kauf);
+  }
+
+  [sliderSprays, sliderDays, sliderPrice].forEach(function(el){
+    el.addEventListener('input', updateCalc);
+  });
+  updateCalc();
+
+  /* ---------- Interesse-Buttons in Modell-Karten -> Formular vorbelegen ---------- */
+  document.querySelectorAll('.js-interest').forEach(function(link){
+    link.addEventListener('click', function(){
+      var interest = link.getAttribute('data-interest');
+      var radio = document.getElementById('int-' + interest);
+      if(radio){ radio.checked = true; }
+    });
+  });
+
+  /* ---------- Kontaktformular (rein clientseitige Demo, kein Versand) ---------- */
+  var form = document.getElementById('contactForm');
+  var successPanel = document.getElementById('successPanel');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('fName').value.trim();
+    var betrieb = document.getElementById('fBetrieb').value.trim();
+    var kontakt = document.getElementById('fKontakt').value.trim();
+    if(!name || !betrieb || !kontakt){
+      [['fName', name], ['fBetrieb', betrieb], ['fKontakt', kontakt]].forEach(function(pair){
+        var input = document.getElementById(pair[0]);
+        input.style.borderColor = pair[1] ? '' : 'var(--wine-light)';
+      });
+      return;
+    }
+    form.classList.add('hide');
+    successPanel.classList.add('show');
+  });
+
+})();
+</script>
+
+</body>
+</html>
