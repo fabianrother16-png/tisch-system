@@ -209,7 +209,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
   background: radial-gradient(circle, var(--copper-glow), transparent 65%);
   opacity: .3; filter: blur(24px); pointer-events:none;
 }
-.hero-inner{ display:grid; grid-template-columns: 1.05fr 0.95fr; gap: 3rem; align-items:center; }
+.hero-inner{ display:grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; align-items:center; }
 .hero-copy h1{ font-size: clamp(2rem, 1.1rem + 3.4vw, 3.2rem); margin-bottom: 0.55em; }
 .hero-copy .lede{ font-size: 1.08rem; max-width: 44ch; color: var(--ink-dim); }
 .hero-actions{ display:flex; flex-wrap:wrap; gap: 1rem; margin: 1.8rem 0 2rem; }
@@ -224,16 +224,16 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
 .particle{ position:absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--copper-light); opacity: .5; animation: floaty 7s ease-in-out infinite; }
 @keyframes floaty{ 0%,100%{ transform: translateY(0) translateX(0); opacity:.3; } 50%{ transform: translateY(-20px) translateX(7px); opacity:.7; } }
 
-.machine-wrap{ position: relative; width: min(300px, 76vw); perspective: 1400px; }
+.machine-wrap{ position: relative; width: min(460px, 92vw); perspective: 1600px; }
 /* Der Automat steht bewusst leicht schräg im Raum statt frontal wie ein Icon —
    näher an einem echten Produktfoto als an einer flachen Illustration. */
 .machine-tilt{
-  transform: rotateY(-11deg) rotateX(4deg) rotateZ(-2deg);
+  transform: rotateY(-16deg) rotateX(6deg) rotateZ(-1deg);
   transform-style: preserve-3d;
   transition: transform .5s var(--ease);
-  filter: drop-shadow(18px 22px 26px rgba(0,0,0,0.45));
+  filter: drop-shadow(14px 20px 28px rgba(0,0,0,0.5));
 }
-.hero-visual:hover .machine-tilt{ transform: rotateY(-8deg) rotateX(3deg) rotateZ(-1.5deg); }
+.hero-visual:hover .machine-tilt{ transform: rotateY(-12deg) rotateX(4.5deg) rotateZ(-0.5deg); }
 @media (prefers-reduced-motion: reduce){ .machine-tilt{ transition: none; } }
 .machine-badge{
   position:absolute; z-index: 2; top: 0%; left: -14%;
@@ -258,7 +258,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
 @media (max-width: 980px){
   .hero-inner{ grid-template-columns: 1fr; }
   .hero-visual{ order:-1; margin-bottom: .5rem; }
-  .machine-wrap{ width: min(240px, 60vw); }
+  .machine-wrap{ width: min(360px, 84vw); }
   .hero-stats{ grid-template-columns: repeat(2,auto); }
 }
 
@@ -512,7 +512,7 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
         </div>
 
         <div class="machine-tilt">
-        <svg viewBox="0 0 320 520" role="img" aria-label="Illustration eines DUFTWERK Duft-Automaten mit vier Sprühdüsen, Bedienbildschirm und Zahlungsmodul">
+        <svg viewBox="0 0 540 360" role="img" aria-label="Illustration eines DUFTWERK Wand-/Tischgeräts mit fünf Sprühdüsen, Auswahl-Display und Zahlungsmodul">
           <defs>
             <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stop-color="#1c372f"/><stop offset="1" stop-color="#0c1a16"/>
@@ -523,80 +523,100 @@ body.nav-open .nav-toggle .icon-close{ display:block; }
             <radialGradient id="shadowGrad" cx="0.5" cy="0.5" r="0.5">
               <stop offset="0" stop-color="#000" stop-opacity="0.5"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
             </radialGradient>
+            <radialGradient id="glowGrad" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#e0a06e" stop-opacity="0.65"/><stop offset="1" stop-color="#e0a06e" stop-opacity="0"/>
+            </radialGradient>
           </defs>
 
-          <ellipse cx="160" cy="497" rx="112" ry="15" fill="url(#shadowGrad)"/>
+          <ellipse cx="270" cy="338" rx="205" ry="16" fill="url(#shadowGrad)"/>
 
           <!-- Gehäusetiefe: Deckel- und Seitenfläche, damit der Korpus auch ohne
                CSS-Rotation schon als Körper statt als flache Karte liest -->
-          <polygon points="66,28 254,28 270,14 82,14" fill="#213f36" stroke="#c17c4e" stroke-width="1" stroke-opacity="0.5"/>
-          <polygon points="254,28 270,14 270,450 254,464" fill="#081310" stroke="#8a5936" stroke-width="1" stroke-opacity="0.5"/>
+          <polygon points="50,70 490,70 506,56 66,56" fill="#213f36" stroke="#c17c4e" stroke-width="1" stroke-opacity="0.5"/>
+          <polygon points="490,70 506,56 506,306 490,320" fill="#081310" stroke="#8a5936" stroke-width="1" stroke-opacity="0.5"/>
 
-          <!-- Gehäuse -->
-          <rect x="66" y="28" width="188" height="436" rx="24" fill="url(#bodyGrad)" stroke="#c17c4e" stroke-width="1.8"/>
+          <!-- Gehäuse: flaches Wand-/Tischpanel -->
+          <rect x="50" y="70" width="440" height="250" rx="16" fill="url(#bodyGrad)" stroke="#c17c4e" stroke-width="1.8"/>
 
-          <!-- Markenplakette -->
-          <text x="160" y="56" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="13" letter-spacing="2" fill="#e0a06e">DUFTWERK</text>
+          <!-- Antenne -->
+          <line x1="90" y1="58" x2="90" y2="28" stroke="#c17c4e" stroke-width="1.6"/>
+          <circle class="pulse-dot" cx="90" cy="23" r="4" fill="#e0a06e"/>
 
-          <!-- Düsenpanel: 4 Sprühdüsen zur Duftwahl -->
-          <rect x="92" y="76" width="136" height="96" rx="12" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1"/>
+          <!-- Trennlinie zwischen Düsenmodul und Display/Zahlung -->
+          <line x1="330" y1="88" x2="330" y2="302" stroke="#c17c4e" stroke-opacity="0.35" stroke-width="1"/>
+
+          <!-- Düsenmodul: 5 Sprühdüsen -->
+          <text x="204" y="100" text-anchor="middle" font-family="Manrope, sans-serif" font-size="8.5" fill="#b9c9c1" letter-spacing="0.3">5 Duftrichtungen zur Wahl</text>
           <g>
-            <line x1="112" y1="92" x2="112" y2="122" stroke="#c17c4e" stroke-width="2"/>
-            <circle cx="112" cy="126" r="5" fill="#e0a06e"/>
-            <path class="mist-drop mist-1" d="M112 133c-4 3-5 6-5 9" stroke="#e0a06e" stroke-width="1.6" fill="none" opacity="0"/>
-
-            <line x1="141" y1="92" x2="141" y2="122" stroke="#c17c4e" stroke-width="2"/>
-            <circle cx="141" cy="126" r="5" fill="#e0a06e"/>
-            <path class="mist-drop mist-2" d="M141 133c-4 3-5 6-5 9" stroke="#e0a06e" stroke-width="1.6" fill="none" opacity="0"/>
-
-            <line x1="170" y1="92" x2="170" y2="122" stroke="#c17c4e" stroke-width="2"/>
-            <circle cx="170" cy="126" r="5" fill="#e0a06e"/>
-            <path class="mist-drop mist-3" d="M170 133c-4 3-5 6-5 9" stroke="#e0a06e" stroke-width="1.6" fill="none" opacity="0"/>
-
-            <line x1="199" y1="92" x2="199" y2="122" stroke="#c17c4e" stroke-width="2"/>
-            <circle cx="199" cy="126" r="5" fill="#e0a06e"/>
-            <path class="mist-drop mist-4" d="M199 133c-4 3-5 6-5 9" stroke="#e0a06e" stroke-width="1.6" fill="none" opacity="0"/>
+            <g>
+              <circle cx="100" cy="132" r="7" fill="url(#panelGrad)" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="100" cy="132" r="2.3" fill="#e0a06e"/>
+              <path class="mist-drop mist-1" d="M100 122c-3 3-4 6-4 9" stroke="#e0a06e" stroke-width="1.4" fill="none" opacity="0"/>
+              <line x1="100" y1="150" x2="100" y2="168" stroke="#e0a06e" stroke-width="1.5"/>
+              <path d="M96 154l4-6 4 6" stroke="#e0a06e" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="100" cy="190" r="8" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="100" cy="190" r="2.6" fill="#c17c4e"/>
+            </g>
+            <g>
+              <circle cx="152" cy="132" r="7" fill="url(#panelGrad)" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="152" cy="132" r="2.3" fill="#e0a06e"/>
+              <line x1="152" y1="150" x2="152" y2="168" stroke="#e0a06e" stroke-width="1.5"/>
+              <path d="M148 154l4-6 4 6" stroke="#e0a06e" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="152" cy="190" r="8" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="152" cy="190" r="2.6" fill="#c17c4e"/>
+            </g>
+            <g>
+              <circle cx="204" cy="132" r="7" fill="url(#panelGrad)" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="204" cy="132" r="2.3" fill="#e0a06e"/>
+              <path class="mist-drop mist-2" d="M204 122c-3 3-4 6-4 9" stroke="#e0a06e" stroke-width="1.4" fill="none" opacity="0"/>
+              <line x1="204" y1="150" x2="204" y2="168" stroke="#e0a06e" stroke-width="1.5"/>
+              <path d="M200 154l4-6 4 6" stroke="#e0a06e" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="204" cy="190" r="8" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="204" cy="190" r="2.6" fill="#c17c4e"/>
+            </g>
+            <g>
+              <circle cx="256" cy="132" r="7" fill="url(#panelGrad)" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="256" cy="132" r="2.3" fill="#e0a06e"/>
+              <line x1="256" y1="150" x2="256" y2="168" stroke="#e0a06e" stroke-width="1.5"/>
+              <path d="M252 154l4-6 4 6" stroke="#e0a06e" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="256" cy="190" r="8" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="256" cy="190" r="2.6" fill="#c17c4e"/>
+            </g>
+            <g>
+              <circle cx="308" cy="132" r="7" fill="url(#panelGrad)" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="308" cy="132" r="2.3" fill="#e0a06e"/>
+              <line x1="308" y1="150" x2="308" y2="168" stroke="#e0a06e" stroke-width="1.5"/>
+              <path d="M304 154l4-6 4 6" stroke="#e0a06e" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="308" cy="190" r="8" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
+              <circle cx="308" cy="190" r="2.6" fill="#c17c4e"/>
+            </g>
           </g>
-          <line x1="100" y1="150" x2="220" y2="150" stroke="#c17c4e" stroke-opacity="0.5" stroke-width="1.4"/>
-          <text x="160" y="163" text-anchor="middle" font-family="Manrope, sans-serif" font-size="8.5" fill="#b9c9c1" letter-spacing="0.4">Hand unter Wunschduft halten</text>
+          <text x="204" y="222" text-anchor="middle" font-family="Manrope, sans-serif" font-size="8.5" fill="#7f948b">Hand positionieren &amp; Knopf drücken</text>
 
-          <!-- Bedienschritte als Mini-Stepper -->
-          <rect x="92" y="188" width="136" height="70" rx="12" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1"/>
-          <g font-family="Manrope, sans-serif" font-size="7.5" fill="#7f948b">
-            <circle cx="112" cy="212" r="9" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
-            <path d="M108 212l3 3 5-6" stroke="#e0a06e" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <text x="112" y="234" text-anchor="middle">Wählen</text>
-
-            <line x1="126" y1="212" x2="146" y2="212" stroke="#c17c4e" stroke-opacity="0.5"/>
-            <circle cx="160" cy="212" r="9" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
-            <path d="M155 212h10M160 207v10" stroke="#e0a06e" stroke-width="1.4"/>
-            <text x="160" y="234" text-anchor="middle">Zahlen</text>
-
-            <line x1="174" y1="212" x2="194" y2="212" stroke="#c17c4e" stroke-opacity="0.5"/>
-            <circle cx="208" cy="212" r="9" fill="none" stroke="#c17c4e" stroke-width="1.3"/>
-            <path d="M208 206c1.6 2.1 3.6 5 3.6 6.9a3.6 3.6 0 1 1-7.2 0c0-1.9 2-4.8 3.6-6.9z" fill="#e0a06e"/>
-            <text x="208" y="234" text-anchor="middle">Sprühen</text>
-          </g>
+          <!-- Auswahl-Display -->
+          <rect x="346" y="88" width="134" height="112" rx="10" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1"/>
+          <circle cx="413" cy="140" r="30" fill="url(#glowGrad)"/>
+          <rect x="405" y="128" width="16" height="32" rx="3" fill="#e0a06e" fill-opacity="0.9"/>
+          <rect x="409" y="120" width="8" height="10" rx="2" fill="#e0a06e"/>
+          <text x="413" y="188" text-anchor="middle" font-family="Manrope, sans-serif" font-size="8" fill="#b9c9c1">Duft am Display wählen</text>
 
           <!-- Zahlungsmodul -->
-          <rect x="92" y="272" width="62" height="42" rx="8" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1"/>
-          <rect x="101" y="285" width="44" height="6" rx="1.5" fill="#c17c4e" fill-opacity="0.85"/>
-          <rect x="101" y="296" width="24" height="5" rx="1.5" fill="#b9c9c1" fill-opacity="0.6"/>
+          <rect x="346" y="214" width="62" height="40" rx="8" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1"/>
+          <rect x="355" y="226" width="44" height="6" rx="1.5" fill="#c17c4e" fill-opacity="0.85"/>
+          <rect x="355" y="237" width="24" height="5" rx="1.5" fill="#b9c9c1" fill-opacity="0.6"/>
 
-          <rect x="166" y="272" width="62" height="42" rx="8" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1"/>
-          <circle cx="197" cy="293" r="13" fill="none" stroke="#c17c4e" stroke-width="1.4"/>
-          <line x1="190" y1="293" x2="204" y2="293" stroke="#c17c4e" stroke-width="1.4"/>
+          <rect x="418" y="214" width="62" height="40" rx="8" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1"/>
+          <circle cx="449" cy="234" r="13" fill="none" stroke="#c17c4e" stroke-width="1.4"/>
+          <line x1="442" y1="234" x2="456" y2="234" stroke="#c17c4e" stroke-width="1.4"/>
 
-          <!-- unterer Gehäuseabschnitt (Tank/Technik) -->
-          <rect x="92" y="332" width="136" height="108" rx="12" fill="url(#panelGrad)" stroke="#8a5936" stroke-width="1" stroke-opacity="0.6"/>
-          <rect x="108" y="352" width="24" height="68" rx="5" fill="#c17c4e" fill-opacity="0.18" stroke="#8a5936" stroke-width="1"/>
-          <rect x="140" y="352" width="24" height="68" rx="5" fill="#c17c4e" fill-opacity="0.28" stroke="#8a5936" stroke-width="1"/>
-          <rect x="172" y="352" width="24" height="68" rx="5" fill="#c17c4e" fill-opacity="0.18" stroke="#8a5936" stroke-width="1"/>
-          <circle class="pulse-dot" cx="212" cy="360" r="3" fill="#e0a06e"/>
+          <text x="413" y="272" text-anchor="middle" font-family="Manrope, sans-serif" font-size="8" fill="#7f948b">Karte &amp; Bargeld</text>
+
+          <!-- Markenplakette -->
+          <text x="270" y="304" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="700" font-size="12" letter-spacing="2" fill="#e0a06e">DUFTWERK</text>
 
           <!-- Standfüße -->
-          <rect x="86" y="454" width="20" height="9" rx="3" fill="#8a5936"/>
-          <rect x="214" y="454" width="20" height="9" rx="3" fill="#8a5936"/>
+          <rect x="140" y="320" width="16" height="12" rx="3" fill="#8a5936"/>
+          <rect x="384" y="320" width="16" height="12" rx="3" fill="#8a5936"/>
         </svg>
         </div>
       </div>
