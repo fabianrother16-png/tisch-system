@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Domain-Investment-Recherche (.de)</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>Domain-Investment-Recherche <span class="tld">.de</span></h1>
+      <p class="subtitle">
+        Thema eingeben → Domain-Kandidaten generieren → DENIC-WHOIS-Verfügbarkeit prüfen → regelbasiert bewerten.
+      </p>
+    </header>
+
+    <section class="search-box">
+      <form id="search-form">
+        <input
+          type="text"
+          id="keyword-input"
+          placeholder="Thema/Keyword eingeben, z.B. KI, Robotik, Wasserstoff …"
+          autocomplete="off"
+          maxlength="60"
+          required
+        />
+        <button type="submit" id="search-button">Suchen</button>
+      </form>
+      <p id="status-line" class="status-line" aria-live="polite"></p>
+    </section>
+
+    <section class="disclaimer">
+      ⚠️ <strong>Hinweis:</strong> Der Score ist eine transparente, rein regelbasierte Heuristik
+      (Länge, Aussprechbarkeit, Themenbezug zu hinterlegten Wachstumsbranchen, generisch vs. Markenname).
+      Er ist <strong>keine Marktprognose und keine Zukunftsvorhersage</strong>.
+    </section>
+
+    <section id="results-section" class="results-section" hidden>
+      <h2 id="results-heading"></h2>
+      <div class="table-wrap">
+        <table id="results-table">
+          <thead>
+            <tr>
+              <th>Domain</th>
+              <th>Verfügbar</th>
+              <th>Score</th>
+              <th>Kurzbegründung</th>
+              <th>Kauf-Check</th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="history-section">
+      <h2>Historie</h2>
+      <ul id="history-list" class="history-list"></ul>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

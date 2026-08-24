@@ -1,0 +1,15 @@
+{
+  "name": "domain-research-tool",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lokale Web-App zur Recherche von .de-Domain-Investment-Kandidaten (Generierung, DENIC-WHOIS-Check, transparentes Scoring, Historie).",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "whois": "^2.16.2"
+  }
+}
