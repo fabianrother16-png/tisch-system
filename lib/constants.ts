@@ -10,12 +10,12 @@ export const SITE = {
 };
 
 export const NAV_LINKS = [
-  { href: "#leistungen", label: "Leistungen" },
-  { href: "#warum-wir", label: "Warum wir" },
-  { href: "#showcase", label: "Showcase" },
-  { href: "#ueber-uns", label: "Über uns" },
-  { href: "#ablauf", label: "Ablauf" },
-  { href: "#kontakt", label: "Kontakt" },
+  { href: "#leistungen", label: "Leistungen", number: "01" },
+  { href: "#warum-wir", label: "Warum wir", number: "02" },
+  { href: "#showcase", label: "Showcase", number: "03" },
+  { href: "#ueber-uns", label: "Über uns", number: "04" },
+  { href: "#ablauf", label: "Ablauf", number: "05" },
+  { href: "#kontakt", label: "Kontakt", number: "06" },
 ];
 
 export type Service = {
@@ -219,4 +219,106 @@ export const MARQUEE_ITEMS = [
   "Meta Ads",
   "Social Media",
   "Content-Produktion",
+];
+
+export const MARQUEE_ITEMS_REGIONAL = ["Sichtbar in Gütersloh & OWL"];
+
+// Ehrliche Fakten, die JETZT schon stimmen – keine Kundenzahlen oder
+// erfundenen Kennzahlen, siehe Leitplanke im Prompt. `isYear` markiert das
+// einzige Feld mit echtem Zahlenwert, das die Count-up-Animation bekommt.
+export const TRUST_FACTS = [
+  { label: "Gegründet", value: "2026", isYear: true },
+  { label: "Sitz in", value: "Gütersloh" },
+  { label: "Eigene Ausrüstung", value: "Drohne & Kamera" },
+];
+
+export const REGIONAL_CITIES = ["Gütersloh", "Bielefeld", "Paderborn", "Herford"];
+
+// Google-Maps-Embed ohne API-Key (klassisches output=embed), zentriert auf
+// Gütersloh.
+export const MAPS_EMBED_SRC =
+  "https://maps.google.com/maps?q=G%C3%BCtersloh,Deutschland&z=10&output=embed";
+
+export const PROBLEM_POINTS = [
+  "Der Betrieb ist bei Google schwer zu finden – oder taucht gar nicht erst auf der ersten Seite auf.",
+  "Es gibt kaum oder keine aktuellen Bewertungen, die potenzielle Kunden überzeugen könnten.",
+  "Die Website ist veraltet, langsam oder auf dem Handy kaum bedienbar.",
+];
+
+export const SOLUTION_POINTS = [
+  "Wir optimieren Google-Profil und lokale Suche, damit der Betrieb dort gefunden wird, wo gesucht wird.",
+  "Wir bauen aktives Rezensionsmanagement auf – von der Bitte um Bewertung bis zur NFC-Karte am Tisch.",
+  "Wir liefern eine schnelle, moderne Website, die auf jedem Gerät überzeugt.",
+];
+
+export const COMPARISON_ROWS = [
+  {
+    generic: "Nur eine Website",
+    sichtwerk: "Website, Rezensionen, SEO & Content-Produktion aus einer Hand",
+  },
+  {
+    generic: "Foto/Video an externe Dienstleister ausgelagert",
+    sichtwerk: "Eigenes Kamera- & Drohnen-Team, das selbst vor Ort dreht",
+  },
+  {
+    generic: "Fester Ansprechpartner wechselt häufig",
+    sichtwerk: "Direkter Draht zu den Gründern",
+  },
+  {
+    generic: "Austauschbare Templates",
+    sichtwerk: "Individuelles Design für jeden Betrieb",
+  },
+  {
+    generic: "Reporting nur auf Nachfrage",
+    sichtwerk: "Laufende Betreuung & Optimierung",
+  },
+  {
+    generic: "Fokus auf Großstädte",
+    sichtwerk: "Fokus auf Mittelstand & Region OWL",
+  },
+];
+
+// TODO: durch echte Kundenstimmen ersetzen, sobald vorhanden. Solange dieses
+// Array leer ist, rendert components/Testimonials.tsx bewusst nichts – siehe
+// Kommentar dort.
+export type Testimonial = {
+  name: string;
+  role: string;
+  location: string;
+  quote: string;
+  rating: number;
+};
+export const TESTIMONIALS: Testimonial[] = [];
+
+export const FAQ_ITEMS = [
+  {
+    question: "Wie läuft der Einstieg ab?",
+    answer:
+      "Mit einem kostenlosen, unverbindlichen Erstgespräch. Danach erarbeiten wir ein individuelles Konzept mit konkreten Maßnahmen, Zeitplan und transparenten Kosten – erst wenn das passt, geht es los.",
+  },
+  {
+    question: "Wie lange dauert ein Website-Projekt?",
+    answer:
+      "Das hängt vom Umfang ab. Eine schlanke One-Page-Website ist in der Regel schneller fertig als ein umfangreicher Auftritt mit mehreren Unterseiten – den genauen Zeitrahmen legen wir im Erstgespräch gemeinsam fest.",
+  },
+  {
+    question: "Erstellt ihr auch die Texte?",
+    answer:
+      "Ja. Wir können Texte komplett für euch schreiben oder eure vorhandenen Inhalte überarbeiten – je nachdem, was ihr schon habt und was ihr euch wünscht.",
+  },
+  {
+    question: "Müssen wir eigenes Kamera-Equipment bereitstellen?",
+    answer:
+      "Nein. Wir bringen unsere eigene Drohnen- und POV-Kamera-Ausrüstung mit und produzieren das Bild- und Videomaterial direkt bei euch vor Ort.",
+  },
+  {
+    question: "Arbeitet ihr auch außerhalb von Gütersloh?",
+    answer:
+      "Ja. Unser Fokus liegt auf Gütersloh und der Region OWL, inklusive Bielefeld, Paderborn und Herford – sprecht uns gerne an, wenn ihr etwas weiter entfernt seid.",
+  },
+  {
+    question: "Was kostet die Zusammenarbeit?",
+    answer:
+      "Das ist individuell, je nachdem welche Leistungen ihr braucht. Im Erstgespräch besprechen wir euren Bedarf und ihr bekommt ein transparentes, unverbindliches Angebot.",
+  },
 ];

@@ -20,6 +20,12 @@ export function About() {
               }
             />
 
+            {/*
+              TODO: Platzhalter-Monogramme durch echte Porträtfotos der
+              beiden Gründer ersetzen, sobald vorhanden (z. B. <Image fill
+              className="object-cover" .../> statt der Kreis-Initialen).
+              Volle Namen bewusst nicht erfunden/eingesetzt.
+            */}
             <div className="mt-10 grid grid-cols-2 gap-4">
               <div className="flex aspect-[3/4] flex-col items-center justify-end gap-3 rounded-2xl bg-anthracite p-6">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cream">
@@ -37,6 +43,23 @@ export function About() {
                   Mitgründer
                 </span>
               </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <p className="font-serif text-sm italic leading-snug text-anthracite/70">
+                &ldquo;Ich wollte nie nur Kampagnen verwalten, sondern sehen,
+                wie ein Betrieb vor Ort wächst.&rdquo;
+                <span className="mt-1 block font-sans text-xs not-italic uppercase tracking-[0.1em] text-anthracite/70">
+                  — F.
+                </span>
+              </p>
+              <p className="font-serif text-sm italic leading-snug text-anthracite/70">
+                &ldquo;Wir kennen die Betriebe hier persönlich – das merkt
+                man in jedem Projekt.&rdquo;
+                <span className="mt-1 block font-sans text-xs not-italic uppercase tracking-[0.1em] text-anthracite/70">
+                  — R.
+                </span>
+              </p>
             </div>
           </div>
 
