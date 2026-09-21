@@ -2,6 +2,7 @@ import { Camera, Plane } from "lucide-react";
 import { Container } from "./ui/Container";
 import { SectionHeading } from "./ui/SectionHeading";
 import { Reveal } from "./ui/Reveal";
+import { GrowthLine } from "./ui/GrowthLine";
 import { USPS } from "@/lib/constants";
 
 export function WhyUs() {
@@ -39,6 +40,8 @@ export function WhyUs() {
                   </span>
                 </div>
               </div>
+
+              <GrowthLine className="mt-4" />
             </div>
           </div>
 
