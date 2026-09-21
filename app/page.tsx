@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { Marquee } from "@/components/Marquee";
 import { Services } from "@/components/Services";
 import { WhyUs } from "@/components/WhyUs";
 import { Showcase } from "@/components/Showcase";
@@ -14,6 +15,7 @@ export default function Home() {
       <Header />
       <main id="main-content">
         <Hero />
+        <Marquee />
         <Services />
         <WhyUs />
         <Showcase />

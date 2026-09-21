@@ -44,7 +44,7 @@ export function About() {
             <Reveal>
               <div className="max-w-2xl space-y-6 text-lg leading-relaxed text-anthracite/75">
                 <p>
-                  ROTHERWERK ist aus einer einfachen Beobachtung entstanden: Die
+                  SICHTWERK ist aus einer einfachen Beobachtung entstanden: Die
                   besten Betriebe im Mittelstand – Restaurants, Handwerk,
                   lokale Dienstleister – werden online oft unter Wert
                   verkauft. Tolle Arbeit, aber kaum sichtbar.
@@ -58,8 +58,8 @@ export function About() {
                   Sichtbarkeit, die bleibt.
                 </p>
                 <p>
-                  Heute ist ROTHERWERK die Werkstatt für alles, was ein
-                  Unternehmen online sichtbar macht – gegründet in Bielefeld,
+                  Heute ist SICHTWERK die Werkstatt für alles, was ein
+                  Unternehmen online sichtbar macht – gegründet in Gütersloh,
                   gedacht für den Mittelstand.
                 </p>
               </div>

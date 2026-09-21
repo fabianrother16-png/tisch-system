@@ -1,6 +1,6 @@
-# ROTHERWERK — Website
+# SICHTWERK — Website
 
-One-Page-Business-Website für ROTHERWERK, eine Marketing-Agentur aus Bielefeld
+One-Page-Business-Website für SICHTWERK, eine Marketing-Agentur aus Gütersloh
 ("Digitale Sichtbarkeit für den Mittelstand"). Gebaut mit Next.js (App Router),
 TypeScript, Tailwind CSS und Framer Motion.
 
@@ -40,15 +40,22 @@ app/
   globals.css          Design-Tokens, Basis-Styles, Reduced-Motion-Regeln
   sitemap.ts           /sitemap.xml
   robots.ts            /robots.txt
-  icon.tsx             Favicon (generiert, Rising-Bars-Icon)
+  icon.tsx             Favicon (generiert, Logo-Icon)
   opengraph-image.tsx  OG-Bild (generiert)
   api/contact/route.ts API-Route für das Kontaktformular
 components/
-  Hero.tsx, Services.tsx, WhyUs.tsx, Showcase.tsx, About.tsx,
+  Hero.tsx             Kinetische Headline, Scroll-Parallax, Logo-Watermark
+  Marquee.tsx          Endless-Loop-Ticker mit den Kernleistungen
+  Services.tsx, WhyUs.tsx, Showcase.tsx, About.tsx,
   Process.tsx, Contact.tsx, Header.tsx, Footer.tsx, Logo.tsx
-  ui/                  Wiederverwendbare Primitives (Button, Container, …)
+  ui/                  Wiederverwendbare Primitives:
+    Button.tsx           Varianten primary/secondary/ghost/light
+    MagneticButton.tsx    Magnetischer Hover-Effekt (Framer Motion)
+    Reveal.tsx            Scroll-Reveal mit Varianten up/scale/left/right
+    Container.tsx, SectionHeading.tsx
 lib/
-  constants.ts          Zentrale Inhalte (Leistungen, USPs, Nav, …)
+  constants.ts          Zentrale Inhalte (Leistungen inkl. Bento-Layout,
+                          USPs, Showcase-Items, Marquee-Begriffe, Nav, …)
 ```
 
 ## Vor dem Live-Gang noch zu erledigen
@@ -59,9 +66,13 @@ echten Launch ersetzt werden sollten:
 1. **Hero-Video:** Aktuell ein animiertes Balken-Motiv als Platzhalter für
    einen Video-Loop-Hintergrund (Drohnenaufnahme). Hinweis zum Einbau steht
    als Kommentar in `components/Hero.tsx`.
-2. **Showcase-Galerie:** `components/Showcase.tsx` zeigt gestylte Platzhalter
-   für Drohnen-/POV-Aufnahmen. Sobald echtes Material vorliegt, `SHOWCASE_ITEMS`
-   in `lib/constants.ts` durch echte Bilder/Videos ersetzen.
+2. **Showcase-Galerie:** `components/Showcase.tsx` zeigt editorielle
+   Platzhalter-Grafiken (kein Fake-Foto) für Drohnen-/POV-Aufnahmen. Jeder
+   Eintrag in `SHOWCASE_ITEMS` (`lib/constants.ts`) trägt ein `query`-Feld
+   mit einem empfohlenen Unsplash-/Pexels-Suchbegriff für lizenzfreies
+   Zwischenmaterial. Sobald echtes Material vorliegt: die mit TODO markierte
+   `PlaceholderArt`-Fläche in `Showcase.tsx` durch `<Image fill
+   className="object-cover" .../>` (next/image) ersetzen.
 3. **Kontaktformular-Backend:** `app/api/contact/route.ts` validiert und
    loggt Anfragen serverseitig, verschickt aber noch keine E-Mail. Für den
    Produktivbetrieb an einen Dienst wie Resend, Postmark oder ein CRM
@@ -89,7 +100,16 @@ echten Launch ersetzt werden sollten:
   (siehe `tailwind.config.ts`)
 - **Typografie:** Fraunces (Headlines, Serif) & Work Sans (Fließtext,
   Grotesk), geladen über `next/font/google`
-- **Icon-Leitmotiv:** aufsteigende Balken mit Stern (`components/Logo.tsx`,
-  `app/icon.tsx`, `app/opengraph-image.tsx`)
+- **Icon-Leitmotiv:** zwei sich diagonal überschneidende, leicht gedrehte
+  Balken (`components/Logo.tsx`, `app/icon.tsx`, `app/opengraph-image.tsx`)
+- **Kinetische Typografie:** Hero-Headline fliegt wortweise gestaffelt ein
+  und reagiert mit sanftem Parallax auf Scrollen (`components/Hero.tsx`)
+- **Bento-Grid:** Leistungen-Bereich mit kuratierten, unterschiedlich großen
+  Kacheln statt gleichförmigem Raster (`BENTO_LAYOUT` in
+  `components/Services.tsx`)
+- **Microinteractions:** magnetische Buttons (`components/ui/
+  MagneticButton.tsx`), varianten-basierte Scroll-Reveals (`components/ui/
+  Reveal.tsx`), Marquee-Ticker (`components/Marquee.tsx`)
 - **Barrierefreiheit:** semantisches HTML, Skip-Link, sichtbare Fokuszustände,
-  `prefers-reduced-motion`-Unterstützung, gegen WCAG AA geprüfte Kontraste
+  `prefers-reduced-motion`-Unterstützung (inkl. Marquee/Magnetic-Buttons),
+  gegen WCAG AA geprüfte Kontraste

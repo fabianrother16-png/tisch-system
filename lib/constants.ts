@@ -1,12 +1,12 @@
 export const SITE = {
-  name: "ROTHERWERK",
+  name: "SICHTWERK",
   claim: "Digitale Sichtbarkeit für den Mittelstand",
-  url: "https://rotherwerk.de",
-  email: "hallo@rotherwerk.de",
-  phone: "+49 521 1234567",
-  phoneHref: "+495211234567",
-  city: "Bielefeld",
-  addressLine: "Bielefeld, Deutschland",
+  url: "https://sichtwerk.de",
+  email: "hallo@sichtwerk.de",
+  phone: "+49 5241 1234567",
+  phoneHref: "+4952411234567",
+  city: "Gütersloh",
+  addressLine: "Gütersloh, Deutschland",
 };
 
 export const NAV_LINKS = [
@@ -152,11 +152,71 @@ export const PROCESS_STEPS = [
   },
 ];
 
+// query = Recherche-Suchbegriff für lizenzfreies Unsplash/Pexels-Material,
+// das hier vorübergehend die editorielle Platzhalter-Grafik ersetzt (siehe
+// TODO-Kommentare in components/Showcase.tsx).
 export const SHOWCASE_ITEMS = [
-  { id: 1, label: "Drohnenaufnahme", tag: "Restaurant Außenansicht", size: "large" },
-  { id: 2, label: "POV-Clip", tag: "Küche in Aktion", size: "small" },
-  { id: 3, label: "Drohnenaufnahme", tag: "Skyline Bielefeld", size: "small" },
-  { id: 4, label: "Social Reel", tag: "Behind the Scenes", size: "medium" },
-  { id: 5, label: "POV-Clip", tag: "Service am Tisch", size: "medium" },
-  { id: 6, label: "Drohnenaufnahme", tag: "Betriebsgelände", size: "small" },
+  {
+    id: 1,
+    label: "Drohnenaufnahme",
+    tag: "Restaurant Außenansicht",
+    size: "large",
+    type: "video" as const,
+    pattern: "bokeh" as const,
+    query: "restaurant exterior evening warm lighting",
+  },
+  {
+    id: 2,
+    label: "POV-Clip",
+    tag: "Küche in Aktion",
+    size: "small",
+    type: "video" as const,
+    pattern: "motion" as const,
+    query: "chef kitchen action shot",
+  },
+  {
+    id: 3,
+    label: "Drohnenaufnahme",
+    tag: "Skyline Gütersloh",
+    size: "small",
+    type: "photo" as const,
+    pattern: "aerial" as const,
+    query: "Gütersloh Stadt Skyline",
+  },
+  {
+    id: 4,
+    label: "Social Reel",
+    tag: "Behind the Scenes",
+    size: "medium",
+    type: "video" as const,
+    pattern: "lens" as const,
+    query: "camera gimbal filming content creator",
+  },
+  {
+    id: 5,
+    label: "POV-Clip",
+    tag: "Service am Tisch",
+    size: "medium",
+    type: "video" as const,
+    pattern: "bokeh" as const,
+    query: "restaurant service table warm lighting",
+  },
+  {
+    id: 6,
+    label: "Drohnenaufnahme",
+    tag: "Rathaus Gütersloh",
+    size: "small",
+    type: "photo" as const,
+    pattern: "aerial" as const,
+    query: "aerial drone city rooftop Germany",
+  },
+];
+
+export const MARQUEE_ITEMS = [
+  "Rezensionen",
+  "Google-Profil",
+  "SEO",
+  "Meta Ads",
+  "Social Media",
+  "Content-Produktion",
 ];

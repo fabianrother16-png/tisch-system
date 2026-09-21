@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     template: `%s – ${SITE.name}`,
   },
   description:
-    "ROTHERWERK ist eine Marketing-Agentur aus Bielefeld für den Mittelstand: Google-Bewertungen, Website, SEO, Social Media, Meta Ads und selbst produzierte Drohnen- & POV-Aufnahmen – alles aus einer Hand.",
+    "SICHTWERK ist eine Marketing-Agentur aus Gütersloh für den Mittelstand: Google-Bewertungen, Website, SEO, Social Media, Meta Ads und selbst produzierte Drohnen- & POV-Aufnahmen – alles aus einer Hand.",
   keywords: [
-    "Marketing Agentur Bielefeld",
+    "Marketing Agentur Gütersloh",
     "Google Bewertungen Management",
     "lokales SEO",
     "Social Media Agentur Mittelstand",

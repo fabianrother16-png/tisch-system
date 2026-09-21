@@ -11,8 +11,9 @@ const SOCIALS = [
 
 export function Footer() {
   return (
-    <footer className="bg-anthracite pt-20 text-cream">
-      <Container>
+    <footer className="relative overflow-hidden bg-anthracite pt-20 text-cream">
+      <div className="grain-overlay pointer-events-none absolute inset-0 opacity-[0.08]" aria-hidden="true" />
+      <Container className="relative">
         <div className="flex flex-col gap-12 border-b border-cream/10 pb-14 md:flex-row md:justify-between">
           <div className="max-w-sm">
             <Logo />

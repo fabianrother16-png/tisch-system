@@ -1,22 +1,57 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Container } from "./ui/Container";
-import { ButtonLink } from "./ui/Button";
+import { MagneticButtonLink } from "./ui/MagneticButton";
+import { LogoMark } from "./Logo";
 import { SITE } from "@/lib/constants";
 
-const BARS = [
-  { height: "34%", delay: 0, opacity: 0.35 },
-  { height: "54%", delay: 0.15, opacity: 0.5 },
-  { height: "72%", delay: 0.3, opacity: 0.7 },
-  { height: "92%", delay: 0.45, opacity: 0.9 },
-  { height: "100%", delay: 0.6, opacity: 1 },
-];
+const wordContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.09, delayChildren: 0.5 },
+  },
+};
+
+const wordReveal = {
+  hidden: { y: "110%", rotate: 4 },
+  visible: {
+    y: "0%",
+    rotate: 0,
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+function KineticWord({ children, accent = false }: { children: string; accent?: boolean }) {
+  return (
+    <span className="inline-block overflow-hidden pb-[0.12em] align-bottom">
+      <motion.span
+        variants={wordReveal}
+        className={`inline-block ${accent ? "italic text-terracotta" : ""}`}
+      >
+        {children}
+      </motion.span>
+    </span>
+  );
+}
 
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"],
+  });
+
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+  const watermarkY = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const watermarkRotate = useTransform(scrollYProgress, [0, 1], [-16, -4]);
+
   return (
     <section
+      ref={sectionRef}
       id="top"
       className="relative flex min-h-[100svh] items-center overflow-hidden bg-anthracite pt-28"
     >
@@ -26,99 +61,85 @@ export function Hero() {
         poster="/hero-poster.jpg" className="absolute inset-0 h-full w-full object-cover">
         einfügen und die Opacity des Gradient-Overlays ggf. auf 0.5 erhöhen.
       */}
-      <div className="grain-overlay pointer-events-none absolute inset-0 opacity-[0.06]" aria-hidden="true" />
+      <div className="grain-overlay pointer-events-none absolute inset-0 z-[1] opacity-[0.1]" aria-hidden="true" />
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(193,80,46,0.22),transparent_55%)]"
         aria-hidden="true"
       />
 
-      <div
-        className="pointer-events-none absolute -right-10 bottom-0 hidden h-[55%] items-end gap-3 opacity-80 sm:flex sm:h-[65%] sm:gap-5 md:right-8"
+      <motion.div
+        style={{ y: watermarkY, rotate: watermarkRotate }}
+        className="pointer-events-none absolute -right-24 -top-24 opacity-[0.07] sm:-right-16 sm:top-1/2 sm:-translate-y-1/2"
         aria-hidden="true"
       >
-        {BARS.map((bar, i) => (
-          <motion.div
-            key={i}
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 1, delay: bar.delay, ease: [0.22, 1, 0.36, 1] }}
-            style={{ height: bar.height, transformOrigin: "bottom", opacity: bar.opacity }}
-            className="w-6 origin-bottom rounded-t-sm bg-terracotta sm:w-10 md:w-14"
-          />
-        ))}
-        <motion.div
-          initial={{ opacity: 0, scale: 0, y: -10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 1.1, ease: "backOut" }}
-          className="absolute -top-6 right-0 text-terracotta sm:-top-8"
-        >
-          <svg width="40" height="40" viewBox="0 0 48 48" fill="none" className="h-8 w-8 sm:h-10 sm:w-10">
-            <path
-              d="M24 2L28.5 18.5L45 24L28.5 29.5L24 46L19.5 29.5L3 24L19.5 18.5L24 2Z"
-              fill="currentColor"
-            />
-          </svg>
-        </motion.div>
-      </div>
+        <LogoMark className="h-[420px] w-[420px] sm:h-[560px] sm:w-[560px] lg:h-[680px] lg:w-[680px]" />
+      </motion.div>
 
-      <Container className="relative z-10">
-        <div className="max-w-3xl">
-          <motion.span
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="eyebrow text-terracotta-light"
-          >
-            Marketing-Agentur aus {SITE.city}
-          </motion.span>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="mt-6 text-[13vw] font-semibold leading-[0.98] tracking-tightest text-cream sm:text-6xl md:text-7xl lg:text-[5.5rem]"
-          >
-            Digitale Sichtbarkeit
-            <br />
-            für den <span className="text-terracotta italic">Mittelstand</span>.
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="mt-8 max-w-xl text-lg leading-relaxed text-cream/75 md:text-xl"
-          >
-            Wir bringen mittelständische Unternehmen und Restaurants online nach
-            vorn – mit Strategie, Kampagnen und eigens produziertem Drohnen- und
-            POV-Content direkt vor Ort.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="mt-10 flex flex-wrap items-center gap-5"
-          >
-            <ButtonLink href="#kontakt" variant="primary">
-              Kostenloses Erstgespräch
-            </ButtonLink>
-            <a
-              href="#leistungen"
-              className="font-sans text-sm font-semibold uppercase tracking-[0.08em] text-cream/70 underline decoration-cream/30 underline-offset-8 transition-colors hover:text-cream hover:decoration-terracotta"
+      <motion.div style={{ y: contentY, opacity: contentOpacity }}>
+        <Container className="relative z-10">
+          <div className="max-w-4xl">
+            <motion.span
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="eyebrow text-terracotta-light"
             >
-              Leistungen ansehen
-            </a>
-          </motion.div>
-        </div>
-      </Container>
+              Marketing-Agentur aus {SITE.city}
+            </motion.span>
+
+            <motion.h1
+              initial="hidden"
+              animate="visible"
+              variants={wordContainer}
+              className="mt-6 text-[clamp(3.25rem,10vw,9.5rem)] font-semibold leading-[0.94] tracking-tightest text-cream"
+            >
+              <span className="block">
+                <KineticWord>Digitale</KineticWord>{" "}
+                <KineticWord>Sichtbarkeit</KineticWord>
+              </span>
+              <span className="block">
+                <KineticWord>für</KineticWord> <KineticWord>den</KineticWord>{" "}
+                <KineticWord accent>Mittelstand.</KineticWord>
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 1.3 }}
+              className="mt-8 max-w-xl text-lg leading-relaxed text-cream/75 md:text-xl"
+            >
+              Wir bringen mittelständische Unternehmen und Restaurants online nach
+              vorn – mit Strategie, Kampagnen und eigens produziertem Drohnen- und
+              POV-Content direkt vor Ort.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 1.45 }}
+              className="mt-10 flex flex-wrap items-center gap-5"
+            >
+              <MagneticButtonLink href="#kontakt" variant="primary">
+                Kostenloses Erstgespräch
+              </MagneticButtonLink>
+              <a
+                href="#leistungen"
+                className="font-sans text-sm font-semibold uppercase tracking-[0.08em] text-cream/70 underline decoration-cream/30 underline-offset-8 transition-colors hover:text-cream hover:decoration-terracotta"
+              >
+                Leistungen ansehen
+              </a>
+            </motion.div>
+          </div>
+        </Container>
+      </motion.div>
 
       <motion.a
         href="#leistungen"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1 }}
-        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-cream/50 transition-colors hover:text-cream sm:flex"
+        transition={{ duration: 0.8, delay: 1.8 }}
+        className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 text-cream/50 transition-colors hover:text-cream sm:flex"
         aria-label="Nach unten scrollen"
       >
         <span className="font-sans text-[10px] uppercase tracking-[0.2em]">Scroll</span>

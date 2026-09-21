@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { Container } from "./ui/Container";
 import { ButtonLink } from "./ui/Button";
+import { MagneticButtonLink } from "./ui/MagneticButton";
 import { NAV_LINKS } from "@/lib/constants";
 
 export function Header() {
@@ -38,7 +39,7 @@ export function Header() {
         <a
           href="#top"
           className="text-cream transition-opacity hover:opacity-80"
-          aria-label="ROTHERWERK Startseite"
+          aria-label="SICHTWERK Startseite"
         >
           <Logo />
         </a>
@@ -56,9 +57,9 @@ export function Header() {
         </nav>
 
         <div className="hidden lg:block">
-          <ButtonLink href="#kontakt" variant="primary" className="px-6 py-3 text-xs">
+          <MagneticButtonLink href="#kontakt" variant="primary" className="px-6 py-3 text-xs">
             Erstgespräch
-          </ButtonLink>
+          </MagneticButtonLink>
         </div>
 
         <button

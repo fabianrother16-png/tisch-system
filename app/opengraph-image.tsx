@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = "ROTHERWERK – Digitale Sichtbarkeit für den Mittelstand";
+export const alt = "SICHTWERK – Digitale Sichtbarkeit für den Mittelstand";
 
 export default function OGImage() {
   return new ImageResponse(
@@ -19,14 +19,36 @@ export default function OGImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "flex-end", gap: 6 }}>
-            <div style={{ width: 14, height: 28, background: "#C1502E", opacity: 0.55, borderRadius: 3, display: "flex" }} />
-            <div style={{ width: 14, height: 44, background: "#C1502E", opacity: 0.8, borderRadius: 3, display: "flex" }} />
-            <div style={{ width: 14, height: 60, background: "#C1502E", borderRadius: 3, display: "flex" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <div style={{ position: "relative", width: 44, height: 44, display: "flex" }}>
+            <div
+              style={{
+                position: "absolute",
+                width: 16,
+                height: 40,
+                background: "#C1502E",
+                borderRadius: 4,
+                transform: "rotate(-16deg)",
+                left: 14,
+                display: "flex",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                width: 16,
+                height: 40,
+                background: "#C1502E",
+                opacity: 0.55,
+                borderRadius: 4,
+                transform: "rotate(16deg)",
+                left: 14,
+                display: "flex",
+              }}
+            />
           </div>
           <span style={{ color: "#F5F1E8", fontSize: 34, fontWeight: 700, letterSpacing: "-0.02em" }}>
-            ROTHERWERK
+            SICHTWERK
           </span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -38,7 +60,7 @@ export default function OGImage() {
           </span>
         </div>
         <span style={{ color: "#DCD2B8", fontSize: 24, display: "flex" }}>
-          Marketing-Agentur aus Bielefeld
+          Marketing-Agentur aus Gütersloh
         </span>
       </div>
     ),

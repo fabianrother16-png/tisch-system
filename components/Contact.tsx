@@ -5,7 +5,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { Container } from "./ui/Container";
 import { SectionHeading } from "./ui/SectionHeading";
 import { Reveal } from "./ui/Reveal";
-import { Button } from "./ui/Button";
+import { MagneticButton } from "./ui/MagneticButton";
 import { SITE } from "@/lib/constants";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -151,9 +151,9 @@ export function Contact() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
-                  <Button type="submit" variant="primary" disabled={status === "loading"}>
+                  <MagneticButton type="submit" variant="primary" disabled={status === "loading"}>
                     {status === "loading" ? "Wird gesendet…" : "Nachricht senden"}
-                  </Button>
+                  </MagneticButton>
                   <div role="status" aria-live="polite">
                     {status === "success" && (
                       <span className="font-sans text-sm text-terracotta-dark">

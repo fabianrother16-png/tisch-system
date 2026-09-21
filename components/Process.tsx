@@ -5,8 +5,9 @@ import { PROCESS_STEPS } from "@/lib/constants";
 
 export function Process() {
   return (
-    <section id="ablauf" className="bg-anthracite py-28 text-cream md:py-36">
-      <Container>
+    <section id="ablauf" className="relative overflow-hidden bg-anthracite py-28 text-cream md:py-36">
+      <div className="grain-overlay pointer-events-none absolute inset-0 opacity-[0.08]" aria-hidden="true" />
+      <Container className="relative">
         <SectionHeading
           eyebrow="Ablauf"
           tone="light"
@@ -21,7 +22,7 @@ export function Process() {
             aria-hidden="true"
           />
           {PROCESS_STEPS.map((step, i) => (
-            <Reveal key={step.number} delay={i * 0.1} className="relative">
+            <Reveal key={step.number} delay={i * 0.1} variant="scale" className="relative">
               <div className="flex items-center gap-4 md:block">
                 <span className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-terracotta-dark font-serif text-lg font-semibold text-cream md:mb-6">
                   {step.number}

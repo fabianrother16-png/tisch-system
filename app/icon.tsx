@@ -10,18 +10,37 @@ export default function Icon() {
         style={{
           width: "100%",
           height: "100%",
+          position: "relative",
           display: "flex",
-          alignItems: "flex-end",
+          alignItems: "center",
           justifyContent: "center",
-          gap: 3,
           background: "#1E1A17",
           borderRadius: 10,
-          padding: "8px 7px",
         }}
       >
-        <div style={{ width: 7, height: 14, background: "#C1502E", opacity: 0.55, borderRadius: 2, display: "flex" }} />
-        <div style={{ width: 7, height: 22, background: "#C1502E", opacity: 0.8, borderRadius: 2, display: "flex" }} />
-        <div style={{ width: 7, height: 30, background: "#C1502E", borderRadius: 2, display: "flex" }} />
+        <div
+          style={{
+            position: "absolute",
+            width: 9,
+            height: 38,
+            background: "#C1502E",
+            borderRadius: 3,
+            transform: "rotate(-16deg)",
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            width: 9,
+            height: 38,
+            background: "#C1502E",
+            opacity: 0.55,
+            borderRadius: 3,
+            transform: "rotate(16deg)",
+            display: "flex",
+          }}
+        />
       </div>
     ),
     { ...size }
