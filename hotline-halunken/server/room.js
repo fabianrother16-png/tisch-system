@@ -1164,7 +1164,7 @@ export class Room {
           endReason: c.endReason,
           startedAt: c.startedAt,
           hangupFrom: c.hangupFrom,
-          messages: c.messages,
+          messages: c.messages.slice(-60),
           masche: showMasche ? this.masche(r.cards[c.callerId].mascheId) : null,
         };
       }

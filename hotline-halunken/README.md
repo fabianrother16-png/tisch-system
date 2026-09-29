@@ -3,8 +3,9 @@
 > Einer ist das Opfer. Alle anderen rufen an. Und einer davon ist ein Undercover-Cop.
 
 **HOTLINE HALUNKEN** ist ein Multiplayer-Partyspiel für den Browser (3–12 Spieler + beliebig viele Zuschauer), gebaut für
-Freundesrunden, Streamer, YouTuber und TikToker. Ihr sitzt zusammen im Voice-Chat (Discord o. Ä.) oder im selben Raum –
-das Spiel liefert Rollen, Maschen, Chaos, Sounds, Punkte und die großen Clip-Momente.
+Freundesrunden, Streamer, YouTuber und TikToker. Gespielt wird per **Voice-Chat** (Discord, im selben Raum …) oder im
+**Chat-Modus**, in dem die „Anrufe“ getippt werden – wie ein Betrugs-Chat auf dem Handy. Das Spiel gibt es auf
+**Deutsch und Englisch**; wer allein testen will, füllt die Lobby mit **Bots** auf.
 
 ![Startseite](docs/home.jpg)
 
@@ -17,44 +18,57 @@ das Spiel liefert Rollen, Maschen, Chaos, Sounds, Punkte und die großen Clip-Mo
 - 📱 **Das Opfer steuert live:** Geld überweisen, Vertrauens-O-Meter hoch/runter, Anrufer in die **Warteschleife**
   schicken („Für Elise“ in 8-Bit 🎵) – oder mit dem großen roten Knopf **AUFLEGEN**.
 - ⚡ **Chaos-Karten** platzen mitten ins Gespräch: Schluckauf, Rollentausch, „Das Opfer ist jetzt schwerhörig“, Papagei …
+  (im Chat-Modus z. B. „Nur noch GROSSBUCHSTABEN“ oder „Kein Buchstabe e mehr“).
 - 🚔 **Der Twist:** Einer der Anrufer ist ein **Undercover-Cop**. Er darf nie „Geld“, „Euro“, „zahlen“ oder „überweisen“
   sagen. Bei der **Razzia** stimmen alle ab. Wer richtig tippt, kassiert Bonus – entkommt der Cop, **beschlagnahmt** er
   die Beute des reichsten Halunken.
 - 🏆 Am Ende: Podest, **Mitarbeiter des Monats**, Awards („Tuut-Tuut-Legende“, „Justizirrtum“, „Sherlock Halunk“ …) und
   ein **teilbares Poster** für Insta/TikTok.
 
-| Anruf (Sicht des Opfers) | Chaos-Karte | Razzia |
+| Anruf (Sicht des Opfers) | Chat-Modus | Chaos-Karte |
 | --- | --- | --- |
-| ![Anruf](docs/anruf-opfer.jpg) | ![Chaos](docs/chaos-karte.jpg) | ![Razzia](docs/razzia.jpg) |
+| ![Anruf](docs/anruf-opfer.jpg) | ![Chat-Modus](docs/chat-modus.jpg) | ![Chaos](docs/chaos-karte.jpg) |
 
-| Lobby | Auswertung | Handy |
+| Lobby | Razzia | Auswertung |
 | --- | --- | --- |
-| ![Lobby](docs/lobby.jpg) | ![Auswertung](docs/auswertung.jpg) | ![Handy](docs/handy.jpg) |
+| ![Lobby](docs/lobby.jpg) | ![Razzia](docs/razzia.jpg) | ![Auswertung](docs/auswertung.jpg) |
+
+| Eigene Karten | English version | Handy |
+| --- | --- | --- |
+| ![Eigene Karten](docs/eigene-karten.jpg) | ![English](docs/english.jpg) | ![Handy](docs/handy.jpg) |
 
 ## Warum das für Content funktioniert
 
 - **Eingebaute Clip-Momente:** riesiges „AUFGELEGT!“ mit Besetztzeichen, Geldregen bei Überweisungen, Fake-Beweise
   in Comic Sans, Chaos-Karten mit Ansager-Stimme, Polizeisirene und Verbrecherfoto bei der Razzia.
 - **Improvisation statt Wissen:** Jeder kann mitspielen, die Lacher entstehen durch Stimmen, Maschen und Chaos.
+- **Chat-Modus = lesbarer Content:** Im Chat-Modus sehen Zuschauer jede Nachricht groß im Messenger – perfekt für
+  Shorts/TikToks, und man braucht keinen Voice-Chat.
 - **Zuschauer machen mit:** Zuschauer treten mit dem Raumcode als **Publikum** bei, schicken fliegende Emoji-Reaktionen
   (mit ihrem Namen) und tippen bei der Razzia mit („Publikum tippte auf Kevin – daneben!“).
-- **Streamer-Modus** (🎥): versteckt Raumcode und QR-Code, damit der Stream nicht gecrasht wird.
+- **Community-Karten:** Mit **Eigene Karten** baut der Host Ideen aus dem Chat als Maschen und Opfer ein. Die Karten
+  werden auf dem Gerät gespeichert, automatisch in neue Räume geladen und lassen sich als Text exportieren/importieren.
+- **Streamer-Modus** (🎥 im Menü): versteckt Raumcode und QR-Code, damit der Stream nicht gecrasht wird.
+- **International:** Deutsch und Englisch – Oberfläche pro Spieler umschaltbar, Kartensprache pro Raum.
 - **Werbefreundlich:** Parodie ohne Beleidigungen oder Gewalt. Zwischendurch laufen echte Anti-Scam-Tipps
   („Die echte Polizei fragt nie am Telefon nach Geld“).
 
 ## Features
 
 - Räume mit 4-Buchstaben-Code, Einladungslink und QR-Code
-- Lobby mit Avataren/Farben, Host-Krone, Kick, Einstellungen (Runden, Anrufdauer, Anrufer pro Runde, Budget,
-  Cop/Chaos/Stimmen/Zuschauer an/aus) und geschätzter Spieldauer
-- 32 Maschen mit Fake-Beweisen, 23 Opfer-Rollen, 32 Pflicht-Stimmen, 36 Chaos-Karten
+- Lobby mit Avataren/Farben, Host-Krone, Kick, **Bots**, Einstellungen (Anrufmodus Voice/Chat, Kartensprache, Runden,
+  Anrufdauer, Anrufer pro Runde, Budget, Cop/Chaos/Stimmen/Zuschauer an/aus) und geschätzter Spieldauer
+- 32 Maschen mit Fake-Beweisen, 23 Opfer-Rollen, 32 Pflicht-Stimmen, 45 Chaos-Karten – jeweils auf Deutsch und Englisch
+- Chat-Modus mit Messenger-Ansicht, Tipp-Anzeige und Ereignissen im Verlauf (Überweisungen, Warteschleife, Beweise)
+- Eigene Karten (Maschen & Opfer), optional „nur eigene Karten“
+- Bots, die Maschen wählen, überweisen, auflegen, abstimmen und im Chat-Modus schreiben
 - Soundboard (Airhorn, Modem, Trommelwirbel, Traurige Posaune …) – **alle Sounds werden live synthetisiert**,
   keine Audiodateien und keine Lizenzprobleme
 - Ansager-Stimme (Text-to-Speech des Browsers), abschaltbar
 - Host-Steuerung: Pause, Phase überspringen, Spiel beenden
 - Wiederverbinden nach Reload oder Verbindungsabbruch (Rolle und Punkte bleiben), Host-Übergabe bei Abgang
-- Mobil-optimiert – Spieler können am Handy spielen, der Streamer am PC
-- Schriften lokal eingebunden (kein Google-CDN, DSGVO-freundlich), Link-Vorschaubild für Discord/WhatsApp
+- Mobil-optimiert, als App installierbar (PWA), Link-Vorschaubild für Discord/WhatsApp
+- Schriften lokal eingebunden (kein Google-CDN, DSGVO-freundlich)
 
 ## Schnellstart (lokal)
 
@@ -67,8 +81,11 @@ npm run build
 npm start
 ```
 
-Dann **http://localhost:3000** öffnen. Zum Testen allein einfach mehrere Browser-Tabs öffnen – jeder Tab ist ein
-eigener Spieler.
+Dann **http://localhost:3000** öffnen.
+
+**Allein ausprobieren:** Raum eröffnen → in der Lobby 2–3× **🤖 Bot hinzufügen** → **Schicht starten**. Die Bots spielen
+automatisch mit (im Chat-Modus schreiben sie sogar). Alternativ mehrere Browser-Tabs öffnen – jeder Tab ist ein eigener
+Spieler.
 
 **Mit Freunden im selben WLAN:** Deine lokale IP herausfinden (z. B. `192.168.0.23`) und die anderen öffnen
 `http://192.168.0.23:3000`.
@@ -77,7 +94,7 @@ eigener Spieler.
 
 ```bash
 npm run dev    # Server (Port 3000, Auto-Reload) + Vite-Dev-Server mit Hot-Reload auf http://localhost:5173
-npm test       # Spiellogik-Tests: spielt ein komplettes Spiel mit Bots im Zeitraffer durch
+npm test       # Tests: komplette Spiele mit Bots im Zeitraffer, Chat, eigene Karten, Übersetzungen
 ```
 
 ## Online stellen (damit Freunde übers Internet mitspielen)
@@ -118,7 +135,8 @@ Ohne Docker: `npm ci && npm run build && npm start` – der Server nimmt den Por
 
 ## So wird gespielt (Kurzfassung)
 
-1. **Host** eröffnet einen Raum, teilt Code/Link. Alle wählen Name, Avatar und Farbe. Ab 3 Spielern kann es losgehen.
+1. **Host** eröffnet einen Raum, teilt Code/Link und wählt **Voice-Chat** oder **Chat-Modus**. Ab 3 Spielern (oder mit
+   Bots) kann es losgehen.
 2. **Schichtbeginn:** Das Opfer liest seine Rolle (inkl. geheimem Tick), die Halunken wählen 1 von 2 Maschen.
 3. **Anrufe:** Jeder Halunke hat z. B. 60 Sekunden. Das Opfer überweist, dreht am Vertrauen, nutzt die Warteschleife
    (1× pro Anruf) oder legt auf (frühestens nach 8 Sekunden). Der Anrufer kann 1× einen Fake-Beweis schicken.
@@ -130,33 +148,41 @@ Das Opfer wechselt jede Runde. Geld, das das Opfer am Rundenende noch hat, verf�
 
 ## Inhalte anpassen
 
-Alle Karten stehen in **`server/content.js`** – einfach neue Einträge ergänzen:
+Ohne Code: in der Lobby über **✨ Eigene Karten**.
+
+Im Code stehen alle Karten in **`server/content/de.js`** und **`server/content/en.js`** (gleiche IDs in beiden Dateien):
 
 - `MASCHEN` – Maschen inkl. Fake-Beweis (`proof`)
 - `PERSONAS` – Opfer-Rollen
 - `VOICES` – Pflicht-Stimmen
-- `CHAOS` – Chaos-Karten (`{caller}` und `{victim}` werden durch Namen ersetzt)
+- `CHAOS` – Chaos-Karten (`{caller}`/`{victim}` werden ersetzt, `mode: 'voice' | 'chat'` = nur in diesem Modus)
 - `TIPS` – Tipps auf den Warte-Bildschirmen
+- `BOT_*` – Sätze der Bots
 
-Punkte, Zeiten und Grenzen stehen oben in **`server/room.js`** (`DUR`, `DEFAULT_SETTINGS`, `MIN_PLAYERS` …).
+Texte der Oberfläche: `client/src/i18n/de.js` und `en.js`. Punkte, Zeiten und Grenzen: oben in **`server/room.js`**.
+`npm test` meldet, wenn eine Übersetzung oder Karte in einer Sprache fehlt.
 
 ## Projektstruktur
 
 ```
 hotline-halunken/
   server/
-    index.js      Express + Socket.io, Räume, Rate-Limits, Auslieferung des Frontends
-    room.js       Komplette Spiellogik (Phasen, Timer, Punkte, Razzia, Awards, Sichtbarkeit pro Spieler)
-    content.js    Alle Karten und Texte
+    index.js         Express + Socket.io, Räume, Rate-Limits, Auslieferung des Frontends
+    room.js          Komplette Spiellogik (Phasen, Timer, Punkte, Razzia, Awards, Sichtbarkeit pro Spieler)
+    bots.js          Verhalten der Bots
+    messages.js      Fehlermeldungen (de/en)
+    content/         Alle Karten und Texte (de.js, en.js)
   client/
     index.html
+    public/          Icons, Manifest, Vorschaubild
     src/
       App.jsx               Phasen-Routing, Phasen-Sounds, Pause-Overlay
-      screens/              Home, Lobby, Rollen, Anruf, Anruf-Ergebnis, Razzia, Rundenergebnis, Auswertung
-      components/           Avatare, Karten, Timer, Effekte (Geldregen, AUFGELEGT, Chaos), Reaktionen, Top-Bar
-      lib/                  Netzwerk/Store, Sound-Synthese + Ansager, Poster-Generator, Hooks
+      screens/              Home, Lobby, Rollen, Anruf (inkl. Messenger), Anruf-Ergebnis, Razzia, Auswertung
+      components/           Avatare, Karten, Timer, Effekte, Reaktionen, Top-Bar, Karten-Editor
+      i18n/                 Texte der Oberfläche (de/en)
+      lib/                  Netzwerk/Store, Sound-Synthese + Ansager, Übersetzung, Poster-Generator, Hooks
       styles.css
-  test/game.test.js         Automatischer Durchlauf eines kompletten Spiels
+  test/                     Spiel-, Bot-, Chat- und Übersetzungs-Tests
   Dockerfile, render.yaml
 ```
 
@@ -165,9 +191,9 @@ Maschen werden erst nach dem Anruf aufgedeckt, das Geheimnis des Opfers sieht nu
 
 ## Ideen für später
 
-- Englische Version (alle Texte liegen gesammelt in `content.js` und den Screens)
 - Echter In-Game-Voice-Chat (WebRTC) statt Discord
-- Twitch-Chat-Integration für Publikums-Abstimmungen
+- Twitch-/YouTube-Chat-Integration für Publikums-Abstimmungen
+- Weitere Sprachen (neue Datei in `server/content/` und `client/src/i18n/`)
 
 ---
 

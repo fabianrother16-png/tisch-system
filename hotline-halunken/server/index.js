@@ -54,16 +54,18 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
     throw new Error('Keine freien Raumcodes');
   }
 
+  const audienceChannel = (code) => `${code}:audience`;
+
   function broadcastState(room) {
-    const baseAudience = room.audience.size ? room.viewFor({}) : null;
     for (const p of room.players) {
       if (p.connected && p.socketId) io.to(p.socketId).emit('state', room.viewFor({ playerId: p.id }));
     }
-    if (!baseAudience) return;
-    const voting = room.phase === 'razziaVote';
-    for (const socketId of room.audience.keys()) {
-      if (voting) io.to(socketId).emit('state', room.viewFor({ socketId }));
-      else io.to(socketId).emit('state', baseAudience);
+    if (!room.audience.size) return;
+    // Zuschauer sehen alle dasselbe – außer ihrem eigenen Razzia-Tipp.
+    if (room.phase === 'razziaVote') {
+      for (const socketId of room.audience.keys()) io.to(socketId).emit('state', room.viewFor({ socketId }));
+    } else {
+      io.to(audienceChannel(room.code)).emit('state', room.viewFor({}));
     }
   }
 
@@ -144,6 +146,7 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
       if (ctx.audience) r.removeAudience(socket.id);
       else if (ctx.playerId && r.player(ctx.playerId)?.socketId === socket.id) r.leave(ctx.playerId);
       socket.leave(r.code);
+      socket.leave(audienceChannel(r.code));
       ctx.code = null;
       ctx.playerId = null;
       ctx.audience = false;
@@ -204,6 +207,7 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
       ctx.code = r.code;
       ctx.audience = true;
       socket.join(r.code);
+      socket.join(audienceChannel(r.code));
       socket.emit('state', r.viewFor({ socketId: socket.id }));
       return { ok: true, code: r.code };
     });
