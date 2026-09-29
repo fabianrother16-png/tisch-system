@@ -1,9 +1,6 @@
+import { money, t } from './i18n.js';
+
 // Erzeugt ein teilbares „Mitarbeiter des Monats“-Poster (1080×1350, ideal für Instagram/TikTok).
-const TITLES = {
-  1: 'MITARBEITER DES MONATS',
-  2: 'VIZE-HALUNKE',
-  3: 'BRONZE-BETRÜGER',
-};
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -64,9 +61,9 @@ export async function renderPoster({ player, rank, total, awards = [] }) {
   ctx.textAlign = 'center';
   ctx.fillStyle = '#0b0614';
   ctx.font = `700 34px ${body}`;
-  ctx.fillText('HALUNKEN GMBH · ABTEILUNG TELEFONBETRUG', W / 2 - 10, 150);
+  ctx.fillText(t('poster.company'), W / 2 - 10, 150);
 
-  const title = TITLES[rank] || `PLATZ ${rank} VON ${total}`;
+  const title = rank <= 3 ? t(`poster.rank${rank}`) : t('poster.rankN', { rank, total });
   const size = fitText(ctx, title, W - 260, 78, display);
   ctx.fillStyle = '#ff4f8b';
   ctx.fillText(title, W / 2 - 6, 250 + (78 - size) / 2);
@@ -97,14 +94,14 @@ export async function renderPoster({ player, rank, total, awards = [] }) {
   ctx.fillText(player.name, cx, 840);
   ctx.font = `900 58px ${body}`;
   ctx.fillStyle = '#16a34a';
-  ctx.fillText(`Beute: ${Math.round(player.score).toLocaleString('de-DE')} €`, cx, 920);
+  ctx.fillText(t('poster.loot', { amount: money(player.score) }), cx, 920);
 
   // Awards
   ctx.fillStyle = '#0b0614';
   ctx.font = `700 40px ${body}`;
   const list = awards.slice(0, 3);
-  list.forEach((a, i) => ctx.fillText(`${a.emoji} ${a.title}`, cx, 990 + i * 50));
-  if (!list.length) ctx.fillText('📞 Hat heute fleißig telefoniert.', cx, 1000);
+  list.forEach((a, i) => ctx.fillText(`${a.emoji} ${t(`award.${a.id}.title`)}`, cx, 990 + i * 50));
+  if (!list.length) ctx.fillText(`📞 ${t('poster.busy')}`, cx, 1000);
 
   // Stempel
   ctx.save();
@@ -116,9 +113,9 @@ export async function renderPoster({ player, rank, total, awards = [] }) {
   roundRect(ctx, -150, -52, 300, 104, 16);
   ctx.stroke();
   ctx.font = `44px ${display}`;
-  ctx.fillText('ECHT', 0, -2);
+  ctx.fillText(t('poster.stamp1'), 0, -2);
   ctx.font = `700 28px ${body}`;
-  ctx.fillText('VERDIENT*', 0, 36);
+  ctx.fillText(t('poster.stamp2'), 0, 36);
   ctx.restore();
 
   // Fußzeile
@@ -126,7 +123,7 @@ export async function renderPoster({ player, rank, total, awards = [] }) {
   ctx.font = `44px ${display}`;
   ctx.fillText('HOTLINE HALUNKEN', cx, H - 150);
   ctx.font = `500 26px ${body}`;
-  ctx.fillText(`${window.location.host} · *Parodie – echte Scammer: auflegen!`, cx, H - 110);
+  ctx.fillText(`${window.location.host} · ${t('poster.footer')}`, cx, H - 110);
 
   return canvas;
 }
@@ -142,7 +139,7 @@ export async function downloadPoster(opts) {
   const touch = window.matchMedia?.('(pointer: coarse)').matches;
   if (touch && navigator.canShare?.({ files: [file] })) {
     try {
-      await navigator.share({ files: [file], title: 'HOTLINE HALUNKEN', text: 'Mitarbeiter des Monats bei der Halunken GmbH 📞😈' });
+      await navigator.share({ files: [file], title: 'HOTLINE HALUNKEN', text: t('poster.shareText') });
       return;
     } catch {
       /* abgebrochen → normaler Download */

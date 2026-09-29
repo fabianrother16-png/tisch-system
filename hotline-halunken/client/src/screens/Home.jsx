@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { clearNotice, createRoom, joinRoom, spectate, useStore } from '../lib/net.js';
 import { setPrefs, usePrefs } from '../lib/prefs.js';
+import { LANGUAGES, setLang, useT } from '../lib/i18n.js';
 import { play, unlockAudio } from '../lib/sound.js';
 
 export const AVATARS = ['🦊', '🐸', '🐷', '🐵', '🐔', '🦄', '🐙', '🐼', '🐯', '🐻', '🐨', '🦁', '🐺', '🦝', '🐧', '🦉', '🐹', '🐮', '🦆', '🐲', '👽', '🤖', '🤡', '👻'];
@@ -9,11 +10,12 @@ export const COLORS = ['#FF4F8B', '#FFD23F', '#3DDCFF', '#3CF08C', '#B57BFF', '#
 const pick = (list) => list[Math.floor(Math.random() * list.length)];
 
 export function ProfileEditor({ name, setName, avatar, setAvatar, color, setColor, onEnter }) {
+  const t = useT();
   return (
     <div className="badge-card">
       <div className="badge-top">
         <span>HALUNKEN GMBH</span>
-        <span className="badge-sub">Mitarbeiterausweis</span>
+        <span className="badge-sub">{t('profile.badge')}</span>
       </div>
       <div className="badge-body">
         <div className="badge-photo" style={{ '--c': color }}>
@@ -21,20 +23,20 @@ export function ProfileEditor({ name, setName, avatar, setAvatar, color, setColo
         </div>
         <div className="badge-fields">
           <label className="field">
-            <span>Dein Name</span>
+            <span>{t('profile.name')}</span>
             <input
               value={name}
               maxLength={16}
-              placeholder="z. B. Kevin"
+              placeholder={t('profile.namePlaceholder')}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && onEnter?.()}
               autoComplete="nickname"
             />
           </label>
-          <div className="badge-meta">Abteilung: Telefonbetrug · Gehalt: Provision</div>
+          <div className="badge-meta">{t('profile.meta')}</div>
         </div>
       </div>
-      <div className="picker" role="radiogroup" aria-label="Avatar">
+      <div className="picker" role="radiogroup" aria-label={t('profile.avatar')}>
         {AVATARS.map((a) => (
           <button
             key={a}
@@ -51,14 +53,14 @@ export function ProfileEditor({ name, setName, avatar, setAvatar, color, setColo
           </button>
         ))}
       </div>
-      <div className="swatches" role="radiogroup" aria-label="Farbe">
+      <div className="swatches" role="radiogroup" aria-label={t('profile.color')}>
         {COLORS.map((c) => (
           <button
             key={c}
             type="button"
             role="radio"
             aria-checked={c === color}
-            aria-label={`Farbe ${c}`}
+            aria-label={t('profile.colorOne', { color: c })}
             className={`swatch ${c === color ? 'is-active' : ''}`}
             style={{ background: c }}
             onClick={() => setColor(c)}
@@ -70,6 +72,7 @@ export function ProfileEditor({ name, setName, avatar, setAvatar, color, setColo
 }
 
 export function Home({ onRules }) {
+  const t = useT();
   const prefs = usePrefs();
   const { notice, connected, resuming } = useStore();
   const params = new URLSearchParams(window.location.search);
@@ -87,7 +90,7 @@ export function Home({ onRules }) {
     unlockAudio();
     clearNotice();
     if (!profile.name) {
-      setError('Wie heißt du? Gib einen Namen ein.');
+      setError(t('home.needName'));
       return;
     }
     setBusy(true);
@@ -96,7 +99,7 @@ export function Home({ onRules }) {
     const res = await fn();
     setBusy(false);
     if (res.error) {
-      setError(res.error);
+      setError(res.local ? t(`err.${res.code}`) : res.error);
       setCanSpectate(!!res.canSpectate);
       play('buzzer');
     } else {
@@ -107,7 +110,7 @@ export function Home({ onRules }) {
 
   const join = () => {
     if (code.length !== 4) {
-      setError('Der Raumcode hat 4 Buchstaben.');
+      setError(t('home.codeLength'));
       return;
     }
     run(() => joinRoom(code, profile));
@@ -116,46 +119,61 @@ export function Home({ onRules }) {
   const watch = async () => {
     unlockAudio();
     if (code.length !== 4) {
-      setError('Gib den Raumcode ein, um zuzuschauen.');
+      setError(t('home.codeToWatch'));
       return;
     }
     setBusy(true);
-    const res = await spectate(code, name.trim() || 'Zuschauer');
+    const res = await spectate(code, name.trim());
     setBusy(false);
-    if (res.error) setError(res.error);
+    if (res.error) setError(res.local ? t(`err.${res.code}`) : res.error);
   };
 
   return (
     <div className="home">
       <section className="hero">
+        <div className="lang-switch" role="group" aria-label="Language">
+          {LANGUAGES.map((l) => (
+            <button key={l.id} type="button" className={`lang-btn ${prefs.lang === l.id ? 'is-active' : ''}`} onClick={() => setLang(l.id)}>
+              {l.flag} {l.label}
+            </button>
+          ))}
+        </div>
         <div className="hero-phone" aria-hidden="true">☎️</div>
         <h1 className="logo">
           <span className="logo-top">HOTLINE</span>
           <span className="logo-bottom">HALUNKEN</span>
         </h1>
         <p className="hero-tag">
-          Das Scam-Callcenter-Partyspiel. Ruf dein Opfer an, zock es mit absurden Maschen ab –
-          <b> aber pass auf: Einer von euch ist ein Undercover-Cop.</b>
+          {t('home.tagline')} <b>{t('home.taglineBold')}</b>
         </p>
         <div className="hero-badges">
-          <span>👥 3–12 Spieler</span>
-          <span>🎙️ Voice-Chat</span>
-          <span>👀 Zuschauer-Modus</span>
-          <span>⏱️ 15–40 Min.</span>
+          <span>👥 {t('home.badgePlayers')}</span>
+          <span>🎙️ {t('home.badgeVoice')}</span>
+          <span>💬 {t('home.badgeChat')}</span>
+          <span>👀 {t('home.badgeAudience')}</span>
+          <span>🤖 {t('home.badgeBots')}</span>
         </div>
       </section>
 
       <section className="home-main">
-        <ProfileEditor name={name} setName={setName} avatar={avatar} setAvatar={setAvatar} color={color} setColor={setColor} onEnter={() => (code.length === 4 ? join() : run(() => createRoom(profile)))} />
+        <ProfileEditor
+          name={name}
+          setName={setName}
+          avatar={avatar}
+          setAvatar={setAvatar}
+          color={color}
+          setColor={setColor}
+          onEnter={() => (code.length === 4 ? join() : run(() => createRoom(profile)))}
+        />
 
         <div className="home-actions">
-          {(notice || error) && <div className="alert">{error || notice}</div>}
-          {resuming && <div className="alert alert-info">Verbinde dich zurück ins Spiel …</div>}
+          {(notice || error) && <div className="alert">{error || t(`notice.${notice}`)}</div>}
+          {resuming && <div className="alert alert-info">{t('home.resuming')}</div>}
           <button type="button" className="btn btn-yellow btn-xl" disabled={busy || !connected} onClick={() => run(() => createRoom(profile))}>
-            📞 Neuen Raum eröffnen
+            📞 {t('home.create')}
           </button>
           <div className="or">
-            <span>oder mit Code beitreten</span>
+            <span>{t('home.orJoin')}</span>
           </div>
           <div className="join-row">
             <input
@@ -163,50 +181,35 @@ export function Home({ onRules }) {
               value={code}
               placeholder="CODE"
               maxLength={4}
-              aria-label="Raumcode"
+              aria-label={t('home.codeLabel')}
               onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4))}
               onKeyDown={(e) => e.key === 'Enter' && join()}
             />
             <button type="button" className="btn btn-cyan" disabled={busy || !connected} onClick={join}>
-              Beitreten
+              {t('home.join')}
             </button>
           </div>
           <button type="button" className={`btn btn-ghost ${canSpectate ? 'is-pulse' : ''}`} disabled={busy || !connected} onClick={watch}>
-            👀 Nur zuschauen (Publikum)
+            👀 {t('home.watch')}
           </button>
-          {!connected && <div className="muted small">Verbinde mit dem Server …</div>}
+          {!connected && <div className="muted small">{t('home.connecting')}</div>}
           <button type="button" className="link-btn" onClick={onRules}>
-            ❓ Wie funktioniert das Spiel?
+            ❓ {t('home.howTo')}
           </button>
         </div>
       </section>
 
       <section className="how">
-        <div className="how-step">
-          <span>🎯</span>
-          <b>Einer ist das Opfer</b>
-          <p>Oma Gertrud, Graf Dracula oder ein smarter Toaster – mit echtem Konto.</p>
-        </div>
-        <div className="how-step">
-          <span>📞</span>
-          <b>Alle anderen rufen an</b>
-          <p>Mit absurden Maschen und Pflicht-Stimmen: Pirat, Roboter, Sportkommentator …</p>
-        </div>
-        <div className="how-step">
-          <span>📵</span>
-          <b>Überweisen oder auflegen</b>
-          <p>Das Opfer schickt Geld, drückt dich in die Warteschleife – oder legt einfach auf.</p>
-        </div>
-        <div className="how-step">
-          <span>🚔</span>
-          <b>Razzia!</b>
-          <p>Einer der Anrufer ist ein Undercover-Cop. Findet ihn – oder er kassiert eure Beute.</p>
-        </div>
+        {['victim', 'call', 'hangup', 'razzia'].map((k, i) => (
+          <div key={k} className="how-step">
+            <span>{['🎯', '📞', '📵', '🚔'][i]}</span>
+            <b>{t(`home.how.${k}.title`)}</b>
+            <p>{t(`home.how.${k}.text`)}</p>
+          </div>
+        ))}
       </section>
 
-      <footer className="home-foot">
-        Parodie-Spiel. Echte Betrugsanrufe? Auflegen – und im Zweifel 110 wählen.
-      </footer>
+      <footer className="home-foot">{t('home.footer')}</footer>
     </div>
   );
 }

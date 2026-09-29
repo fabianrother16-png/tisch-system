@@ -10,18 +10,21 @@ export function Avatar({ player, size = 'md', crown = false, badge = null, dim =
       <span className="avatar-face">{player.avatar}</span>
       {headset && <span className="avatar-headset" aria-hidden="true" />}
       {crown && <span className="avatar-crown" aria-label="Host">👑</span>}
-      {badge && <span className="avatar-badge">{badge}</span>}
-      {offline && <span className="avatar-offline" title="Offline">📴</span>}
+      {(badge || player.bot) && <span className="avatar-badge">{badge || '🤖'}</span>}
+      {offline && <span className="avatar-offline">📴</span>}
     </div>
   );
 }
 
-export function PlayerChip({ player, you = false, children }) {
+export function PlayerChip({ player, you = false, youLabel = '', children }) {
   if (!player) return null;
   return (
     <span className="player-chip" style={{ '--c': player.color }}>
       <span className="player-chip-face">{player.avatar}</span>
-      <span className="player-chip-name">{player.name}{you ? ' (du)' : ''}</span>
+      <span className="player-chip-name">
+        {player.name}
+        {you ? ` ${youLabel}` : ''}
+      </span>
       {children}
     </span>
   );

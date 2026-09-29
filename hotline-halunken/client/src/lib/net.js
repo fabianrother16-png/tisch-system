@@ -1,5 +1,6 @@
 import { io } from 'socket.io-client';
 import { useSyncExternalStore } from 'react';
+import { getPrefs, subscribePrefs } from './prefs.js';
 
 // Pro Tab eine eigene Sitzung (sessionStorage): So kann man zum Testen auch mehrere Tabs öffnen,
 // und ein Neuladen der Seite bringt einen trotzdem zurück ins laufende Spiel.
@@ -61,7 +62,17 @@ export function emitLocalFx(fx) {
 }
 
 // ---------------------------------------------------------------- socket
-export const socket = io({ transports: ['websocket', 'polling'], reconnectionDelayMax: 3000 });
+export const socket = io({ transports: ['websocket', 'polling'], reconnectionDelayMax: 3000, auth: { lang: getPrefs().lang } });
+
+// Sprachwechsel an den Server melden (für Fehlermeldungen).
+let lastLang = getPrefs().lang;
+subscribePrefs(() => {
+  const { lang } = getPrefs();
+  if (lang === lastLang) return;
+  lastLang = lang;
+  socket.auth = { lang };
+  if (socket.connected) socket.emit('lang', { lang }, () => {});
+});
 
 socket.on('connect', () => {
   setStore({ connected: true });
@@ -77,9 +88,9 @@ socket.on('state', (view) => {
 
 socket.on('fx', (fx) => emitLocalFx(fx));
 
-socket.on('kicked', ({ text }) => {
+socket.on('kicked', ({ code }) => {
   saveSession(null);
-  setStore({ view: null, notice: text });
+  setStore({ view: null, notice: code || 'kicked' });
 });
 
 async function resume(session) {
@@ -89,31 +100,37 @@ async function resume(session) {
     : await emit('room:resume', session);
   if (res.error) {
     saveSession(null);
-    setStore({ view: null, resuming: false, notice: 'Deine letzte Sitzung ist abgelaufen.' });
+    setStore({ view: null, resuming: false, notice: 'sessionExpired' });
   }
 }
 
 export function emit(event, payload = {}) {
   return new Promise((resolve) => {
     if (!socket.connected) {
-      resolve({ error: 'Keine Verbindung zum Server.' });
+      resolve({ error: 'offline', code: 'offline', local: true });
       return;
     }
     socket.timeout(8000).emit(event, payload, (err, res) => {
-      resolve(err ? { error: 'Server antwortet nicht.' } : res || { ok: true });
+      resolve(err ? { error: 'timeout', code: 'timeout', local: true } : res || { ok: true });
     });
   });
 }
 
-export async function act(type, data) {
+// Fehler anzeigen: Servertexte sind schon übersetzt, lokale Fehler haben einen Schlüssel.
+export function showError(res) {
+  if (!res?.error) return;
+  emitLocalFx(res.local ? { type: 'toast', key: `err.${res.code}`, kind: 'error' } : { type: 'toast', text: res.error, kind: 'error' });
+}
+
+export async function act(type, data, { quiet = false } = {}) {
   const res = await emit('action', { type, data });
-  if (res?.error) emitLocalFx({ type: 'toast', text: res.error, kind: 'error' });
+  if (res?.error && !quiet) showError(res);
   return res;
 }
 
 export async function react(emoji) {
   const res = await emit('react', { emoji });
-  if (res?.error && !res.error.startsWith('Langsam')) emitLocalFx({ type: 'toast', text: res.error, kind: 'error' });
+  if (res?.error && res.code !== 'slowDown') showError(res);
 }
 
 export async function createRoom(profile) {

@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useCountdown } from '../lib/hooks.js';
+import { useT } from '../lib/i18n.js';
 import { play } from '../lib/sound.js';
 
 export function Timer({ endsAt, timerKey, tickFrom = 0, big = false, label }) {
+  const t = useT();
   const { seconds, progress } = useCountdown(endsAt, timerKey);
   const lastTick = useRef(null);
   useEffect(() => {
@@ -17,17 +19,10 @@ export function Timer({ endsAt, timerKey, tickFrom = 0, big = false, label }) {
   const circ = 2 * Math.PI * r;
   const danger = seconds <= 5;
   return (
-    <div className={`timer ${big ? 'timer-big' : ''} ${danger ? 'is-danger' : ''}`} role="timer" aria-label={`${seconds} Sekunden`}>
+    <div className={`timer ${big ? 'timer-big' : ''} ${danger ? 'is-danger' : ''}`} role="timer" aria-label={t('timer.seconds', { n: seconds })}>
       <svg viewBox="0 0 64 64" aria-hidden="true">
         <circle cx="32" cy="32" r={r} className="timer-track" />
-        <circle
-          cx="32"
-          cy="32"
-          r={r}
-          className="timer-bar"
-          strokeDasharray={circ}
-          strokeDashoffset={circ * (1 - progress)}
-        />
+        <circle cx="32" cy="32" r={r} className="timer-bar" strokeDasharray={circ} strokeDashoffset={circ * (1 - progress)} />
       </svg>
       <span className="timer-num">{seconds}</span>
       {label && <span className="timer-label">{label}</span>}

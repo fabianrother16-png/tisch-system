@@ -451,6 +451,7 @@ export function customProof(title) {
 export const BOT_NAMES = ['Bot Bernd', 'Bot Gisela', 'Bot Kevin', 'Bot Mandy', 'Bot Horst', 'Bot Chantal', 'Bot Detlef', 'Bot Svenja', 'Bot Uwe', 'Bot Jacqueline', 'Bot Rüdiger', 'Bot Heidi'];
 
 export const BOT_CALLER_OPENER = 'Hallo, hier spricht {caller}! Haben Sie kurz Zeit?';
+export const BOT_CALLER_TOPIC = 'Es geht um Folgendes: {title}. Ein einmaliges Angebot, nur für Sie!';
 export const BOT_CALLER_PUSH = [
   'Das Angebot gilt aber nur noch heute!',
   'Vertrauen Sie mir, ich mache das beruflich.',

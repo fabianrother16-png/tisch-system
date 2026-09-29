@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { onFx, useStore } from '../lib/net.js';
+import { onFx, serverNow, useStore } from '../lib/net.js';
 import { announce, play, startHoldMusic, stopHoldMusic } from '../lib/sound.js';
-import { euro } from '../lib/hooks.js';
+import { money, t as translateNow, useT } from '../lib/i18n.js';
 import { ProofCard } from './Cards.jsx';
 
 let nextId = 1;
 
 // Globale Effekte: Geldregen, AUFGELEGT, Chaos-Karten, Beweise – plus die passenden Sounds.
 export function FxLayer() {
+  const t = useT();
   const { view } = useStore();
   const viewRef = useRef(view);
   viewRef.current = view;
@@ -19,20 +20,21 @@ export function FxLayer() {
       setOverlays((list) => [...list.filter((o) => o.kind !== kind), { id, kind, data }]);
       setTimeout(() => setOverlays((list) => list.filter((o) => o.id !== id)), ms);
     };
-    const nameOf = (id) => viewRef.current?.players.find((p) => p.id === id)?.name ?? 'Jemand';
+    const nameOf = (id) => viewRef.current?.players.find((p) => p.id === id)?.name ?? '???';
     return onFx((fx) => {
+      const v = viewRef.current;
       switch (fx.type) {
         case 'transfer':
           play('kaching');
           show('transfer', { amount: fx.amount, to: nameOf(fx.callerId), all: fx.all }, 2800);
-          if (fx.all) announce('Wahnsinn. Das Opfer hat alles überwiesen!');
+          if (fx.all) announce(translateNow('say.allIn'));
           break;
         case 'callEnd':
           stopHoldMusic();
           if (fx.reason === 'hangup') {
             play('busy');
             show('hangup', { name: nameOf(fx.callerId) }, 2800);
-            announce('Aufgelegt!');
+            announce(translateNow('say.hungUp'));
           } else if (fx.reason === 'timeout') {
             play('buzzer');
           }
@@ -40,7 +42,7 @@ export function FxLayer() {
         case 'chaos':
           play('chaos');
           show('chaos', fx.chaos, 6500);
-          announce(`Chaos-Karte! ${fx.chaos.text}`);
+          announce(`${translateNow('say.chaos')} ${fx.chaos.text}`);
           break;
         case 'proof':
           play('paper');
@@ -55,8 +57,17 @@ export function FxLayer() {
         case 'sfx':
           play(fx.id);
           break;
+        case 'chat': {
+          const myRole = v?.game?.myRole;
+          const mine = (fx.from === 'victim' && myRole === 'victim') || (fx.from === 'caller' && v?.game?.call?.callerId === v?.me?.id);
+          if (!mine) play('pling');
+          break;
+        }
         case 'pause':
           stopHoldMusic();
+          break;
+        case 'resume':
+          if (fx.holdUntil && fx.holdUntil > serverNow()) startHoldMusic((fx.holdUntil - serverNow()) / 1000);
           break;
         default:
           break;
@@ -72,11 +83,11 @@ export function FxLayer() {
         if (o.kind === 'transfer') {
           return (
             <div key={o.id} className="fx fx-transfer">
-              <MoneyRain big={o.data.all || o.data.amount >= 500} />
+              <MoneyRain big={o.data.all || o.data.amount >= (view?.chips?.[3] ?? 500)} />
               <div className="fx-transfer-box">
-                <div className="fx-transfer-amount">+{euro(o.data.amount)}</div>
-                <div className="fx-transfer-to">💸 überwiesen an {o.data.to}</div>
-                {o.data.all && <div className="fx-transfer-all">ALLES!!!</div>}
+                <div className="fx-transfer-amount">+{money(o.data.amount)}</div>
+                <div className="fx-transfer-to">💸 {t('fx.transferTo', { name: o.data.to })}</div>
+                {o.data.all && <div className="fx-transfer-all">{t('fx.all')}</div>}
               </div>
             </div>
           );
@@ -86,8 +97,8 @@ export function FxLayer() {
             <div key={o.id} className="fx fx-hangup" onClick={() => dismiss(o.id)}>
               <div className="fx-hangup-box">
                 <div className="fx-hangup-icon">📵</div>
-                <div className="fx-hangup-text">AUFGELEGT!</div>
-                <div className="fx-hangup-sub">tuut … tuut … tuut … ({o.data.name})</div>
+                <div className="fx-hangup-text">{t('fx.hungUp')}</div>
+                <div className="fx-hangup-sub">{t('fx.busy', { name: o.data.name })}</div>
               </div>
             </div>
           );
@@ -96,7 +107,7 @@ export function FxLayer() {
           return (
             <div key={o.id} className="fx fx-chaos" onClick={() => dismiss(o.id)}>
               <div className="fx-chaos-card">
-                <div className="fx-chaos-label">⚡ CHAOS-KARTE ⚡</div>
+                <div className="fx-chaos-label">⚡ {t('fx.chaosCard')} ⚡</div>
                 <div className="fx-chaos-emoji">{o.data.emoji}</div>
                 <div className="fx-chaos-text">{o.data.text}</div>
               </div>
@@ -130,10 +141,7 @@ function MoneyRain({ big }) {
   return (
     <div className="money-rain" aria-hidden="true">
       {drops.map((d) => (
-        <span
-          key={d.id}
-          style={{ left: `${d.left}%`, animationDelay: `${d.delay}s`, animationDuration: `${d.dur}s`, fontSize: `${d.size}rem` }}
-        >
+        <span key={d.id} style={{ left: `${d.left}%`, animationDelay: `${d.delay}s`, animationDuration: `${d.dur}s`, fontSize: `${d.size}rem` }}>
           {d.emoji}
         </span>
       ))}
@@ -171,22 +179,23 @@ export function ReactionLayer() {
 }
 
 export function Toasts() {
+  const t = useT();
   const [toasts, setToasts] = useState([]);
   useEffect(
     () =>
       onFx((fx) => {
         if (fx.type !== 'toast') return;
         const id = nextId++;
-        setToasts((list) => [...list.slice(-3), { id, text: fx.text, kind: fx.kind || 'info' }]);
-        setTimeout(() => setToasts((list) => list.filter((t) => t.id !== id)), 3200);
+        setToasts((list) => [...list.slice(-3), { id, text: fx.text, key: fx.key, vars: fx.vars, kind: fx.kind || 'info' }]);
+        setTimeout(() => setToasts((list) => list.filter((x) => x.id !== id)), 3200);
       }),
     [],
   );
   return (
     <div className="toasts" role="status">
-      {toasts.map((t) => (
-        <div key={t.id} className={`toast toast-${t.kind}`}>
-          {t.text}
+      {toasts.map((x) => (
+        <div key={x.id} className={`toast toast-${x.kind}`}>
+          {x.key ? t(x.key, x.vars) : x.text}
         </div>
       ))}
     </div>

@@ -44,9 +44,6 @@ export function usePrevious(value) {
   return ref.current;
 }
 
-export function euro(n) {
-  return `${Math.round(n).toLocaleString('de-DE')} €`;
-}
 
 // Animiertes Hochzählen einer Zahl.
 export function useCountUp(target, duration = 900) {

@@ -222,6 +222,10 @@ const SFX = {
     noise({ dur: 0.25, vol: 0.2, freq: 4000, sweepTo: 1500, q: 1.5 });
     noise({ at: 0.18, dur: 0.2, vol: 0.15, freq: 2500, sweepTo: 5000, q: 1.5 });
   },
+  pling() {
+    tone({ freq: 988, dur: 0.07, vol: 0.14 });
+    tone({ freq: 1480, at: 0.08, dur: 0.12, vol: 0.12, release: 0.1 });
+  },
   coins() {
     for (let i = 0; i < 6; i++) tone({ freq: 1800 + i * 180, type: 'triangle', at: i * 0.06, dur: 0.08, vol: 0.08 });
   },
@@ -282,11 +286,11 @@ export function announce(text) {
     const clean = text.replace(/[\p{Extended_Pictographic}‍️]/gu, '').replace(/\s+/g, ' ').trim();
     if (!clean) return;
     const u = new SpeechSynthesisUtterance(clean);
-    u.lang = 'de-DE';
+    u.lang = getPrefs().lang === 'en' ? 'en-US' : 'de-DE';
     u.rate = 1.05;
     u.pitch = 0.85;
     u.volume = Math.min(1, getPrefs().volume + 0.1);
-    const voice = synth.getVoices().find((v) => v.lang?.toLowerCase().startsWith('de'));
+    const voice = synth.getVoices().find((v) => v.lang?.toLowerCase().startsWith(getPrefs().lang === 'en' ? 'en' : 'de'));
     if (voice) u.voice = voice;
     synth.speak(u);
   } catch {

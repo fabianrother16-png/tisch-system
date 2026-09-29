@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { act, useStore } from './lib/net.js';
 import { announce, audioLocked, play, stopHoldMusic, unlockAudio } from './lib/sound.js';
+import { t as translateNow, useT } from './lib/i18n.js';
+import { usePrefs } from './lib/prefs.js';
 import { TopBar } from './components/TopBar.jsx';
 import { FxLayer, ReactionLayer, Toasts } from './components/FxLayer.jsx';
 import { Modal, Rules } from './components/Modal.jsx';
@@ -26,18 +28,18 @@ function usePhaseEffects(view) {
     switch (view.phase) {
       case 'roles':
         play('whoosh');
-        announce(`Runde ${g.round}. Heute im Visier: ${g.persona?.name}.`);
+        announce(translateNow('say.round', { round: g.round, name: g.persona?.name }));
         break;
       case 'call':
         play('pickup');
         break;
       case 'razziaVote':
         play('siren');
-        announce('Razzia! Einer der Anrufer ist ein Undercover-Cop. Stimmt ab!');
+        announce(translateNow('say.razzia'));
         break;
       case 'gameOver': {
         const top = g.ranking?.[0] && view.players.find((p) => p.id === g.ranking[0].id);
-        if (top) announce(`Schicht beendet. Mitarbeiter des Monats ist ${top.name}!`);
+        if (top) announce(translateNow('say.gameOver', { name: top.name }));
         break;
       }
       default:
@@ -47,15 +49,16 @@ function usePhaseEffects(view) {
 }
 
 function PauseOverlay({ isHost }) {
+  const t = useT();
   return (
     <div className="pause-overlay">
       <div className="pause-box">
         <div className="pause-icon">⏸️</div>
-        <div className="pause-title">KAFFEEPAUSE</div>
-        <p>Der Host hat das Spiel pausiert.</p>
+        <div className="pause-title">{t('pause.title')}</div>
+        <p>{t('pause.text')}</p>
         {isHost && (
           <button type="button" className="btn btn-yellow btn-lg" onClick={() => act('resume')}>
-            ▶ Weiter geht’s
+            ▶ {t('pause.resume')}
           </button>
         )}
       </div>
@@ -64,6 +67,7 @@ function PauseOverlay({ isHost }) {
 }
 
 function SoundHint() {
+  const t = useT();
   const [locked, setLocked] = useState(false);
   useEffect(() => {
     setLocked(audioLocked());
@@ -81,13 +85,18 @@ function SoundHint() {
   if (!locked) return null;
   return (
     <button type="button" className="sound-hint" onClick={() => unlockAudio()}>
-      🔊 Tippen für Sound
+      🔊 {t('app.soundHint')}
     </button>
   );
 }
 
 export default function App() {
+  const t = useT();
+  const { lang } = usePrefs();
   const { view } = useStore();
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
   const [rules, setRules] = useState(false);
   usePhaseEffects(view);
 
@@ -139,7 +148,7 @@ export default function App() {
       <Toasts />
       {view && <SoundHint />}
       {rules && (
-        <Modal title="So läuft eine Schicht" onClose={() => setRules(false)} wide>
+        <Modal title={t('rules.title')} onClose={() => setRules(false)} wide>
           <Rules />
         </Modal>
       )}

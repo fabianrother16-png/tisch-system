@@ -91,10 +91,7 @@ function runCall(room, bots) {
     if (room.random() < 0.5) after(room, at(between(room, 0.1, 0.8)), () => room.action(caller.id, 'sound', { id: pick(room, ['typing', 'kaching', 'airhorn', 'ding']) }));
     if (chatMode) {
       const masche = room.masche(r.cards[caller.id].mascheId);
-      const lines = [
-        C.BOT_CALLER_OPENER.replace('{caller}', masche.caller),
-        ...masche.pitch.split(/(?<=[.!?])\s+/).filter(Boolean),
-      ];
+      const lines = [C.BOT_CALLER_OPENER.replace('{caller}', masche.caller), C.BOT_CALLER_TOPIC.replace('{title}', masche.title)];
       let i = 0;
       const next = () => {
         const text = i < lines.length ? lines[i] : pick(room, C.BOT_CALLER_PUSH);
