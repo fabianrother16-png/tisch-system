@@ -86,9 +86,15 @@ Das Spiel braucht einen Server mit **WebSockets** – reines Static-Hosting oder
 Gut geeignet (jeweils mit Gratis-Stufe):
 
 **Render (am einfachsten):**
-1. Auf [render.com](https://render.com) einloggen → **New + → Blueprint** → dieses GitHub-Repo auswählen.
-2. Render liest `hotline-halunken/render.yaml` und richtet alles automatisch ein.
+1. Auf [render.com](https://render.com) einloggen → **New + → Web Service** → dieses GitHub-Repo auswählen.
+2. Eintragen:
+   - **Root Directory:** `hotline-halunken`
+   - **Build Command:** `npm ci && npm run build`
+   - **Start Command:** `npm start`
+   - **Instance Type:** Free
 3. Nach dem Build bekommst du eine URL wie `https://hotline-halunken.onrender.com` – fertig.
+
+Alternativ per **New + → Blueprint** mit dem Blueprint-Pfad `hotline-halunken/render.yaml` (enthält dieselben Einstellungen).
 
 > Hinweis: Der Gratis-Plan von Render schläft nach Inaktivität ein; der erste Aufruf dauert dann ~30 Sekunden.
 
