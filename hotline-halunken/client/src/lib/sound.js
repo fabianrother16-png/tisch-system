@@ -277,7 +277,7 @@ export function stopHoldMusic() {
 }
 
 // --------------------------------------------------------------- Ansager (Text-to-Speech)
-export function announce(text) {
+export function announce(text, lang = getPrefs().lang) {
   const { announcer, muted } = getPrefs();
   if (!announcer || muted || !('speechSynthesis' in window)) return;
   try {
@@ -286,11 +286,11 @@ export function announce(text) {
     const clean = text.replace(/[\p{Extended_Pictographic}‍️]/gu, '').replace(/\s+/g, ' ').trim();
     if (!clean) return;
     const u = new SpeechSynthesisUtterance(clean);
-    u.lang = getPrefs().lang === 'en' ? 'en-US' : 'de-DE';
+    u.lang = lang === 'en' ? 'en-US' : 'de-DE';
     u.rate = 1.05;
     u.pitch = 0.85;
     u.volume = Math.min(1, getPrefs().volume + 0.1);
-    const voice = synth.getVoices().find((v) => v.lang?.toLowerCase().startsWith(getPrefs().lang === 'en' ? 'en' : 'de'));
+    const voice = synth.getVoices().find((v) => v.lang?.toLowerCase().startsWith(lang === 'en' ? 'en' : 'de'));
     if (voice) u.voice = voice;
     synth.speak(u);
   } catch {

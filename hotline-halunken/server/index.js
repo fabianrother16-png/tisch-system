@@ -29,6 +29,10 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
   app.disable('x-powered-by');
   app.set('trust proxy', true); // hinter Render/Railway/Fly: https korrekt erkennen
   app.get('/health', (_req, res) => res.json({ ok: true, rooms: rooms.size }));
+  // Optionale Links für den öffentlichen Betrieb (z. B. Impressum-Pflicht in Deutschland).
+  app.get('/config.json', (_req, res) =>
+    res.json({ imprintUrl: process.env.IMPRINT_URL || null, privacyUrl: process.env.PRIVACY_URL || null }),
+  );
   if (fs.existsSync(DIST)) {
     const indexHtml = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
     app.use(express.static(DIST, { index: false, maxAge: '1h' }));
@@ -177,6 +181,9 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
     on('room:join', ({ code, profile }) => {
       const r = rooms.get(normalizeCode(code));
       if (!r) return { error: 'roomNotFound' };
+      // Doppelt geklickt? Dann einfach die bestehende Sitzung zurückgeben.
+      const existing = ctx.code === r.code && ctx.playerId ? r.player(ctx.playerId) : null;
+      if (existing && existing.socketId === socket.id) return { ok: true, code: r.code, playerId: existing.id, secret: existing.secret };
       const res = r.addPlayer(profile, socket.id);
       if (res.error) return { ...res, canSpectate: r.settings.audience };
       return attachPlayer(r, res.player);

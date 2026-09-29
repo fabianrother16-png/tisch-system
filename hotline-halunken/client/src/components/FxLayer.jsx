@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { onFx, serverNow, useStore } from '../lib/net.js';
 import { announce, play, startHoldMusic, stopHoldMusic } from '../lib/sound.js';
-import { money, t as translateNow, useT } from '../lib/i18n.js';
+import { money, t as translateNow, translate, useT } from '../lib/i18n.js';
 import { ProofCard } from './Cards.jsx';
 
 let nextId = 1;
@@ -42,7 +42,11 @@ export function FxLayer() {
         case 'chaos':
           play('chaos');
           show('chaos', fx.chaos, 6500);
-          announce(`${translateNow('say.chaos')} ${fx.chaos.text}`);
+          {
+            // Die Karte ist in der Kartensprache des Raums – also auch so vorlesen.
+            const roomLang = v?.settings?.lang;
+            announce(`${translate(roomLang, 'say.chaos')} ${fx.chaos.text}`, roomLang);
+          }
           break;
         case 'proof':
           play('paper');

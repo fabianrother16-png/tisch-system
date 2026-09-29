@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { clearNotice, createRoom, joinRoom, spectate, useStore } from '../lib/net.js';
 import { setPrefs, usePrefs } from '../lib/prefs.js';
 import { LANGUAGES, setLang, useT } from '../lib/i18n.js';
@@ -209,7 +209,37 @@ export function Home({ onRules }) {
         ))}
       </section>
 
-      <footer className="home-foot">{t('home.footer')}</footer>
+      <footer className="home-foot">
+        <div>{t('home.footer')}</div>
+        <div className="home-privacy">🔒 {t('home.privacy')}</div>
+        <LegalLinks />
+      </footer>
+    </div>
+  );
+}
+
+function LegalLinks() {
+  const t = useT();
+  const [config, setConfig] = useState(null);
+  useEffect(() => {
+    fetch('/config.json')
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setConfig)
+      .catch(() => setConfig(null));
+  }, []);
+  if (!config?.imprintUrl && !config?.privacyUrl) return null;
+  return (
+    <div className="legal-links">
+      {config.imprintUrl && (
+        <a href={config.imprintUrl} target="_blank" rel="noreferrer">
+          {t('home.imprint')}
+        </a>
+      )}
+      {config.privacyUrl && (
+        <a href={config.privacyUrl} target="_blank" rel="noreferrer">
+          {t('home.privacyLink')}
+        </a>
+      )}
     </div>
   );
 }

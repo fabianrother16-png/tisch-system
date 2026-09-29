@@ -78,6 +78,9 @@ export default {
   'home.how.razzia.title': 'Police raid!',
   'home.how.razzia.text': 'One of the callers is an undercover cop. Find them – or they seize your loot.',
   'home.footer': 'A parody game. Real scam calls? Hang up – and if in doubt, call the police.',
+  'home.privacy': 'No cookies, no tracking: names and messages only exist in the server’s memory while you play.',
+  'home.imprint': 'Legal notice',
+  'home.privacyLink': 'Privacy',
 
   'lobby.inviteTitle': 'Invite your fellow scammers',
   'lobby.inviteText': 'Enter the code on this page – or share the link/QR code. Viewers can join the audience with the same code.',

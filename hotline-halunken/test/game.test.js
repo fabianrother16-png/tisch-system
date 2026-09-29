@@ -230,6 +230,10 @@ test('Raumwechsel: alter Spieler verlässt den alten Raum', async () => {
     const first = await a.emit('room:create', { profile: { name: 'Anna' } });
     await b.emit('room:join', { code: first.code, profile: { name: 'Ben' } });
     await b.waitFor((s) => s.players.length === 2, 'beide in Raum 1');
+    const again = await b.emit('room:join', { code: first.code, profile: { name: 'Ben' } });
+    assert.ok(again.ok, 'doppeltes Beitreten ist harmlos');
+    await new Promise((r) => setTimeout(r, 50));
+    assert.equal(a.state.players.length, 2, 'kein doppelter Spieler');
     const second = await b.emit('room:create', { profile: { name: 'Ben' } });
     assert.ok(second.ok);
     await a.waitFor((s) => s.players.length === 1, 'Ben hat Raum 1 verlassen');

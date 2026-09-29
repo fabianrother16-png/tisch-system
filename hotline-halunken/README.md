@@ -132,6 +132,16 @@ Ohne Docker: `npm ci && npm run build && npm start` – der Server nimmt den Por
 | `PORT` | `3000` | Port des Servers |
 | `HH_TIME_SCALE` | `1` | Zeitfaktor für alle Timer (z. B. `0.5` = doppelt so schnell, zum Testen) |
 | `CORS_ORIGIN` | – | Nur nötig, wenn Frontend und Server auf verschiedenen Domains laufen (Komma-getrennt) |
+| `IMPRINT_URL` | – | Link zu deinem Impressum (wird auf der Startseite angezeigt) |
+| `PRIVACY_URL` | – | Link zu deiner Datenschutzerklärung |
+
+### Rechtliches beim öffentlichen Betrieb
+
+Wenn du das Spiel öffentlich (z. B. für deine Community) betreibst, brauchst du in Deutschland je nach Fall ein
+**Impressum** und eine **Datenschutzerklärung**. Trag die Links über `IMPRINT_URL` und `PRIVACY_URL` ein – sie
+erscheinen dann unten auf der Startseite. Zur Einordnung: Das Spiel setzt keine Cookies, nutzt kein Tracking und lädt
+keine externen Schriften; Namen und Chat-Nachrichten liegen nur während des Spiels im Arbeitsspeicher des Servers.
+Die Browser-Einstellungen (Ton, Sprache, eigene Karten) werden lokal im Browser gespeichert.
 
 ## So wird gespielt (Kurzfassung)
 

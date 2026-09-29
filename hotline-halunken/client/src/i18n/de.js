@@ -78,6 +78,9 @@ export default {
   'home.how.razzia.title': 'Razzia!',
   'home.how.razzia.text': 'Einer der Anrufer ist ein Undercover-Cop. Findet ihn – oder er kassiert eure Beute.',
   'home.footer': 'Parodie-Spiel. Echte Betrugsanrufe? Auflegen – und im Zweifel 110 wählen.',
+  'home.privacy': 'Keine Cookies, kein Tracking: Namen und Nachrichten existieren nur während des Spiels im Arbeitsspeicher des Servers.',
+  'home.imprint': 'Impressum',
+  'home.privacyLink': 'Datenschutz',
 
   'lobby.inviteTitle': 'Lade deine Halunken ein',
   'lobby.inviteText': 'Code auf dieser Seite eingeben – oder Link/QR teilen. Zuschauer können mit dem gleichen Code als Publikum rein.',

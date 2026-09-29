@@ -1162,6 +1162,21 @@ h3 {
   text-align: center;
   color: var(--muted);
   font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.home-privacy {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+.legal-links {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+.legal-links a {
+  color: var(--cyan);
 }
 
 /* ------------------------------------------------------------------ Lobby */
