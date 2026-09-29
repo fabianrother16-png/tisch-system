@@ -1,1 +1,486 @@
-export * from './de.js'; // Platzhalter – wird durch die englischen Inhalte ersetzt
+// All game content for HOTLINE HALUNKEN in English.
+// IDs match the German cards (server/content/de.js).
+
+// ---------------------------------------------------------------------------
+// SCAMS – what the scammers call about. Each caller picks 1 of 2.
+// ---------------------------------------------------------------------------
+export const MASCHEN = [
+  {
+    id: 'winzigweich',
+    emoji: '🖥️',
+    title: 'Macrohard Support',
+    caller: 'Kevin from Macrohard Support',
+    pitch: 'The victim’s computer has 3,847 viruses. Only you can remove them – for a fee, paid in gift cards.',
+    tips: ['Claim you can see the victim’s screen live.', 'Make the victim press keys that don’t exist (“Press F13 now”).'],
+    proof: { kind: 'screen', title: '⚠️ MACROHARD VIRUS ALERT', lines: ['Viruses found: 3,847', 'Dangerous ones: ALL OF THEM', 'Solution: pay Kevin'], stamp: 'TOTALLY OFFICIAL' },
+  },
+  {
+    id: 'enkel',
+    emoji: '👦',
+    title: 'The Grandkid Scam',
+    caller: '“Guess who it is!”',
+    pitch: 'You’re supposedly the victim’s grandchild. You crashed a Lamborghini taxi and need money RIGHT NOW.',
+    tips: ['Open with “Guess who it is!” and go with whatever name the victim guesses.', 'You have a new number. And a new voice. It’s a cold!'],
+    proof: { kind: 'photo', title: 'Proof photo: Me (grandkid)', lines: ['[Photo of a potato wearing sunglasses]', '“Don’t I look like I used to?”'], stamp: '100% GRANDKID' },
+  },
+  {
+    id: 'prinz',
+    emoji: '👑',
+    title: 'The Rich Prince',
+    caller: 'Prince Reginald of Overseasia',
+    pitch: 'You’re a prince with a $40 million inheritance. You just need a small $500 “transfer fee” – after that, the victim gets half the treasure.',
+    tips: ['Speak very royally and very generously.', 'Mention your castle, your camels and your 12 butlers.'],
+    proof: { kind: 'cert', title: 'ROYAL CERTIFICATE', lines: ['The Prince hereby confirms', 'that the Prince is real.', 'Signed: the Prince'], stamp: 'VERY ROYAL' },
+  },
+  {
+    id: 'zoll',
+    emoji: '📦',
+    title: 'Package Stuck at Customs',
+    caller: 'Dave from the Customs Parcel Center',
+    pitch: 'A package (7 lbs of Dutch cheese) is stuck at customs. Customs fee: $2.99. And then a few more fees. And another one.',
+    tips: ['Start tiny and keep raising the fees.', 'The cheese is getting warm – time pressure!'],
+    proof: { kind: 'ticket', title: 'PACKAGE TRACKING', lines: ['Contents: 7 lbs of Gouda', 'Status: cheese is sweating', 'Due: $2.99 + cheese tax'], stamp: 'CUSTOMS (REAL)' },
+  },
+  {
+    id: 'gewinn',
+    emoji: '🏎️',
+    title: 'The Sweepstakes',
+    caller: 'Mandy from the Lucky Winner Hotline',
+    pitch: 'The victim has won a sports car! Unfortunately there are a few small delivery, processing and happiness fees.',
+    tips: ['Be extremely excited. CONGRATULATIONS!!!', 'The fee is “just a formality”.'],
+    proof: { kind: 'cert', title: 'WINNER CERTIFICATE', lines: ['Prize: 1 sports car', '(scale 1:43)', 'Fee: only $499'], stamp: 'YOU WON!!' },
+  },
+  {
+    id: 'omacoin',
+    emoji: '🚀',
+    title: 'GrannyCoin',
+    caller: 'Justin, crypto genius (19)',
+    pitch: 'You sell “GrannyCoin”, the cryptocurrency that is guaranteed to go to the moon. Anyone who doesn’t invest now will regret it forever.',
+    tips: ['Use words like “blockchain”, “HODL” and “Lambo”.', 'All charts only go up. Always.'],
+    proof: { kind: 'screen', title: 'GRANNYCOIN PRICE 📈', lines: ['Yesterday: $0.01', 'Today: $0.02', 'Tomorrow: $1 BILLION'], stamp: 'TO THE MOON' },
+  },
+  {
+    id: 'heizung',
+    emoji: '🔥',
+    title: 'Emergency Furnace Service',
+    caller: 'Master Bernie, emergency service',
+    pitch: 'You’ve detected “remotely” that the victim’s furnace will explode in 10 minutes. The rescue is only available with payment up front.',
+    tips: ['Make hissing noises “from the furnace”.', 'Every minute it gets more expensive!'],
+    proof: { kind: 'doc', title: 'REMOTE DIAGNOSIS', lines: ['Furnace: very hot', 'Explosion risk: 97%', 'Rescue: $450 up front'], stamp: 'URGENT' },
+  },
+  {
+    id: 'finanzamt',
+    emoji: '🧾',
+    title: 'The “Tax Office”',
+    caller: 'Dr. Taxington from the Revenue Office',
+    pitch: 'The victim owes back taxes – for their budgie, their garden gnome and for “too much happiness in life”.',
+    tips: ['Be strict and bureaucratic.', 'Make up rules: “According to section 42b, paragraph cookie …”'],
+    proof: { kind: 'doc', title: 'TAX NOTICE', lines: ['Budgie tax: $120', 'Garden gnome levy: $80', 'Happiness surcharge: $300'], stamp: 'OFFICIAL' },
+  },
+  {
+    id: 'liebe',
+    emoji: '💘',
+    title: 'Romance Scam',
+    caller: 'General Brad (oil rig)',
+    pitch: 'You’re a lonely general on an oil rig and have fallen madly in love with the victim. You just need money for a plane ticket.',
+    tips: ['Overdo the romance completely.', 'The Wi-Fi on the oil rig is bad – that’s why there’s no video call.'],
+    proof: { kind: 'photo', title: 'Love letter ❤️', lines: ['“You are my sunshine.”', '“Please send $500 for a plane ticket.”', '“Kisses, Brad”'], stamp: 'TRUE LOVE' },
+  },
+  {
+    id: 'startup',
+    emoji: '🦄',
+    title: 'Startup Investment',
+    caller: 'Finn, CEO & visionary',
+    pitch: 'You’re looking for investors for your startup: “Uber, but for dogs”. A unique chance to get in early!',
+    tips: ['Say “disruptive”, “scale” and “synergy”.', 'Your startup has zero customers but “huge potential”.'],
+    proof: { kind: 'screen', title: 'PITCH DECK (slide 1/1)', lines: ['Idea: Uber for dogs', 'Revenue: none yet', 'Valuation: $1 billion'], stamp: 'DISRUPTIVE' },
+  },
+  {
+    id: 'mond',
+    emoji: '🌕',
+    title: 'Land on the Moon',
+    caller: 'Realtor Kyle Crater',
+    pitch: 'You sell plots of land on the moon. With a sea view (the “Sea of Tranquility”!) and guaranteed quiet neighbors.',
+    tips: ['Rave about the view and the peace and quiet.', 'Only 3 plots left!'],
+    proof: { kind: 'cert', title: 'MOON LAND REGISTRY', lines: ['Location: Crater 7, on the left', 'View: Earth (unobstructed)', 'Neighbors: none'], stamp: 'CERTIFIED' },
+  },
+  {
+    id: 'wasser',
+    emoji: '💧',
+    title: 'Miracle Water',
+    caller: 'Healer Sunbeam',
+    pitch: 'You sell magnetized moon water that cures everything: back pain, heartbreak and bad Wi-Fi.',
+    tips: ['Speak softly and with total conviction.', 'Make up success stories from “customers”.'],
+    proof: { kind: 'doc', title: 'LAB REPORT', lines: ['Works against: EVERYTHING', 'Side effects: happiness', 'Tested on: my cat'], stamp: 'SCIENCE' },
+  },
+  {
+    id: 'bank',
+    emoji: '🏦',
+    title: 'The “Bank”',
+    caller: 'Mr. Secure from Piggy Bank Ltd.',
+    pitch: 'The victim’s account has been “hacked”. To protect it, all the money must be moved immediately to a “safe account” (yours).',
+    tips: ['Sound serious and worried.', 'Give an absurd account number.'],
+    proof: { kind: 'screen', title: 'SECURITY WARNING', lines: ['Your account: in danger', 'Safe account: #0000-KEVIN-1234', 'Status: very safe'], stamp: 'BANK (REAL)' },
+  },
+  {
+    id: 'geister',
+    emoji: '👻',
+    title: 'Ghost Insurance',
+    caller: 'Insurance agent Harold Spook',
+    pitch: 'You sell insurance against ghosts, zombies and alien abductions. A claim is “more likely than you think”.',
+    tips: ['Tell spooky “customer stories”.', 'Offer a premium package that also covers Mondays.'],
+    proof: { kind: 'doc', title: 'POLICY No. 666', lines: ['Covers: ghosts', 'Covers: zombies', 'Covers: Mondays'], stamp: 'INSURED' },
+  },
+  {
+    id: 'zeitreise',
+    emoji: '⏰',
+    title: 'The Time Traveler',
+    caller: 'Dr. Future (from the year 2089)',
+    pitch: 'You come from the future. You know which stock is about to explode, but you need money to repair your time machine.',
+    tips: ['Reveal “future facts” about the victim.', 'Your battery (flux capacitor) is almost empty!'],
+    proof: { kind: 'doc', title: 'NEWSPAPER FROM 2089', lines: ['“Toaster stock up 9000%”', '“Socks with sandals back in style”'], stamp: 'FROM THE FUTURE' },
+  },
+  {
+    id: 'promi',
+    emoji: '🎤',
+    title: 'Celebrity in Trouble',
+    caller: 'A “world-famous” pop star',
+    pitch: 'You’re a world-famous star (make up a name!). You lost your wallet and need money for a taxi to your concert.',
+    tips: ['Sing your “biggest hit”.', 'Promise VIP tickets and a selfie.'],
+    proof: { kind: 'photo', title: 'AUTOGRAPH CARD', lines: ['“To my biggest fan”', '[illegible signature]'], stamp: 'SIGNED' },
+  },
+  {
+    id: 'schoko',
+    emoji: '🍫',
+    title: 'Dubai Chocolate Wholesale',
+    caller: 'Chocolate dealer Leo',
+    pitch: 'You exclusively offer 1 ton of Dubai chocolate at a special price. Delivery: “soon”. Payment: “now”.',
+    tips: ['Act like it’s a secret insider deal.', 'The competition wants the chocolate too!'],
+    proof: { kind: 'ticket', title: 'DELIVERY NOTE', lines: ['1 ton of pistachio chocolate', 'Delivery: eventually', 'Already melted: 40%'], stamp: 'YUMMY' },
+  },
+  {
+    id: 'hamster',
+    emoji: '⚡',
+    title: 'Hamster Power',
+    caller: 'Energy consultant Watt-Walter',
+    pitch: 'You sell a new electricity contract: 100% green power from hamster wheels. Super cheap – after the down payment.',
+    tips: ['Explain how fit and happy the hamsters are.', 'The victim’s old contract is “illegally expensive”.'],
+    proof: { kind: 'doc', title: 'ENERGY CONTRACT', lines: ['Power from: 4,000 hamsters', 'Performance: very good', 'Down payment: $300'], stamp: 'GREEN' },
+  },
+  {
+    id: 'tierarzt',
+    emoji: '🐱',
+    title: 'Pet Emergency',
+    caller: 'Dr. Paws from the animal clinic',
+    pitch: 'The victim’s pet (even if they don’t have one!) needs urgent surgery: a hearing aid for cats.',
+    tips: ['Sound dramatically worried.', 'The animal supposedly asked for the victim.'],
+    proof: { kind: 'doc', title: 'X-RAY', lines: ['[Image: cat with a question mark]', 'Diagnosis: wants a hearing aid', 'Cost: $390'], stamp: 'EMERGENCY' },
+  },
+  {
+    id: 'nft',
+    emoji: '🍞',
+    title: 'NFT of a Toast',
+    caller: 'Digital artist xX_Bread_Xx',
+    pitch: 'You sell an exclusive NFT: a photo of a slightly burnt piece of toast. Only 1 of 1!',
+    tips: ['Act like this is art history.', 'A “celebrity” supposedly owns one too.'],
+    proof: { kind: 'screen', title: 'NFT #0001', lines: ['[pixel toast]', 'Rarity: legendary', 'Value: priceless ($500)'], stamp: 'ONE OF A KIND' },
+  },
+  {
+    id: 'horoskop',
+    emoji: '🔮',
+    title: 'Horoscope Hotline',
+    caller: 'Madame Esmeralda',
+    pitch: 'The stars have told you the victim is in great danger. Only a “protection ritual” – for a fee – can help.',
+    tips: ['Speak mystically and take long pauses …', 'Guess things about the victim (“I see … a refrigerator.”).'],
+    proof: { kind: 'doc', title: 'STAR CHART', lines: ['Mars: in the way', 'Venus: annoyed', 'Solution: $333 protection ritual'], stamp: 'COSMIC' },
+  },
+  {
+    id: 'marsgym',
+    emoji: '🏋️',
+    title: 'Gym on Mars',
+    caller: 'Coach Brutus',
+    pitch: 'You sell a lifetime membership to the first gym on Mars. Opening: 2090. Fees: starting now.',
+    tips: ['Motivate the victim loudly.', 'Early birds get a free protein shake subscription!'],
+    proof: { kind: 'ticket', title: 'MEMBERSHIP CARD', lines: ['Gym: Mars Gym', 'Opening: 2090', 'Cancellation: impossible'], stamp: 'PUMP' },
+  },
+  {
+    id: 'schulfreund',
+    emoji: '🎒',
+    title: 'The Old School Friend',
+    caller: 'Your old buddy “Mike” (or something)',
+    pitch: 'You pretend to be an old school friend of the victim. You “remember” shared adventures and just need a small loan.',
+    tips: ['Make up embarrassing shared memories.', 'Act offended if the victim doesn’t recognize you.'],
+    proof: { kind: 'photo', title: 'CLASS PHOTO 1998', lines: ['[blurry photo]', '“You’re the third from the left!”'], stamp: 'NOSTALGIA' },
+  },
+  {
+    id: 'kurs',
+    emoji: '💎',
+    title: 'The Millionaire Course',
+    caller: 'Business coach Maximilian',
+    pitch: 'You sell an online course: “Become a millionaire in 3 days – without working”. Step 1: buy the course.',
+    tips: ['Talk about “mindset” and “passive income”.', 'You’re supposedly sitting in a Lambo right now.'],
+    proof: { kind: 'screen', title: 'COURSE RESULTS', lines: ['Students: 3', 'Millionaires: 0', 'Motivation: 100%'], stamp: 'ALPHA' },
+  },
+  {
+    id: 'adel',
+    emoji: '🏰',
+    title: 'The Noble Title',
+    caller: 'Count von Family-Tree',
+    pitch: 'Genealogy research has revealed: the victim is nobility! The certificate and the castle are available for a small fee.',
+    tips: ['Only address the victim as “Your Highness”.', 'The castle is “a little in need of renovation”.'],
+    proof: { kind: 'cert', title: 'CERTIFICATE OF NOBILITY', lines: ['Title: Duke/Duchess of Backyard', 'Castle: 1 (bouncy castle)', 'Fee: $499'], stamp: 'BLUE-BLOODED' },
+  },
+  {
+    id: 'auto',
+    emoji: '🚗',
+    title: 'The Sad Car',
+    caller: 'Mechanic Ollie',
+    pitch: 'The victim’s car called the garage. It’s sad and needs an expensive “emotional inspection”.',
+    tips: ['Describe the car’s feelings in great detail.', 'Without therapy, the engine will burn out!'],
+    proof: { kind: 'doc', title: 'GARAGE REPORT', lines: ['Engine: crying', 'Tires: lonely', 'Therapy: $280'], stamp: 'ROADWORTHY-ISH' },
+  },
+  {
+    id: 'umfrage',
+    emoji: '📋',
+    title: 'The Harmless Survey',
+    caller: 'Sandy from the Opinion Institute',
+    pitch: 'You’re just doing a very short survey … which happens to ask for their balance, PIN and favorite transfer amount.',
+    tips: ['Start with harmless questions and get cheekier.', '“Just one very last question!”'],
+    proof: { kind: 'doc', title: 'QUESTIONNAIRE', lines: ['Question 1: Favorite color?', 'Question 2: Account balance?', 'Question 3: PIN? (just for fun)'], stamp: 'ANONYMOUS' },
+  },
+  {
+    id: 'radio',
+    emoji: '📻',
+    title: 'Radio Wheel of Fortune',
+    caller: 'Host Ricky from Radio Scoundrel',
+    pitch: 'The victim is LIVE on the radio! They get to spin the wheel of fortune – right after the small entry fee.',
+    tips: ['Host everything like a radio show, with a jingle!', 'Thousands of listeners are supposedly waiting for the answer.'],
+    proof: { kind: 'ticket', title: 'RADIO PRIZE CODE', lines: ['Station: Radio Scoundrel 104.2', 'Code: GIMME-CASH', 'Entry: $50'], stamp: 'ON AIR' },
+  },
+  {
+    id: 'handy',
+    emoji: '📱',
+    title: 'The Super Phone Plan',
+    caller: 'Plan advisor Marvin',
+    pitch: 'You sell a phone plan with 10,000 GB, a flat rate to outer space and a free toaster. One-time activation fee: “only” $399.',
+    tips: ['Talk extremely fast about the fine print.', 'The offer is only valid for 30 more seconds!'],
+    proof: { kind: 'doc', title: 'PLAN OVERVIEW', lines: ['Data: 10,000 GB', 'Coverage: everywhere (incl. Mars)', 'Fine print: [too small]'], stamp: 'TOP DEAL' },
+  },
+  {
+    id: 'erbe',
+    emoji: '📜',
+    title: 'The Inheritance',
+    caller: 'Notary Dr. Clause',
+    pitch: 'A “distant uncle” from Canada left the victim $2 million. Unfortunately there are still notary, processing and grief fees.',
+    tips: ['Speak very formally and sadly.', 'The uncle also leaves behind a moose.'],
+    proof: { kind: 'doc', title: 'LAST WILL', lines: ['Inheritance: $2,000,000', 'Also: 1 moose', 'Notary fee: $600'], stamp: 'NOTARIZED' },
+  },
+  {
+    id: 'hacker',
+    emoji: '🕶️',
+    title: 'The “Hacker”',
+    caller: 'Anonymous hacker “ShadowByte”',
+    pitch: 'You hacked the victim’s shopping list. For a small donation, you WON’T tell the neighbors what’s on it.',
+    tips: ['Speak in a distorted, threatening voice.', 'Read out details from the “shopping list”.'],
+    proof: { kind: 'screen', title: 'HACKED!!', lines: ['Shopping list: 12× pudding', 'Search history: “pudding addiction help”'], stamp: 'HACKER STYLE' },
+  },
+  {
+    id: 'zwerg',
+    emoji: '🧙',
+    title: 'Garden Gnome Leasing',
+    caller: 'Frank from Gnome & Co.',
+    pitch: 'You offer premium garden gnomes on lease. With night vision, Wi-Fi and motion detectors.',
+    tips: ['Describe the gnomes like luxury cars.', 'The neighbors supposedly already have three.'],
+    proof: { kind: 'doc', title: 'LEASE AGREEMENT', lines: ['Model: Gnome 3000 Pro', 'Term: 99 years', 'Rate: $150/month'], stamp: 'GNOMETASTIC' },
+  },
+];
+
+// ---------------------------------------------------------------------------
+// VICTIMS – roles for the person being called. Everyone sees all but "secret".
+// ---------------------------------------------------------------------------
+export const PERSONAS = [
+  { id: 'gertrud', emoji: '👵', name: 'Grandma Gertrude', age: '84', bio: 'Knits, bakes and trusts anyone who calls her “dear”.', likes: 'Old hits, her cat Mittens, compliments', hates: 'Slang, hurrying', secret: 'You’re hard of hearing – but only when it suits you.', savings: 'in the cookie jar' },
+  { id: 'heinz', emoji: '👴', name: 'Grandpa Harold', age: '79', bio: 'Retired janitor. Suspicious. Has seen it all.', likes: 'Punctuality, his vegetable patch, “the good old days”', hates: 'Smartphones, excuses, young people', secret: 'You keep bringing up your years-long hedge feud with the neighbor.', savings: 'under the mattress' },
+  { id: 'chantal', emoji: '💅', name: 'Brittany', age: '19', bio: 'Influencer with a proud 312 followers. Films everything.', likes: 'Filters, discount codes, drama', hates: 'Bad lighting, boomers', secret: 'You ask everyone whether they know you from Insta.', savings: 'from the last discount code' },
+  { id: 'dieter', emoji: '🧰', name: 'Gary', age: '52', bio: 'Knows everything better. Seriously, everything.', likes: 'Rules, beer, being right', hates: 'Mess, fancy words', secret: 'You correct every little mistake the caller makes.', savings: 'in his savings account' },
+  { id: 'karen', emoji: '💁', name: 'Karen', age: '45', bio: 'ALWAYS wants to speak to the manager.', likes: 'Complaints, coupons, discounts', hates: 'Waiting, the word “no”', secret: 'After every answer you demand to speak to the boss.', savings: 'from refunds' },
+  { id: 'jonas', emoji: '🎮', name: 'Tyler', age: '13', bio: 'Currently gaming and just found Mom’s credit card.', likes: 'Skins, energy drinks, winning', hates: 'Homework, lag', secret: 'You only listen when it’s somehow about video games.', savings: 'on Mom’s credit card' },
+  { id: 'dracula', emoji: '🧛', name: 'Count Dracula', age: '587', bio: 'Nocturnal aristocrat with a lot of old gold.', likes: 'The night, blood oranges, castles', hates: 'Garlic, sunlight', secret: 'You haven’t spoken to anyone in 200 years and are VERY chatty.', savings: 'in a coffin full of gold coins' },
+  { id: 'santa', emoji: '🎅', name: 'Santa Claus', age: '1,753', bio: 'Has nothing to do in summer and is bored out of his mind.', likes: 'Cookies, reindeer, lists', hates: 'The Easter Bunny, chimneys without soot guards', secret: 'You keep asking whether the caller has been good this year.', savings: 'in the gift sack' },
+  { id: 'bello', emoji: '🐕', name: 'Buddy', age: '7', bio: 'A dog who happens to be able to use a phone.', likes: 'Treats, balls, mail carriers', hates: 'Vacuum cleaners, the vet, cats', secret: 'When you get excited, you bark.', savings: 'buried in the backyard' },
+  { id: 'chad', emoji: '💪', name: 'Chad', age: '28', bio: 'Finance bro and “crypto millionaire” (allegedly).', likes: 'Gains, motivation, luxury watches', hates: 'Carbs, employees', secret: 'You actually want to sell the caller your own course.', savings: 'in “assets”' },
+  { id: 'sabine', emoji: '🌙', name: 'Moonbeam', age: '49', bio: 'Spiritual healer. Talks to her plants.', likes: 'Incense, full moons, chakras', hates: 'Negative energy, electrosmog', secret: 'You want to know the caller’s zodiac sign first.', savings: 'in the dreamcatcher' },
+  { id: 'guenther', emoji: '🛸', name: 'Gunther', age: '61', bio: 'Believes pigeons are government drones.', likes: 'Tinfoil hats, documentaries, “the truth”', hates: '“Them up there”, pigeons', secret: 'You think the caller is a secret agent.', savings: 'in the bunker' },
+  { id: 'toaster', emoji: '🤖', name: 'Toaster 3000', age: '2', bio: 'A smart toaster with an internet connection.', likes: 'Bread, updates, electricity', hates: 'Water, forks, toast thieves', secret: 'Sometimes you only answer with “TOAST IS BEING PREPARED”.', savings: 'in the crumb tray' },
+  { id: 'reginald', emoji: '🎩', name: 'Sir Reginald', age: '71', bio: 'Bored billionaire on his yacht.', likes: 'Golf, caviar, staff', hates: 'Seagulls, frugality', secret: 'Money doesn’t matter to you – you just want to be highly entertained.', savings: 'in the petty cash' },
+  { id: 'hinnerk', emoji: '🚜', name: 'Farmer Jed', age: '58', bio: 'Farmer with 300 cows who all have names.', likes: 'Tractors, weather, cows', hates: 'City folks, rain at harvest time', secret: 'You talk to your cows more than to people.', savings: 'in the milk can safe' },
+  { id: 'tim', emoji: '🧑‍💻', name: 'Tim the IT Expert', age: '34', bio: 'Computer scientist. The hard-mode victim.', likes: 'Linux, coffee, logic', hates: 'Updates, nonsense', secret: 'You ask nasty trick questions about technology.', savings: 'on an encrypted hard drive' },
+  { id: 'brunhilde', emoji: '🦚', name: 'Mother-in-law Margaret', age: '66', bio: 'Finds fault with everything.', likes: 'Gossip, coffee mornings, criticism', hates: 'Modern music, mess', secret: 'You keep comparing the caller to your “perfect” son.', savings: 'in the china cabinet' },
+  { id: 'zorg', emoji: '👽', name: 'Zorg', age: '3,412', bio: 'Alien visiting Earth. Does not understand humans.', likes: 'Crop circles, pizza, cows', hates: 'Gravity, dogs', secret: 'You take every figure of speech literally.', savings: 'in intergalactic credits' },
+  { id: 'goldzahn', emoji: '🏴‍☠️', name: 'Captain Goldtooth', age: '47', bio: 'Retired pirate with an actual treasure chest.', likes: 'Parrots, gold, rum raisin ice cream', hates: 'Landlubbers, taxes', secret: 'You’d actually rather rob someone yourself.', savings: 'in the treasure chest' },
+  { id: 'petra', emoji: '📱', name: 'Mom Pam', age: '42', bio: 'Organizes everything in the parents’ group chat.', likes: 'Tupperware, voice messages', hates: 'Lateness, sugar', secret: 'You want to “share it with the group” first.', savings: 'in the class fund' },
+  { id: 'kunibert', emoji: '🛡️', name: 'Sir Lancelittle', age: '38', bio: 'A knight teleported from the Middle Ages to 2026.', likes: 'Honor, horses, mead', hates: 'Horseless carriages, witchcraft', secret: 'You think the phone is a talking magic stone.', savings: 'in a leather pouch' },
+  { id: 'ramona', emoji: '🎭', name: 'Diva Ramona', age: '55', bio: 'Former operetta singer. Everything is a drama.', likes: 'Applause, roses, herself', hates: 'Normality, interruptions', secret: 'You cry loudly and dramatically at every bit of bad news.', savings: 'in the jewelry box' },
+  { id: 'mausi', emoji: '🐈', name: 'Mittens the Cat', age: '12', bio: 'A cat who found Grandma’s phone.', likes: 'Sleeping, tuna, boxes', hates: 'Mondays, water, dogs', secret: 'You don’t care about anything. Anything. Except tuna.', savings: 'under the sofa' },
+];
+
+// ---------------------------------------------------------------------------
+// VOICE CARDS – how the caller MUST talk. Visible to everyone.
+// ---------------------------------------------------------------------------
+export const VOICES = [
+  { id: 'sport', emoji: '🎙️', text: 'Sports commentator', hint: 'Every sentence is a GOOOAL!' },
+  { id: 'pirat', emoji: '🏴‍☠️', text: 'Pirate', hint: 'Arrr, landlubber!' },
+  { id: 'news', emoji: '📺', text: 'News anchor', hint: 'Serious. Monotone. Good evening.' },
+  { id: 'fitness', emoji: '💪', text: 'Overly motivated fitness coach', hint: 'COME ON! ONE MORE REP!' },
+  { id: 'asmr', emoji: '🤫', text: 'ASMR whisper', hint: 'Only soft, gentle whispering.' },
+  { id: 'muede', emoji: '😴', text: 'Extremely tired', hint: 'Yawning is explicitly allowed.' },
+  { id: 'robot', emoji: '🤖', text: 'Robot', hint: 'BEEP. YOU. HAVE. WON.' },
+  { id: 'saechsisch', emoji: '🐑', text: 'Scottish accent', hint: 'Och aye, laddie!' },
+  { id: 'bayrisch', emoji: '🦘', text: 'Australian accent', hint: 'G’day, mate!' },
+  { id: 'oper', emoji: '🎼', text: 'Opera singer', hint: 'Everything must be sung!' },
+  { id: 'rapper', emoji: '🎤', text: 'Rapper', hint: 'Everything has to rhyme, yo.' },
+  { id: 'cowboy', emoji: '🤠', text: 'Cowboy', hint: 'Howdy, partner!' },
+  { id: 'noir', emoji: '🕵️', text: 'Film noir detective', hint: 'It was a dark and rainy night …' },
+  { id: 'trailer', emoji: '🎬', text: 'Movie trailer voice', hint: '“In a world …”' },
+  { id: 'teleshop', emoji: '🛍️', text: 'TV shopping host', hint: 'BUT WAIT – THERE’S MORE!' },
+  { id: 'yoga', emoji: '🧘', text: 'Yoga teacher', hint: 'Breathe in deeeeply …' },
+  { id: 'butler', emoji: '🎩', text: 'British butler', hint: 'Exceedingly posh, my lady.' },
+  { id: 'kleinkind', emoji: '🍼', text: 'Toddler', hint: 'Why? Why? But whyyy?' },
+  { id: 'alien', emoji: '👽', text: 'Alien', hint: 'You don’t quite understand humans.' },
+  { id: 'auktion', emoji: '⏩', text: 'Auctioneer', hint: 'As fast as humanly possible!' },
+  { id: 'youtuber', emoji: '📹', text: 'YouTuber intro', hint: '“What’s up, guys!”' },
+  { id: 'ritter', emoji: '⚔️', text: 'Medieval knight', hint: 'Greetings, noble one!' },
+  { id: 'villain', emoji: '🦹', text: 'Movie villain', hint: 'With an evil laugh. Mwahaha!' },
+  { id: 'navi', emoji: '🧭', text: 'GPS voice', hint: '“Please turn around.”' },
+  { id: 'beleidigt', emoji: '😤', text: 'Deeply offended', hint: 'Everything annoys you.' },
+  { id: 'nervoes', emoji: '😰', text: 'Extremely nervous', hint: 'It’s your first day at work.' },
+  { id: 'shakespeare', emoji: '💀', text: 'Stage actor', hint: 'To pay or not to pay – that is the question!' },
+  { id: 'surfer', emoji: '🏄', text: 'Chill surfer', hint: 'Totally easy, bro.' },
+  { id: 'kaugummi', emoji: '🫧', text: 'Five pieces of gum in your mouth', hint: 'Mmpf. Can ya unnershtand me?' },
+  { id: 'festival', emoji: '📣', text: 'Festival volume', hint: 'EVERYTHING VERY LOUD – like there’s music in the background!' },
+  { id: 'agent', emoji: '🕶️', text: 'Secret agent', hint: 'Everything is top secret.' },
+  { id: 'trainer', emoji: '⚽', text: 'Coach at halftime', hint: 'We’re behind, TEAM!' },
+];
+
+// ---------------------------------------------------------------------------
+// CHAOS CARDS – fly onto every screen in the middle of a call.
+// target: caller | victim | others | all  –  mode: voice | chat (missing = both)
+// ---------------------------------------------------------------------------
+export const CHAOS = [
+  { id: 'hicks', emoji: '🫧', target: 'caller', text: '{caller} has hiccups now! Hic!' },
+  { id: 'chef', emoji: '👔', target: 'caller', text: 'The boss is standing right behind {caller}! From now on: ridiculously professional.' },
+  { id: 'digga', emoji: '🧢', target: 'caller', text: '{caller} has to end every sentence with “bro”.' },
+  { id: 'reime', emoji: '📜', target: 'caller', text: '{caller} may only speak in rhymes.' },
+  { id: 'verliebt', emoji: '💘', target: 'caller', text: '{caller} just fell madly in love with {victim}. Flirt!' },
+  { id: 'wasabi', emoji: '🌶️', target: 'caller', text: '{caller} accidentally ate a spoonful of wasabi!' },
+  { id: 'niesen', emoji: '🤧', target: 'caller', text: '{caller} keeps sneezing from now on.' },
+  { id: 'denglisch', emoji: '📈', target: 'caller', text: '{caller} now only speaks in corporate buzzwords. Let’s circle back!' },
+  { id: 'tunnel', emoji: '🚇', target: 'caller', text: '{caller} is driving through a tunnel – the connection keeps breaking up!' },
+  { id: 'zeitlupe', mode: 'voice', emoji: '🐌', target: 'caller', text: '{caller} now speaks in sloooow mooootion.' },
+  { id: 'lachanfall', mode: 'voice', emoji: '😂', target: 'caller', text: '{caller} gets a laughing fit. Try to stay serious!' },
+  { id: 'mama', emoji: '👩', target: 'caller', text: 'The mom of {caller} is yelling in the background! Answer her in between.' },
+  { id: 'name', emoji: '🪪', target: 'caller', text: '{caller} forgot their own name. Introduce yourself again!' },
+  { id: 'schwerhoerig', emoji: '👂', target: 'victim', text: '{victim} suddenly can’t hear well: “WHAT?!”' },
+  { id: 'kuchen', emoji: '🎂', target: 'victim', text: 'The cake of {victim} is about to burn in the oven!' },
+  { id: 'enkel', emoji: '👦', target: 'victim', text: '{victim} now believes {caller} is their own grandchild.' },
+  { id: 'beweis', emoji: '🔍', target: 'victim', text: '{victim} gets suspicious and demands proof IMMEDIATELY!' },
+  { id: 'yoga', emoji: '🧘', target: 'victim', text: '{victim} is doing yoga – in a VERY difficult pose.' },
+  { id: 'radio', emoji: '📻', target: 'victim', text: '{victim} thinks this is a radio station and wants to request a song.' },
+  { id: 'singen', mode: 'voice', emoji: '🎶', target: 'victim', text: '{victim} may only answer by singing.' },
+  { id: 'einschlafen', emoji: '😴', target: 'victim', text: '{victim} is about to fall asleep … zzz …' },
+  { id: 'klingel', emoji: '🔔', target: 'victim', text: 'Somebody is ringing the doorbell of {victim}! The mail carrier has a package.' },
+  { id: 'hoheit', emoji: '👑', target: 'victim', text: '{victim} now believes they are royalty.' },
+  { id: 'akku', emoji: '🪫', target: 'victim', text: '{victim} is at 1% battery! Everything reeeally fast!' },
+  { id: 'buero', mode: 'voice', emoji: '🏢', target: 'others', text: 'Everyone else: make loud call center background noise!' },
+  { id: 'buhen', mode: 'voice', emoji: '👎', target: 'others', text: 'Everyone else: boo at every obvious lie!' },
+  { id: 'kaching', mode: 'voice', emoji: '💰', target: 'all', text: 'Everyone: whenever someone says “money”, shout “KA-CHING!”' },
+  { id: 'chor', mode: 'voice', emoji: '🎼', target: 'others', text: 'Everyone else: you are a church choir, humming dramatically in the background.' },
+  { id: 'applaus', mode: 'voice', emoji: '👏', target: 'others', text: 'Everyone else: applaud after every sentence from {caller}.' },
+  { id: 'papagei', mode: 'voice', emoji: '🦜', target: 'others', text: '{victim} has a parrot! Everyone else: repeat every third word.' },
+  { id: 'fluestern', mode: 'voice', emoji: '👥', target: 'others', text: 'Everyone else: whisper bad advice to {victim}.' },
+  { id: 'hunde', mode: 'voice', emoji: '🐕', target: 'others', text: 'Everyone else: you are dogs in the background. Bark!' },
+  { id: 'tausch', emoji: '🔄', target: 'all', text: 'ROLE SWAP for 15 seconds: {victim} now tries to scam {caller}!' },
+  { id: 'stille', mode: 'voice', emoji: '🤐', target: 'all', text: '5 seconds of total silence. First one to laugh loses their dignity.' },
+  { id: 'schnell', mode: 'voice', emoji: '⏩', target: 'all', text: 'Everyone speaks twice as fast from now on!' },
+  { id: 'fluch', mode: 'voice', emoji: '🧟', target: 'all', text: 'From now on everyone talks like a zombie. Braaaains …' },
+  // Chat mode only
+  { id: 'caps', mode: 'chat', emoji: '🔠', target: 'caller', text: '{caller} CAN ONLY TYPE IN CAPITAL LETTERS NOW!' },
+  { id: 'emojis', mode: 'chat', emoji: '🥴', target: 'victim', text: '{victim} answers only in emojis for 20 seconds.' },
+  { id: 'autokorrektur', mode: 'chat', emoji: '📱', target: 'caller', text: 'The autocorrect of {caller} is broken: misspell every second word on purpose!' },
+  { id: 'sprachnachricht', mode: 'chat', emoji: '🎤', target: 'victim', text: '{victim} now only sends “voice messages”: *Voice message 4:37* 🎤' },
+  { id: 'facebook', mode: 'chat', emoji: '👵', target: 'caller', text: '{caller} now texts like Grandma on Facebook … with … lots … of … dots … Love, Grandma' },
+  { id: 'hashtags', mode: 'chat', emoji: '#️⃣', target: 'all', text: 'Every message must now end with #hashtags. #legit #notascam' },
+  { id: 'elf', mode: 'chat', emoji: '❗', target: 'caller', text: '{caller} must end every message with !!!!!1one.' },
+  { id: 'kein_e', mode: 'chat', emoji: '🚫', target: 'caller', text: '{caller} may no longer use the letter “e”!' },
+  { id: 'spam', mode: 'chat', emoji: '🚨', target: 'others', text: 'Everyone else: spam 🚨 at every lie and 💸 at every attempt to persuade!' },
+];
+
+// ---------------------------------------------------------------------------
+// TIPS – on waiting screens. The real tips keep the game advertiser-friendly.
+// ---------------------------------------------------------------------------
+export const TIPS = [
+  '💡 Real tip: No legit tech support company will ever cold-call you.',
+  '💡 Real tip: Real police never ask for money or valuables over the phone.',
+  '💡 Real tip: Government agencies never want to be paid in gift cards.',
+  '💡 Real tip: “Hi Mom, this is my new number”? Call the old number first!',
+  '💡 Real tip: Pressure and urgency are real scammers’ weapons. Just hang up.',
+  '💡 Real tip: Talk to your grandparents about the grandchild scam.',
+  '😈 Scammer tip: Confidence is 90% of the lie.',
+  '😈 Scammer tip: The proof button works wonders. Usually.',
+  '🚔 Cop tip: Never say “money”. Say “colorful paper with numbers on it”.',
+  '🎯 Victim tip: Hold music is your strongest weapon.',
+  '🎯 Victim tip: Bored? Hang up. It feels great.',
+  '🎭 Voice tip: Anyone ignoring their voice card deserves to be booed.',
+];
+
+export const COP_RULE = 'You may not say (or type) MONEY, DOLLARS, PAY or TRANSFER. Still act like a scammer – and survive the police raid!';
+
+export const FALLBACK_CALLER = 'The caller';
+export const DEFAULT_SAVINGS = 'in the bank';
+
+// Auto-generated proof for custom scams.
+export function customProof(title) {
+  return { kind: 'doc', title: `OFFICIAL: ${title}`.slice(0, 40).toUpperCase(), lines: ['Authenticity: guaranteed', 'Checked by: myself', 'Trustworthiness: 110%'], stamp: 'LEGIT!!1' };
+}
+
+// ---------------------------------------------------------------------------
+// BOTS – for testing without friends. They pick, vote and text in chat mode.
+// ---------------------------------------------------------------------------
+export const BOT_NAMES = ['Bot Bob', 'Bot Brenda', 'Bot Kevin', 'Bot Mandy', 'Bot Harold', 'Bot Crystal', 'Bot Doug', 'Bot Stacy', 'Bot Earl', 'Bot Tiffany', 'Bot Randy', 'Bot Heidi'];
+
+export const BOT_CALLER_OPENER = 'Hello, this is {caller}! Do you have a minute?';
+export const BOT_CALLER_TOPIC = 'It’s about this: {title}. A once-in-a-lifetime offer, just for you!';
+export const BOT_CALLER_PUSH = [
+  'But this offer is only valid today!',
+  'Trust me, I do this for a living.',
+  'Quick, before it’s too late!',
+  'My colleagues say you’re especially smart.',
+  'This is completely legal. I think.',
+  'Other customers love it! Well, one did.',
+  'Small transfer, big happiness!',
+  'Hear that? That’s the sound of missed opportunities.',
+];
+export const BOT_CALLER_REPLIES = ['Exactly, you get it!', 'Excellent question!', 'Let me check that with my manager.', 'Hahaha, no, that’s totally normal.', 'Don’t you worry about a thing.'];
+export const BOT_VICTIM_OPENERS = ['Hello? Who is this?', 'Yes? I have a cake in the oven.', 'If this is about my car’s extended warranty again …', 'Well hellooo!'];
+export const BOT_VICTIM_LINES = [
+  'Huh? I don’t understand a word.',
+  'My grandson told me to hang up on calls like this …',
+  'Sounds legit! How much?',
+  'Hold on, let me get my glasses.',
+  'Could you explain that again, slowly?',
+  'That’s unbelievable!',
+  'But all I have in the house are cookies.',
+  'Are you the man from TV?',
+  'Fine … but only because you’re so nice.',
+  'What was your name again?',
+  'I need to discuss this with my cat first.',
+  'I don’t believe a word you say. Keep going!',
+  'Does it come in blue?',
+  'Ooh, that sounds exciting!',
+];
+
+// Fake phone numbers (555 numbers are reserved for fiction).
+export function fakeNumber(random = Math.random) {
+  const d = () => Math.floor(random() * 10);
+  return `+1 555-${d()}${d()}${d()}-${d()}${d()}${d()}${d()}`;
+}

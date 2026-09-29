@@ -55,3 +55,24 @@ test('Deutsch und Englisch haben dieselben Schlüssel und Platzhalter', () => {
     assert.deepEqual(vars(en[key]), vars(de[key]), `Platzhalter in ${key}`);
   }
 });
+
+test('Spielinhalte: Deutsch und Englisch haben dieselben Karten', async () => {
+  const de = await import('../server/content/de.js');
+  const en = await import('../server/content/en.js');
+  assert.deepEqual(Object.keys(en).sort(), Object.keys(de).sort(), 'gleiche Exporte');
+  for (const list of ['MASCHEN', 'PERSONAS', 'VOICES', 'CHAOS']) {
+    assert.deepEqual(en[list].map((c) => c.id), de[list].map((c) => c.id), `${list}: gleiche IDs`);
+    assert.equal(new Set(de[list].map((c) => c.id)).size, de[list].length, `${list}: IDs eindeutig`);
+  }
+  assert.deepEqual(en.CHAOS.map((c) => `${c.mode || ''}:${c.target}`), de.CHAOS.map((c) => `${c.mode || ''}:${c.target}`), 'gleiche Modi/Ziele');
+  for (const C of [de, en]) {
+    for (const m of C.MASCHEN) {
+      for (const f of ['emoji', 'title', 'caller', 'pitch']) assert.ok(m[f], `${m.id}.${f}`);
+      assert.ok(m.proof?.title && m.proof.lines.length && m.proof.stamp, `${m.id}.proof`);
+    }
+    for (const p of C.PERSONAS) for (const f of ['emoji', 'name', 'age', 'bio', 'likes', 'hates', 'secret', 'savings']) assert.ok(p[f], `${p.id}.${f}`);
+    for (const c of C.CHAOS) assert.ok(!/\{(?!caller\}|victim\})/.test(c.text), `Platzhalter in ${c.id}`);
+    assert.match(C.fakeNumber(), /^\+\d/);
+    assert.ok(C.customProof('Test').title.length <= 40);
+  }
+});
