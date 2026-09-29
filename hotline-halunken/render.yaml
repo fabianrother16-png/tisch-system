@@ -1,0 +1,13 @@
+# Ein-Klick-Deployment auf Render (https://render.com): "New +" → "Blueprint" → dieses Repo wählen.
+services:
+  - type: web
+    name: hotline-halunken
+    runtime: node
+    rootDir: hotline-halunken
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 22
