@@ -377,8 +377,8 @@ export const CHAOS = [
   { id: 'niesen', emoji: '🤧', target: 'caller', text: '{caller} muss ab jetzt ständig niesen.' },
   { id: 'denglisch', emoji: '🇬🇧', target: 'caller', text: '{caller} spricht ab jetzt nur noch Denglisch. Very important!' },
   { id: 'tunnel', emoji: '🚇', target: 'caller', text: '{caller} fährt durch einen Tunnel – die Verbindung wird ganz abgehackt!' },
-  { id: 'zeitlupe', emoji: '🐌', target: 'caller', text: '{caller} spricht ab jetzt in Zeeeeiiiitluuupe.' },
-  { id: 'lachanfall', emoji: '😂', target: 'caller', text: '{caller} bekommt einen Lachanfall. Versuch ernst zu bleiben!' },
+  { id: 'zeitlupe', mode: 'voice', emoji: '🐌', target: 'caller', text: '{caller} spricht ab jetzt in Zeeeeiiiitluuupe.' },
+  { id: 'lachanfall', mode: 'voice', emoji: '😂', target: 'caller', text: '{caller} bekommt einen Lachanfall. Versuch ernst zu bleiben!' },
   { id: 'mama', emoji: '👩', target: 'caller', text: 'Die Mama von {caller} ruft im Hintergrund! Antworte ihr zwischendurch.' },
   { id: 'name', emoji: '🪪', target: 'caller', text: '{caller} hat den eigenen Namen vergessen. Stell dich neu vor!' },
   { id: 'schwerhoerig', emoji: '👂', target: 'victim', text: '{victim} ist plötzlich schwerhörig: „WIE BITTE?!“' },
@@ -387,23 +387,33 @@ export const CHAOS = [
   { id: 'beweis', emoji: '🔍', target: 'victim', text: '{victim} wird misstrauisch und verlangt SOFORT einen Beweis!' },
   { id: 'yoga', emoji: '🧘', target: 'victim', text: '{victim} macht gerade Yoga – in einer SEHR anstrengenden Pose.' },
   { id: 'radio', emoji: '📻', target: 'victim', text: '{victim} denkt, das ist ein Radiosender, und will sich ein Lied wünschen.' },
-  { id: 'singen', emoji: '🎶', target: 'victim', text: '{victim} darf nur noch singend antworten.' },
+  { id: 'singen', mode: 'voice', emoji: '🎶', target: 'victim', text: '{victim} darf nur noch singend antworten.' },
   { id: 'einschlafen', emoji: '😴', target: 'victim', text: '{victim} schläft gleich ein … zzz …' },
   { id: 'klingel', emoji: '🔔', target: 'victim', text: 'Bei {victim} klingelt es an der Tür! Der Postbote will ein Paket abgeben.' },
   { id: 'hoheit', emoji: '👑', target: 'victim', text: '{victim} hält sich ab jetzt für eine königliche Hoheit.' },
   { id: 'akku', emoji: '🪫', target: 'victim', text: '{victim} hat nur noch 1 % Akku! Alles gaaanz schnell!' },
-  { id: 'buero', emoji: '🏢', target: 'others', text: 'Alle anderen: Macht lautstark Callcenter-Hintergrundgeräusche!' },
-  { id: 'buhen', emoji: '👎', target: 'others', text: 'Alle anderen: Buht bei jeder offensichtlichen Lüge!' },
-  { id: 'kaching', emoji: '💰', target: 'all', text: 'Alle: Jedes Mal, wenn jemand „Geld“ sagt, ruft ihr „KA-CHING!“' },
-  { id: 'chor', emoji: '🎼', target: 'others', text: 'Alle anderen: Ihr seid ein Kirchenchor und summt dramatisch im Hintergrund.' },
-  { id: 'applaus', emoji: '👏', target: 'others', text: 'Alle anderen: Applaudiert nach jedem Satz von {caller}.' },
-  { id: 'papagei', emoji: '🦜', target: 'others', text: '{victim} hat einen Papagei! Alle anderen: Wiederholt jedes dritte Wort.' },
-  { id: 'fluestern', emoji: '👥', target: 'others', text: 'Alle anderen: Flüstert {victim} schlechte Ratschläge zu.' },
-  { id: 'hunde', emoji: '🐕', target: 'others', text: 'Alle anderen: Ihr seid Hunde im Hintergrund. Bellt!' },
+  { id: 'buero', mode: 'voice', emoji: '🏢', target: 'others', text: 'Alle anderen: Macht lautstark Callcenter-Hintergrundgeräusche!' },
+  { id: 'buhen', mode: 'voice', emoji: '👎', target: 'others', text: 'Alle anderen: Buht bei jeder offensichtlichen Lüge!' },
+  { id: 'kaching', mode: 'voice', emoji: '💰', target: 'all', text: 'Alle: Jedes Mal, wenn jemand „Geld“ sagt, ruft ihr „KA-CHING!“' },
+  { id: 'chor', mode: 'voice', emoji: '🎼', target: 'others', text: 'Alle anderen: Ihr seid ein Kirchenchor und summt dramatisch im Hintergrund.' },
+  { id: 'applaus', mode: 'voice', emoji: '👏', target: 'others', text: 'Alle anderen: Applaudiert nach jedem Satz von {caller}.' },
+  { id: 'papagei', mode: 'voice', emoji: '🦜', target: 'others', text: '{victim} hat einen Papagei! Alle anderen: Wiederholt jedes dritte Wort.' },
+  { id: 'fluestern', mode: 'voice', emoji: '👥', target: 'others', text: 'Alle anderen: Flüstert {victim} schlechte Ratschläge zu.' },
+  { id: 'hunde', mode: 'voice', emoji: '🐕', target: 'others', text: 'Alle anderen: Ihr seid Hunde im Hintergrund. Bellt!' },
   { id: 'tausch', emoji: '🔄', target: 'all', text: 'ROLLENTAUSCH für 15 Sekunden: {victim} versucht jetzt, {caller} abzuzocken!' },
-  { id: 'stille', emoji: '🤐', target: 'all', text: '5 Sekunden absolute Stille. Wer zuerst lacht, verliert seine Würde.' },
-  { id: 'schnell', emoji: '⏩', target: 'all', text: 'Alle sprechen ab jetzt doppelt so schnell!' },
-  { id: 'fluch', emoji: '🧟', target: 'all', text: 'Ab jetzt sprechen alle wie Zombies. Gehirrrrne …' },
+  { id: 'stille', mode: 'voice', emoji: '🤐', target: 'all', text: '5 Sekunden absolute Stille. Wer zuerst lacht, verliert seine Würde.' },
+  { id: 'schnell', mode: 'voice', emoji: '⏩', target: 'all', text: 'Alle sprechen ab jetzt doppelt so schnell!' },
+  { id: 'fluch', mode: 'voice', emoji: '🧟', target: 'all', text: 'Ab jetzt sprechen alle wie Zombies. Gehirrrrne …' },
+  // Nur im Chat-Modus
+  { id: 'caps', mode: 'chat', emoji: '🔠', target: 'caller', text: '{caller} KANN NUR NOCH IN GROSSBUCHSTABEN SCHREIBEN!' },
+  { id: 'emojis', mode: 'chat', emoji: '🥴', target: 'victim', text: '{victim} antwortet 20 Sekunden lang nur noch mit Emojis.' },
+  { id: 'autokorrektur', mode: 'chat', emoji: '📱', target: 'caller', text: 'Die Autokorrektur von {caller} spinnt: Schreib jedes zweite Wort absichtlich falsch!' },
+  { id: 'sprachnachricht', mode: 'chat', emoji: '🎤', target: 'victim', text: '{victim} schickt ab jetzt nur noch „Sprachnachrichten“: *Sprachnachricht 4:37* 🎤' },
+  { id: 'facebook', mode: 'chat', emoji: '👵', target: 'caller', text: '{caller} schreibt ab jetzt wie Oma auf Facebook … mit … vielen … Punkten … LG' },
+  { id: 'hashtags', mode: 'chat', emoji: '#️⃣', target: 'all', text: 'Jede Nachricht muss jetzt mit #Hashtags enden. #Seriös #KeinScam' },
+  { id: 'elf', mode: 'chat', emoji: '❗', target: 'caller', text: '{caller} muss jede Nachricht mit !!!!!1elf beenden.' },
+  { id: 'kein_e', mode: 'chat', emoji: '🚫', target: 'caller', text: '{caller} darf ab jetzt keinen Buchstaben „e“ mehr benutzen!' },
+  { id: 'spam', mode: 'chat', emoji: '🚨', target: 'others', text: 'Alle anderen: Spammt 🚨 bei jeder Lüge und 💸 bei jedem Überredungsversuch!' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -425,7 +435,50 @@ export const TIPS = [
   '🎭 Stimm-Tipp: Wer seine Stimm-Karte ignoriert, wird vom Publikum ausgebuht.',
 ];
 
-export const COP_RULE = 'Du darfst die Wörter GELD, EURO, ZAHLEN und ÜBERWEISEN nicht sagen. Tu trotzdem so, als wärst du ein Halunke – und überlebe die Razzia!';
+export const COP_RULE = 'Du darfst die Wörter GELD, EURO, ZAHLEN und ÜBERWEISEN nicht sagen (bzw. schreiben). Tu trotzdem so, als wärst du ein Halunke – und überlebe die Razzia!';
+
+export const FALLBACK_CALLER = 'Der Anrufer';
+export const DEFAULT_SAVINGS = 'auf dem Konto';
+
+// Automatisch erzeugter Beweis für selbst erstellte Maschen.
+export function customProof(title) {
+  return { kind: 'doc', title: `OFFIZIELL: ${title}`.slice(0, 40).toUpperCase(), lines: ['Echtheit: garantiert', 'Geprüft von: mir selbst', 'Seriosität: 110 %'], stamp: 'ECHT!!1' };
+}
+
+// ---------------------------------------------------------------------------
+// BOTS – zum Testen ohne Freunde. Sie wählen, stimmen ab und chatten im Chat-Modus.
+// ---------------------------------------------------------------------------
+export const BOT_NAMES = ['Bot Bernd', 'Bot Gisela', 'Bot Kevin', 'Bot Mandy', 'Bot Horst', 'Bot Chantal', 'Bot Detlef', 'Bot Svenja', 'Bot Uwe', 'Bot Jacqueline', 'Bot Rüdiger', 'Bot Heidi'];
+
+export const BOT_CALLER_OPENER = 'Hallo, hier spricht {caller}! Haben Sie kurz Zeit?';
+export const BOT_CALLER_PUSH = [
+  'Das Angebot gilt aber nur noch heute!',
+  'Vertrauen Sie mir, ich mache das beruflich.',
+  'Schnell, bevor es zu spät ist!',
+  'Meine Kollegen sagen, Sie sind besonders klug.',
+  'Das ist absolut legal. Glaube ich.',
+  'Andere Kunden sind begeistert! Na ja, einer.',
+  'Kleine Überweisung, großes Glück!',
+  'Hören Sie das? Das ist das Geräusch von verpassten Chancen.',
+];
+export const BOT_CALLER_REPLIES = ['Genau, Sie haben es verstanden!', 'Ausgezeichnete Frage!', 'Das kläre ich sofort mit meinem Chef.', 'Hahaha, nein, das ist völlig normal.', 'Machen Sie sich keine Sorgen.'];
+export const BOT_VICTIM_OPENERS = ['Hallo? Wer ist da?', 'Ja bitte? Ich hab gerade Kuchen im Ofen.', 'Wenn das wieder wegen dem Auto ist …', 'Hallöchen!'];
+export const BOT_VICTIM_LINES = [
+  'Hä? Ich versteh nur Bahnhof.',
+  'Mein Enkel hat gesagt, bei so was soll ich auflegen …',
+  'Klingt seriös! Wie viel?',
+  'Moment, ich hol meine Brille.',
+  'Können Sie das nochmal langsam erklären?',
+  'Das ist ja unglaublich!',
+  'Ich hab aber nur Kekse im Haus.',
+  'Sind Sie der Mann vom Fernsehen?',
+  'Na gut … aber nur, weil Sie so nett sind.',
+  'Wie war nochmal Ihr Name?',
+  'Das muss ich erst mit meiner Katze besprechen.',
+  'Ich glaube Ihnen kein Wort. Erzählen Sie weiter!',
+  'Gibt es das auch in Blau?',
+  'Oh, das klingt aufregend!',
+];
 
 // Fake-Telefonnummern für das Anrufer-Display.
 export function fakeNumber(random = Math.random) {

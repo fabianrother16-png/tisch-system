@@ -2,15 +2,15 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { io as connect } from 'socket.io-client';
 import { createServer } from '../server/index.js';
-import { Room } from '../server/room.js';
+import { Room, sanitizeCustom } from '../server/room.js';
 
 // Zeitraffer: 1 Sekunde Spielzeit = 20 ms
 const TIME_SCALE = 0.02;
 
 const openClients = new Set();
 
-function makeClient(url) {
-  const socket = connect(url, { transports: ['websocket'], forceNew: true });
+function makeClient(url, lang) {
+  const socket = connect(url, { transports: ['websocket'], forceNew: true, auth: lang ? { lang } : undefined });
   openClients.add(socket);
   const client = { socket, state: null, fx: [], waiters: [] };
   socket.on('state', (s) => {
@@ -243,4 +243,92 @@ test('Raumwechsel: alter Spieler verlässt den alten Raum', async () => {
     for (const s of openClients) s.close();
     await srv.close();
   }
+});
+
+test('Bots spielen ein komplettes Spiel im Chat-Modus mit', async () => {
+  const srv = createServer({ timeScale: TIME_SCALE, logger: { error() {} } });
+  const port = await srv.listen(0);
+  const host = makeClient(`http://localhost:${port}`);
+  try {
+    const created = await host.emit('room:create', { profile: { name: 'Solo' } });
+    assert.ok(created.ok);
+    for (let i = 0; i < 3; i++) assert.ok((await host.act('addBot')).ok);
+    await host.waitFor((s) => s.players.length === 4 && s.players.filter((p) => p.bot).length === 3, '3 Bots');
+    assert.ok((await host.act('settings', { callMode: 'chat', rounds: 2, callSeconds: 30 })).ok);
+    await host.waitFor((s) => s.settings.callMode === 'chat', 'Chat-Modus');
+    let chatSeen = 0;
+    let botTransfers = 0;
+    host.socket.on('state', (s) => {
+      const msgs = s.game?.call?.messages || [];
+      chatSeen = Math.max(chatSeen, msgs.filter((m) => m.from !== 'system').length);
+    });
+    host.socket.on('fx', (f) => {
+      if (f.type === 'transfer') botTransfers++;
+    });
+    assert.ok((await host.act('start')).ok);
+    // Wenn der Mensch dran ist, schreibt er auch eine Nachricht.
+    host.socket.on('state', async (s) => {
+      if (s.phase === 'call' && (s.game.myRole === 'victim' || s.game.call?.callerId === s.me.id) && !s.game.call.messages.some((m) => m.text === 'Ich bin ein Mensch!')) {
+        await host.act('chat', { text: 'Ich bin ein Mensch!' });
+      }
+    });
+    const over = await host.waitFor((s) => s.phase === 'gameOver', 'Spielende mit Bots', 25000);
+    assert.equal(over.game.ranking.length, 4);
+    assert.ok(chatSeen >= 2, `Chat-Nachrichten gesehen: ${chatSeen}`);
+    assert.ok(botTransfers >= 0);
+  } finally {
+    for (const s of openClients) s.close();
+    await srv.close();
+  }
+});
+
+test('Englische Fehlermeldungen und Chat nur im Chat-Modus', async () => {
+  const srv = createServer({ timeScale: 1, logger: { error() {} } });
+  const port = await srv.listen(0);
+  const url = `http://localhost:${port}`;
+  const a = makeClient(url, 'en');
+  const b = makeClient(url, 'en');
+  try {
+    const created = await a.emit('room:create', { profile: { name: 'Amy' } });
+    const lobby = await a.waitFor((s) => s.code === created.code, 'Lobby');
+    assert.equal(lobby.settings.lang, 'en', 'Raum übernimmt Sprache des Hosts');
+    await b.emit('room:join', { code: created.code, profile: { name: 'Bob' } });
+    const res = await b.act('kick', { playerId: created.playerId });
+    assert.equal(res.error, 'Only the host can do that.');
+    assert.equal(res.code, 'hostOnly');
+    const missing = await makeClient(url, 'en').emit('room:join', { code: 'ZZZZ', profile: { name: 'X' } });
+    assert.equal(missing.error, 'Room not found. Check the code!');
+  } finally {
+    for (const s of openClients) s.close();
+    await srv.close();
+  }
+});
+
+test('Eigene Karten werden geprüft und zuerst gezogen', () => {
+  const clean = sanitizeCustom({
+    maschen: [
+      { title: 'Kaffee-Abo für Katzen', pitch: 'Jede Katze braucht Espresso.', emoji: '☕' },
+      { title: '  ', pitch: 'fehlt' },
+      { title: 'Bitcoin-Toaster', pitch: 'Toastet und schürft.', emoji: 'kein emoji' },
+      'Unsinn',
+    ],
+    personas: [{ name: 'Tante Inge', bio: 'Liebt Kreuzworträtsel.' }, { name: 'Ohne Bio' }],
+  });
+  assert.equal(clean.maschen.length, 2);
+  assert.equal(clean.maschen[1].emoji, '📞');
+  assert.equal(clean.personas.length, 1);
+
+  const room = new Room('TEST', { timeScale: 1000 });
+  const host = room.addPlayer({ name: 'A' }, 'a').player;
+  room.addPlayer({ name: 'B' }, 'b');
+  room.addPlayer({ name: 'C' }, 'c');
+  assert.ok(room.action(host.id, 'custom', clean).ok);
+  assert.ok(room.action(host.id, 'settings', { customOnly: true }).ok);
+  assert.ok(room.action(host.id, 'start').ok);
+  const r = room.game.r;
+  assert.equal(r.persona.name, 'Tante Inge');
+  for (const id of r.callOrder) for (const m of r.cards[id].options) assert.match(m, /^custom-m-/);
+  const view = room.viewFor({ playerId: r.callOrder[0] });
+  assert.ok(view.game.myCard.options[0].proof.title.startsWith('OFFIZIELL'));
+  room.clearAllTimers();
 });

@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 import { Server } from 'socket.io';
 import { Room, cleanName } from './room.js';
+import { localize } from './messages.js';
+import { LANGS } from './content/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '../dist');
@@ -65,9 +67,10 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
     }
   }
 
-  function createRoom() {
+  function createRoom(lang) {
     const code = newCode();
     const room = new Room(code, {
+      lang,
       timeScale,
       onChange: broadcastState,
       onFx: (r, fx) => io.to(r.code).emit('fx', fx),
@@ -75,7 +78,7 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
         if (!socketId) return;
         const s = io.sockets.sockets.get(socketId);
         if (s) {
-          s.emit('kicked', { text: 'Du wurdest vom Host aus dem Raum entfernt.' });
+          s.emit('kicked', { code: 'kicked' });
           s.leave(r.code);
           if (s.data.ctx) s.data.ctx.code = null;
         }
@@ -104,7 +107,8 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
 
   // ------------------------------------------------------------------ sockets
   io.on('connection', (socket) => {
-    const ctx = { code: null, playerId: null, audience: false };
+    const wantedLang = socket.handshake.auth?.lang;
+    const ctx = { code: null, playerId: null, audience: false, lang: LANGS.includes(wantedLang) ? wantedLang : 'de' };
     socket.data.ctx = ctx;
     const bucket = { tokens: 20, last: Date.now() };
     const reactBucket = { tokens: 6, last: Date.now() };
@@ -123,12 +127,12 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
     const on = (event, handler, limiter = () => take(bucket, 15, 20)) => {
       socket.on(event, (payload, ack) => {
         const reply = typeof ack === 'function' ? ack : () => {};
-        if (!limiter()) return reply({ error: 'Langsam! Zu viele Aktionen.' });
+        if (!limiter()) return reply(localize({ error: 'slowDown' }, ctx.lang));
         try {
-          reply(handler(payload && typeof payload === 'object' ? payload : {}) || { ok: true });
+          reply(localize(handler(payload && typeof payload === 'object' ? payload : {}) || { ok: true }, ctx.lang));
         } catch (err) {
           logger.error('[socket]', event, err);
-          reply({ error: 'Serverfehler – bitte nochmal versuchen.' });
+          reply(localize({ error: 'serverError' }, ctx.lang));
         }
       });
     };
@@ -154,9 +158,14 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
       return { ok: true, code: r.code, playerId: player.id, secret: player.secret };
     }
 
+    on('lang', ({ lang }) => {
+      if (LANGS.includes(lang)) ctx.lang = lang;
+      return { ok: true };
+    });
+
     on('room:create', ({ profile }) => {
-      if (rooms.size >= MAX_ROOMS) return { error: 'Server ist voll. Bitte später nochmal.' };
-      const r = createRoom();
+      if (rooms.size >= MAX_ROOMS) return { error: 'serverFull' };
+      const r = createRoom(ctx.lang);
       const res = r.addPlayer(profile, socket.id);
       if (res.error) return res;
       return attachPlayer(r, res.player);
@@ -164,7 +173,7 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
 
     on('room:join', ({ code, profile }) => {
       const r = rooms.get(normalizeCode(code));
-      if (!r) return { error: 'Raum nicht gefunden. Code prüfen!' };
+      if (!r) return { error: 'roomNotFound' };
       const res = r.addPlayer(profile, socket.id);
       if (res.error) return { ...res, canSpectate: r.settings.audience };
       return attachPlayer(r, res.player);
@@ -172,13 +181,13 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
 
     on('room:resume', ({ code, playerId, secret }) => {
       const r = rooms.get(normalizeCode(code));
-      if (!r) return { error: 'Raum existiert nicht mehr.' };
+      if (!r) return { error: 'roomGone' };
       const res = r.reconnect(String(playerId || ''), String(secret || ''), socket.id);
       if (res.error) return res;
       if (res.previousSocket && res.previousSocket !== socket.id) {
         const old = io.sockets.sockets.get(res.previousSocket);
         if (old) {
-          old.emit('kicked', { text: 'Du hast das Spiel in einem anderen Tab geöffnet.' });
+          old.emit('kicked', { code: 'otherTab' });
           old.leave(r.code);
           if (old.data.ctx) old.data.ctx.code = null;
         }
@@ -188,7 +197,7 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
 
     on('room:spectate', ({ code, name }) => {
       const r = rooms.get(normalizeCode(code));
-      if (!r) return { error: 'Raum nicht gefunden. Code prüfen!' };
+      if (!r) return { error: 'roomNotFound' };
       detach();
       const res = r.addAudience(socket.id, cleanName(name));
       if (res.error) return res;
@@ -206,17 +215,17 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
 
     on('action', ({ type, data }) => {
       const r = room();
-      if (!r) return { error: 'Du bist in keinem Raum.' };
+      if (!r) return { error: 'noRoom' };
       if (ctx.audience) {
         if (type === 'vote') return r.audienceVote(socket.id, data?.suspectId);
-        return { error: 'Zuschauer können das nicht.' };
+        return { error: 'audienceCant' };
       }
       return r.action(ctx.playerId, String(type || ''), data && typeof data === 'object' ? data : {});
     }, () => take(bucket, 25, 30));
 
     on('react', ({ emoji }) => {
       const r = room();
-      if (!r) return { error: 'Du bist in keinem Raum.' };
+      if (!r) return { error: 'noRoom' };
       const name = ctx.audience ? r.audience.get(socket.id)?.name : null;
       return r.react(ctx.audience ? null : ctx.playerId, emoji, name);
     }, () => take(reactBucket, 4, 6));
