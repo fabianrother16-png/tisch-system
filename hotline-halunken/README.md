@@ -90,6 +90,12 @@ Spieler.
 **Mit Freunden im selben WLAN:** Deine lokale IP herausfinden (z. B. `192.168.0.23`) und die anderen öffnen
 `http://192.168.0.23:3000`.
 
+### Browser-Demo ohne Server
+
+```bash
+npm run build:demo   # erzeugt dist-demo/ – läuft als statische Seite, allein gegen Bots im Chat-Modus
+```
+
 ### Entwicklung
 
 ```bash

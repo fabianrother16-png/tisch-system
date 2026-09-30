@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import QRCode from 'qrcode';
 import { act, emitLocalFx, joinRoom, showError } from '../lib/net.js';
+import { confirmAction, DEMO } from '../lib/demo.js';
 import { usePrefs } from '../lib/prefs.js';
 import { LANGUAGES, money, useT } from '../lib/i18n.js';
 import { play, unlockAudio } from '../lib/sound.js';
@@ -65,6 +66,17 @@ export function Lobby({ view }) {
     });
   }, [isHost, prefs.autoCustom, prefs.customCards, customTotal, view.code]);
 
+  // Demo: gleich mit 3 Bots im Chat-Modus loslegen (Bots können nicht hören, aber schreiben).
+  const demoSetup = useRef(false);
+  useEffect(() => {
+    if (!DEMO || !isHost || demoSetup.current || view.players.length !== 1) return;
+    demoSetup.current = true;
+    (async () => {
+      await act('settings', { callMode: 'chat', rounds: 2, callSeconds: 60 }, { quiet: true });
+      for (let i = 0; i < 3; i++) await act('addBot', {}, { quiet: true });
+    })();
+  }, [isHost, view.players.length]);
+
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(joinUrl);
@@ -112,6 +124,12 @@ export function Lobby({ view }) {
   return (
     <div className="lobby">
       <div className="lobby-col">
+        {DEMO ? (
+          <section className="panel demo-box">
+            <b>🎮 {t('demo.lobbyTitle')}</b>
+            <p>{t('demo.lobbyText')}</p>
+          </section>
+        ) : (
         <section className="panel invite">
           <div className="invite-text">
             <h2>{t('lobby.inviteTitle')}</h2>
@@ -129,6 +147,7 @@ export function Lobby({ view }) {
             </div>
           )}
         </section>
+        )}
 
         {lastWinner && (
           <div className="last-results">
@@ -157,7 +176,7 @@ export function Lobby({ view }) {
                   <button
                     type="button"
                     className="kick-btn"
-                    onClick={() => (p.bot || window.confirm(t('lobby.confirmKick', { name: p.name }))) && act('kick', { playerId: p.id })}
+                    onClick={() => (p.bot || confirmAction(t('lobby.confirmKick', { name: p.name }))) && act('kick', { playerId: p.id })}
                     title={t('lobby.kick')}
                   >
                     ✕

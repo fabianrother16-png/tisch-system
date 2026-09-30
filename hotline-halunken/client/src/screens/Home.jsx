@@ -3,6 +3,7 @@ import { clearNotice, createRoom, joinRoom, spectate, useStore } from '../lib/ne
 import { setPrefs, usePrefs } from '../lib/prefs.js';
 import { LANGUAGES, setLang, useT } from '../lib/i18n.js';
 import { play, unlockAudio } from '../lib/sound.js';
+import { DEMO } from '../lib/demo.js';
 
 export const AVATARS = ['🦊', '🐸', '🐷', '🐵', '🐔', '🦄', '🐙', '🐼', '🐯', '🐻', '🐨', '🦁', '🐺', '🦝', '🐧', '🦉', '🐹', '🐮', '🦆', '🐲', '👽', '🤖', '🤡', '👻'];
 export const COLORS = ['#FF4F8B', '#FFD23F', '#3DDCFF', '#3CF08C', '#B57BFF', '#FF8A3D', '#FF5A5A', '#2EC4B6', '#F9A8FF', '#A3E635', '#60A5FA', '#FDBA74'];
@@ -104,7 +105,11 @@ export function Home({ onRules }) {
       play('buzzer');
     } else {
       play('pickup');
-      window.history.replaceState(null, '', window.location.pathname);
+      try {
+        window.history.replaceState(null, '', window.location.pathname);
+      } catch {
+        /* eingebettete Seite */
+      }
     }
   }
 
@@ -169,9 +174,16 @@ export function Home({ onRules }) {
         <div className="home-actions">
           {(notice || error) && <div className="alert">{error || t(`notice.${notice}`)}</div>}
           {resuming && <div className="alert alert-info">{t('home.resuming')}</div>}
+          {DEMO && (
+            <div className="demo-box">
+              <b>🎮 {t('demo.title')}</b>
+              <p>{t('demo.text')}</p>
+            </div>
+          )}
           <button type="button" className="btn btn-yellow btn-xl" disabled={busy || !connected} onClick={() => run(() => createRoom(profile))}>
-            📞 {t('home.create')}
+            📞 {DEMO ? t('demo.start') : t('home.create')}
           </button>
+          {!DEMO && (<>
           <div className="or">
             <span>{t('home.orJoin')}</span>
           </div>
@@ -192,6 +204,7 @@ export function Home({ onRules }) {
           <button type="button" className={`btn btn-ghost ${canSpectate ? 'is-pulse' : ''}`} disabled={busy || !connected} onClick={watch}>
             👀 {t('home.watch')}
           </button>
+          </>)}
           {!connected && <div className="muted small">{t('home.connecting')}</div>}
           <button type="button" className="link-btn" onClick={onRules}>
             ❓ {t('home.howTo')}
@@ -222,6 +235,7 @@ function LegalLinks() {
   const t = useT();
   const [config, setConfig] = useState(null);
   useEffect(() => {
+    if (DEMO) return;
     fetch('/config.json')
       .then((r) => (r.ok ? r.json() : null))
       .then(setConfig)

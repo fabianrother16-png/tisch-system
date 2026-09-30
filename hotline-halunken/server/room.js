@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import { getContent, LANGS } from './content/index.js';
 import { botsOnChat, botsOnPhase } from './bots.js';
 
@@ -57,8 +56,12 @@ const TRANSFER_FRACTIONS = [0.05, 0.1, 0.25, 0.5];
 
 const err = (code, vars) => ({ error: code, vars });
 
+// Web-Crypto gibt es in Node (ab 20) und im Browser – so läuft die Spiellogik auch in der Browser-Demo.
 export function randomId(bytes = 9) {
-  return crypto.randomBytes(bytes).toString('base64url');
+  const buf = globalThis.crypto.getRandomValues(new Uint8Array(bytes));
+  let bin = '';
+  for (const b of buf) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 // Der HTTP-Server hält den Prozess am Leben – Spiel-Timer sollen das nicht (sauberes Beenden in Tests).

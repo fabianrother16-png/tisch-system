@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { act, onFx } from '../lib/net.js';
+import { confirmAction } from '../lib/demo.js';
 import { play } from '../lib/sound.js';
 import { useCountUp, useNow } from '../lib/hooks.js';
 import { money, useT } from '../lib/i18n.js';
@@ -127,7 +128,7 @@ function VictimControls({ view, call, trust, setTrust }) {
             type="button"
             className="chip chip-all"
             disabled={ringing || g.budgetLeft <= 0}
-            onClick={() => window.confirm(t('call.confirmAll', { amount: money(g.budgetLeft) })) && act('transfer', { amount: 'all' })}
+            onClick={() => confirmAction(t('call.confirmAll', { amount: money(g.budgetLeft) })) && act('transfer', { amount: 'all' })}
           >
             {t('call.all')}
           </button>

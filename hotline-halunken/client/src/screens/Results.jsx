@@ -4,6 +4,7 @@ import { play } from '../lib/sound.js';
 import { useCountUp } from '../lib/hooks.js';
 import { money, useT } from '../lib/i18n.js';
 import { downloadPoster } from '../lib/poster.js';
+import { DEMO } from '../lib/demo.js';
 import { Avatar } from '../components/Avatar.jsx';
 import { Timer } from '../components/Timer.jsx';
 import { ReactionBar } from '../components/Reactions.jsx';
@@ -192,9 +193,11 @@ export function GameOver({ view }) {
       </ol>
 
       <div className="results-foot">
-        <button type="button" className="btn btn-cyan" onClick={savePoster} disabled={saving || !first}>
-          🖼️ {saving ? t('over.posterSaving') : t('over.poster')}
-        </button>
+        {!DEMO && (
+          <button type="button" className="btn btn-cyan" onClick={savePoster} disabled={saving || !first}>
+            🖼️ {saving ? t('over.posterSaving') : t('over.poster')}
+          </button>
+        )}
         {view.me?.isHost ? (
           <button type="button" className="btn btn-yellow btn-lg" onClick={() => act('lobby')}>
             🔁 {t('over.again')}

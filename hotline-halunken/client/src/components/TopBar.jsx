@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { act, leaveRoom, useStore } from '../lib/net.js';
+import { confirmAction } from '../lib/demo.js';
 import { setPrefs, usePrefs } from '../lib/prefs.js';
 import { LANGUAGES, setLang, useT } from '../lib/i18n.js';
 import { applyVolume, play, stopHoldMusic } from '../lib/sound.js';
@@ -41,11 +42,11 @@ export function TopBar({ onRules }) {
   };
 
   const leave = async () => {
-    if (window.confirm(view?.me ? t('top.confirmLeave') : t('top.confirmStopWatching'))) await leaveRoom();
+    if (confirmAction(view?.me ? t('top.confirmLeave') : t('top.confirmStopWatching'))) await leaveRoom();
   };
 
   const endGame = () => {
-    if (window.confirm(t('top.confirmEnd'))) act('endGame');
+    if (confirmAction(t('top.confirmEnd'))) act('endGame');
   };
 
   const onOff = (v) => (v ? t('common.on') : t('common.off'));

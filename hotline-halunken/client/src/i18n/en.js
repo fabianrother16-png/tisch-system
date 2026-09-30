@@ -8,6 +8,11 @@ export default {
   'common.you': '(you)',
   'common.roundOf': 'Round {round} of {total}',
 
+  'demo.title': 'Demo version',
+  'demo.text': 'You play alone against 3 bots right in your browser – in chat mode, so the bots can answer you. For real games with friends, voice chat and an audience, the game has to run on a server (see README).',
+  'demo.start': 'Start demo (vs. bots)',
+  'demo.lobbyTitle': 'Demo: you vs. the bots',
+  'demo.lobbyText': 'Three bots are already here. Adjust the settings on the right and start the shift. Inviting friends only works with the real server.',
   'app.soundHint': 'Tap for sound',
   'newHost': '👑 {name} is now the host.',
   'err.offline': 'No connection to the server.',

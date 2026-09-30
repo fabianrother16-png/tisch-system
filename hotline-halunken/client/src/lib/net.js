@@ -1,6 +1,8 @@
 import { io } from 'socket.io-client';
 import { useSyncExternalStore } from 'react';
 import { getPrefs, subscribePrefs } from './prefs.js';
+import { DEMO } from './demo.js';
+import { createLocalSocket } from './localServer.js';
 
 // Pro Tab eine eigene Sitzung (sessionStorage): So kann man zum Testen auch mehrere Tabs öffnen,
 // und ein Neuladen der Seite bringt einen trotzdem zurück ins laufende Spiel.
@@ -15,6 +17,7 @@ function readSession() {
 }
 
 export function saveSession(session) {
+  if (DEMO) return; // In der Demo gibt es nach einem Neuladen nichts wiederherzustellen.
   try {
     if (session) sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
     else sessionStorage.removeItem(SESSION_KEY);
@@ -27,7 +30,7 @@ let snapshot = {
   view: null,
   connected: false,
   offset: 0,
-  resuming: !!readSession(),
+  resuming: !DEMO && !!readSession(),
   notice: null,
 };
 const subs = new Set();
@@ -62,7 +65,9 @@ export function emitLocalFx(fx) {
 }
 
 // ---------------------------------------------------------------- socket
-export const socket = io({ transports: ['websocket', 'polling'], reconnectionDelayMax: 3000, auth: { lang: getPrefs().lang } });
+export const socket = DEMO
+  ? createLocalSocket({ lang: getPrefs().lang })
+  : io({ transports: ['websocket', 'polling'], reconnectionDelayMax: 3000, auth: { lang: getPrefs().lang } });
 
 // Sprachwechsel an den Server melden (für Fehlermeldungen).
 let lastLang = getPrefs().lang;
@@ -76,7 +81,7 @@ subscribePrefs(() => {
 
 socket.on('connect', () => {
   setStore({ connected: true });
-  const session = readSession();
+  const session = DEMO ? null : readSession();
   if (session) resume(session);
 });
 
