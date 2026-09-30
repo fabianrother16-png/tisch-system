@@ -3,8 +3,9 @@
 > Einer ist das Opfer. Alle anderen rufen an. Und einer davon ist ein Undercover-Cop.
 
 **HOTLINE HALUNKEN** ist ein Multiplayer-Partyspiel für den Browser (3–12 Spieler + beliebig viele Zuschauer), gebaut für
-Freundesrunden, Streamer, YouTuber und TikToker. Gespielt wird per **Voice-Chat** (Discord, im selben Raum …) oder im
-**Chat-Modus**, in dem die „Anrufe“ getippt werden – wie ein Betrugs-Chat auf dem Handy. Das Spiel gibt es auf
+Freundesrunden, Streamer, YouTuber und TikToker. Gespielt wird per **Sprachchat direkt im Browser** (Handy oder PC –
+kein Discord nötig), per Discord/im selben Raum oder im **Chat-Modus**, in dem die „Anrufe“ getippt werden – wie ein
+Betrugs-Chat auf dem Handy. Das Spiel gibt es auf
 **Deutsch und Englisch**; wer allein testen will, füllt die Lobby mit **Bots** auf.
 
 ![Startseite](docs/home.jpg)
@@ -55,6 +56,9 @@ Freundesrunden, Streamer, YouTuber und TikToker. Gespielt wird per **Voice-Chat*
 
 ## Features
 
+- **Sprachchat im Browser** (WebRTC): Handy und PC, ohne App oder Discord. Stummschalten, „nur zuhören“ ohne Mikrofon,
+  Leuchtrand am Avatar, wer gerade spricht, und **Telefon-Effekt**: Anrufer und Opfer klingen während des Anrufs wie
+  durchs Telefon
 - Räume mit 4-Buchstaben-Code, Einladungslink und QR-Code
 - Lobby mit Avataren/Farben, Host-Krone, Kick, **Bots**, Einstellungen (Anrufmodus Voice/Chat, Kartensprache, Runden,
   Anrufdauer, Anrufer pro Runde, Budget, Cop/Chaos/Stimmen/Zuschauer an/aus) und geschätzter Spieldauer
@@ -140,6 +144,28 @@ Ohne Docker: `npm ci && npm run build && npm start` – der Server nimmt den Por
 | `CORS_ORIGIN` | – | Nur nötig, wenn Frontend und Server auf verschiedenen Domains laufen (Komma-getrennt) |
 | `IMPRINT_URL` | – | Link zu deinem Impressum (wird auf der Startseite angezeigt) |
 | `PRIVACY_URL` | – | Link zu deiner Datenschutzerklärung |
+| `TURN_URLS` | – | TURN-Server für den Sprachchat, z. B. `turn:turn.example.com:3478,turns:turn.example.com:443` |
+| `TURN_USERNAME` / `TURN_CREDENTIAL` | – | Zugangsdaten für den TURN-Server |
+| `STUN_URLS` | Google-STUN | Eigene STUN-Server (Komma-getrennt), falls gewünscht |
+
+### Sprachchat im Browser
+
+In der Lobby und im Spiel gibt es unten links **🎙️ Sprachchat beitreten**. Der Browser fragt einmal nach dem Mikrofon,
+danach hören sich alle Spieler im Raum. Die Stimmen gehen direkt von Gerät zu Gerät (WebRTC); der Spielserver vermittelt
+nur die Verbindung und bekommt kein Audio.
+
+- **HTTPS ist Pflicht:** Browser geben das Mikrofon nur auf `https://`-Seiten frei (oder auf `localhost`). Render &
+  Co. liefern HTTPS automatisch. Im Heim-WLAN über `http://192.168.…` funktioniert das Mikrofon am Handy deshalb nicht –
+  man kann dort nur zuhören.
+- **Mobilfunk (4G/5G) und Firmen-WLANs:** Hier klappt die direkte Verbindung oft nicht ohne **TURN-Server** (ein
+  Vermittler, der das Audio weiterreicht, wenn es direkt nicht geht). Ohne TURN funktioniert der Sprachchat meist im
+  Heim-WLAN, aber nicht bei allen Mobilfunkkunden. Einen TURN-Server bekommst du z. B. bei Anbietern wie Metered oder
+  Cloudflare (jeweils mit Gratis-Kontingent) oder selbst gehostet mit *coturn*; trag ihn über `TURN_URLS`,
+  `TURN_USERNAME` und `TURN_CREDENTIAL` ein.
+- **Kopfhörer** verhindern Echo, wenn mehrere Leute im selben Raum sitzen.
+- Bis 12 Spieler im Sprachchat (jeder verbindet sich mit jedem). Zuschauer hören nicht mit – sie bekommen den Ton über
+  den Stream.
+- Wer das Mikrofon ablehnt oder keins hat, ist automatisch im Modus **„Nur zuhören“**.
 
 ### Rechtliches beim öffentlichen Betrieb
 
@@ -148,6 +174,9 @@ Wenn du das Spiel öffentlich (z. B. für deine Community) betreibst, brauchst d
 erscheinen dann unten auf der Startseite. Zur Einordnung: Das Spiel setzt keine Cookies, nutzt kein Tracking und lädt
 keine externen Schriften; Namen und Chat-Nachrichten liegen nur während des Spiels im Arbeitsspeicher des Servers.
 Die Browser-Einstellungen (Ton, Sprache, eigene Karten) werden lokal im Browser gespeichert.
+Beim Sprachchat läuft das Audio direkt zwischen den Geräten (oder über deinen TURN-Server, falls eingetragen) und wird
+nirgends gespeichert. Für den Verbindungsaufbau werden standardmäßig die öffentlichen STUN-Server von Google genutzt,
+die dabei die IP-Adresse der Spieler sehen; über `STUN_URLS` kannst du eigene eintragen.
 
 ## So wird gespielt (Kurzfassung)
 
@@ -207,7 +236,6 @@ Maschen werden erst nach dem Anruf aufgedeckt, das Geheimnis des Opfers sieht nu
 
 ## Ideen für später
 
-- Echter In-Game-Voice-Chat (WebRTC) statt Discord
 - Twitch-/YouTube-Chat-Integration für Publikums-Abstimmungen
 - Weitere Sprachen (neue Datei in `server/content/` und `client/src/i18n/`)
 

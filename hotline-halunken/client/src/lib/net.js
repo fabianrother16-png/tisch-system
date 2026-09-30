@@ -50,6 +50,11 @@ export function useStore() {
   );
 }
 
+export function subscribeStore(fn) {
+  subs.add(fn);
+  return () => subs.delete(fn);
+}
+
 export function getStore() {
   return snapshot;
 }

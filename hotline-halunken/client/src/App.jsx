@@ -4,6 +4,7 @@ import { announce, audioLocked, play, stopHoldMusic, unlockAudio } from './lib/s
 import { t as translateNow, useT } from './lib/i18n.js';
 import { usePrefs } from './lib/prefs.js';
 import { TopBar } from './components/TopBar.jsx';
+import { VoiceBar } from './components/VoiceBar.jsx';
 import { FxLayer, ReactionLayer, Toasts } from './components/FxLayer.jsx';
 import { Modal, Rules } from './components/Modal.jsx';
 import { Home } from './screens/Home.jsx';
@@ -147,6 +148,7 @@ export default function App() {
       <ReactionLayer />
       <Toasts />
       {view && <SoundHint />}
+      <VoiceBar />
       {rules && (
         <Modal title={t('rules.title')} onClose={() => setRules(false)} wide>
           <Rules />

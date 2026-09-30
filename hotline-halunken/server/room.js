@@ -25,6 +25,7 @@ export const DEFAULT_SETTINGS = {
   voices: true,
   audience: true,
   customOnly: false,
+  phoneFx: true, // Anrufer und Opfer klingen im Browser-Sprachchat wie am Telefon
 };
 
 const SETTING_OPTIONS = {
@@ -34,7 +35,8 @@ const SETTING_OPTIONS = {
   budget: [500, 1000, 2000, 5000],
 };
 const ENUM_SETTINGS = { lang: LANGS, callMode: ['voice', 'chat'] };
-const BOOL_SETTINGS = ['cop', 'chaos', 'voices', 'audience', 'customOnly'];
+const BOOL_SETTINGS = ['cop', 'chaos', 'voices', 'audience', 'customOnly', 'phoneFx'];
+export const VOICE_MODES = ['off', 'mic', 'listen'];
 
 // Dauer der Phasen in ms (werden mit timeScale multipliziert).
 export const DUR = {
@@ -297,6 +299,8 @@ export class Room {
       connected: true,
       left: false,
       bot,
+      voice: 'off', // Browser-Sprachchat: off | mic | listen
+      muted: false,
       score: 0,
       stats: freshStats(),
     };
@@ -338,6 +342,7 @@ export class Room {
     if (!p) return;
     p.connected = false;
     p.socketId = null;
+    p.voice = 'off';
     if (this.phase === 'lobby') {
       this.schedule(`remove:${p.id}`, 45000, () => this.removePlayer(p.id));
     }
@@ -355,6 +360,7 @@ export class Room {
       p.connected = false;
       p.left = true;
       p.socketId = null;
+      p.voice = 'off';
       if (this.hostId === p.id) this.reassignHost();
       this.checkProgress();
       this.changed();
@@ -1089,9 +1095,36 @@ export class Room {
     return { ok: true };
   }
 
+  // ------------------------------------------------------------------ Browser-Sprachchat
+  setVoice(playerId, mode) {
+    const p = this.player(playerId);
+    if (!p || p.bot || !VOICE_MODES.includes(mode)) return err('notNow');
+    p.voice = mode;
+    if (mode === 'off') p.muted = false;
+    this.changed();
+    return { ok: true };
+  }
+
+  setMuted(playerId, muted) {
+    const p = this.player(playerId);
+    if (!p || p.voice === 'off') return err('notNow');
+    p.muted = !!muted;
+    if (p.muted) this.fx({ type: 'speaking', id: p.id, on: false });
+    this.changed();
+    return { ok: true };
+  }
+
+  // Wer gerade spricht, bekommt bei allen einen Leuchtrand (auch bei Zuschauern).
+  speaking(playerId, on) {
+    const p = this.player(playerId);
+    if (!p || p.voice !== 'mic' || (on && p.muted)) return { ok: true };
+    this.fx({ type: 'speaking', id: p.id, on: !!on });
+    return { ok: true };
+  }
+
   // ------------------------------------------------------------------ views
   publicPlayer(p) {
-    return { id: p.id, name: p.name, avatar: p.avatar, color: p.color, connected: p.connected, left: p.left, bot: p.bot, score: p.score };
+    return { id: p.id, name: p.name, avatar: p.avatar, color: p.color, connected: p.connected, left: p.left, bot: p.bot, voice: p.voice, muted: p.muted, score: p.score };
   }
 
   viewFor({ playerId = null, socketId = null } = {}) {

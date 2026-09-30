@@ -1,9 +1,12 @@
+import { useSpeaking } from '../lib/voice.js';
+
 export function Avatar({ player, size = 'md', crown = false, badge = null, dim = false, headset = true, className = '' }) {
+  const talking = useSpeaking(player?.id);
   if (!player) return null;
   const offline = player.connected === false;
   return (
     <div
-      className={`avatar avatar-${size} ${offline || dim ? 'is-dim' : ''} ${className}`}
+      className={`avatar avatar-${size} ${offline || dim ? 'is-dim' : ''} ${talking ? 'is-speaking' : ''} ${className}`}
       style={{ '--c': player.color }}
       title={player.name}
     >

@@ -9,6 +9,7 @@ import { Avatar } from '../components/Avatar.jsx';
 import { Modal } from '../components/Modal.jsx';
 import { RoomCode } from '../components/TopBar.jsx';
 import { CustomCardsEditor } from '../components/CustomCards.jsx';
+import { VoiceIcon } from '../components/VoiceBar.jsx';
 import { AVATARS, COLORS, ProfileEditor } from './Home.jsx';
 
 const SELECTS = [
@@ -23,6 +24,7 @@ const TOGGLES = [
   { key: 'chaos', icon: '⚡' },
   { key: 'voices', icon: '🎭' },
   { key: 'audience', icon: '👀' },
+  { key: 'phoneFx', icon: '📞' },
 ];
 
 function estimateMinutes(settings, playerCount) {
@@ -166,7 +168,9 @@ export function Lobby({ view }) {
             {view.players.map((p) => (
               <div key={p.id} className={`player-card ${p.id === view.me?.id ? 'is-me' : ''}`} style={{ '--c': p.color }}>
                 <Avatar player={p} size="lg" crown={p.id === view.hostId} />
-                <div className="player-card-name">{p.name}</div>
+                <div className="player-card-name">
+                  {p.name} <VoiceIcon player={p} />
+                </div>
                 {p.id === view.me?.id && (
                   <button type="button" className="mini-btn" onClick={() => setEditing(true)}>
                     ✏️ {t('lobby.edit')}

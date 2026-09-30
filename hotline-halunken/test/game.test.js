@@ -336,3 +336,47 @@ test('Eigene Karten werden geprüft und zuerst gezogen', () => {
   assert.ok(view.game.myCard.options[0].proof.title.startsWith('OFFIZIELL'));
   room.clearAllTimers();
 });
+
+test('Browser-Sprachchat: Signale werden nur an Teilnehmer im selben Raum weitergeleitet', async () => {
+  const srv = createServer({ timeScale: 1, logger: { error() {} } });
+  const port = await srv.listen(0);
+  const url = `http://localhost:${port}`;
+  const [a, b, c] = Array.from({ length: 3 }, () => makeClient(url));
+  try {
+    const created = await a.emit('room:create', { profile: { name: 'Anna' } });
+    const joinB = await b.emit('room:join', { code: created.code, profile: { name: 'Ben' } });
+    await c.emit('room:join', { code: created.code, profile: { name: 'Cem' } });
+    const got = [];
+    b.socket.on('voice:signal', (m) => got.push(m));
+
+    // Ben ist noch nicht im Sprachchat → nichts wird weitergeleitet.
+    assert.ok((await a.emit('voice:join', { mic: true })).ok);
+    assert.ok((await a.emit('voice:signal', { to: joinB.playerId, data: { description: { type: 'offer', sdp: 'x' } } })).error);
+
+    assert.ok((await b.emit('voice:join', { mic: false })).ok);
+    const view = await a.waitFor((s) => s.players.find((p) => p.id === joinB.playerId)?.voice === 'listen', 'Ben hört zu');
+    assert.equal(view.players.find((p) => p.id === created.playerId).voice, 'mic');
+    assert.ok((await a.emit('voice:signal', { to: joinB.playerId, data: { candidate: { candidate: 'c' } } })).ok);
+    await new Promise((r) => setTimeout(r, 50));
+    assert.deepEqual(got, [{ from: created.playerId, data: { candidate: { candidate: 'c' } } }]);
+
+    // Stummschalten und Sprech-Anzeige
+    const fx = [];
+    c.socket.on('fx', (f) => f.type === 'speaking' && fx.push(f));
+    await a.emit('voice:speaking', { on: true });
+    await a.emit('voice:mute', { muted: true });
+    await a.emit('voice:speaking', { on: true });
+    await c.waitFor((s) => s.players.find((p) => p.id === created.playerId)?.muted === true, 'Anna stumm');
+    await new Promise((r) => setTimeout(r, 50));
+    assert.deepEqual(fx.map((f) => f.on), [true, false], 'stumm = keine Sprech-Anzeige');
+
+    // Verbindungsabbruch beendet den Sprachchat
+    b.socket.close();
+    await a.waitFor((s) => s.players.find((p) => p.id === joinB.playerId)?.voice === 'off', 'Ben raus');
+    const cfg = await fetch(`${url}/config.json`).then((r) => r.json());
+    assert.ok(cfg.iceServers[0].urls.length > 0);
+  } finally {
+    for (const s of openClients) s.close();
+    await srv.close();
+  }
+});

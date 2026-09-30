@@ -13,6 +13,16 @@ const DIST = path.resolve(__dirname, '../dist');
 const CODE_ALPHABET = 'BCDFGHJKLMNPQRSTVWXZ';
 const MAX_ROOMS = 5000;
 
+// STUN reicht in vielen Heimnetzen. Für Mobilfunk/Firmennetze braucht es oft einen TURN-Server (siehe README).
+function iceServers() {
+  const list = (v) => String(v || '').split(',').map((x) => x.trim()).filter(Boolean);
+  const servers = [{ urls: list(process.env.STUN_URLS).length ? list(process.env.STUN_URLS) : ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] }];
+  if (list(process.env.TURN_URLS).length) {
+    servers.push({ urls: list(process.env.TURN_URLS), username: process.env.TURN_USERNAME || '', credential: process.env.TURN_CREDENTIAL || '' });
+  }
+  return servers;
+}
+
 export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 1, logger = console } = {}) {
   const app = express();
   const server = http.createServer(app);
@@ -31,7 +41,7 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
   app.get('/health', (_req, res) => res.json({ ok: true, rooms: rooms.size }));
   // Optionale Links für den öffentlichen Betrieb (z. B. Impressum-Pflicht in Deutschland).
   app.get('/config.json', (_req, res) =>
-    res.json({ imprintUrl: process.env.IMPRINT_URL || null, privacyUrl: process.env.PRIVACY_URL || null }),
+    res.json({ imprintUrl: process.env.IMPRINT_URL || null, privacyUrl: process.env.PRIVACY_URL || null, iceServers: iceServers() }),
   );
   if (fs.existsSync(DIST)) {
     const indexHtml = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
@@ -118,6 +128,7 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
     socket.data.ctx = ctx;
     const bucket = { tokens: 20, last: Date.now() };
     const reactBucket = { tokens: 6, last: Date.now() };
+    const signalBucket = { tokens: 80, last: Date.now() };
 
     const take = (b, rate, burst) => {
       const now = Date.now();
@@ -240,6 +251,48 @@ export function createServer({ timeScale = Number(process.env.HH_TIME_SCALE) || 
       const name = ctx.audience ? r.audience.get(socket.id)?.name : null;
       return r.react(ctx.audience ? null : ctx.playerId, emoji, name);
     }, () => take(reactBucket, 4, 6));
+
+    // ---------------------------------------------------------- Browser-Sprachchat (WebRTC)
+    // Die Stimmen laufen direkt zwischen den Browsern; der Server vermittelt nur die Verbindung.
+    const voicePlayer = () => {
+      const r = room();
+      return r && !ctx.audience && ctx.playerId ? r : null;
+    };
+
+    on('voice:join', ({ mic }) => {
+      const r = voicePlayer();
+      if (!r) return { error: 'noRoom' };
+      return r.setVoice(ctx.playerId, mic ? 'mic' : 'listen');
+    });
+
+    on('voice:leave', () => {
+      const r = voicePlayer();
+      if (!r) return { ok: true };
+      return r.setVoice(ctx.playerId, 'off');
+    });
+
+    on('voice:mute', ({ muted }) => {
+      const r = voicePlayer();
+      if (!r) return { error: 'noRoom' };
+      return r.setMuted(ctx.playerId, muted);
+    });
+
+    on('voice:speaking', ({ on: speaking }) => {
+      const r = voicePlayer();
+      if (!r) return { ok: true };
+      return r.speaking(ctx.playerId, speaking);
+    }, () => take(bucket, 25, 30));
+
+    on('voice:signal', ({ to, data }) => {
+      const r = voicePlayer();
+      if (!r) return { error: 'noRoom' };
+      const me = r.player(ctx.playerId);
+      const target = r.player(String(to || ''));
+      if (!me || !target || me.voice === 'off' || target.voice === 'off' || !target.socketId) return { error: 'notNow' };
+      if (!data || typeof data !== 'object' || JSON.stringify(data).length > 20000) return { error: 'notNow' };
+      io.to(target.socketId).emit('voice:signal', { from: me.id, data });
+      return { ok: true };
+    }, () => take(signalBucket, 60, 80));
 
     socket.on('disconnect', () => {
       const r = room();
