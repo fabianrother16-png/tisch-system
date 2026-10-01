@@ -4,6 +4,10 @@ One-Page-Business-Website für SICHTWERK, eine Marketing-Agentur aus Gütersloh
 ("Digitale Sichtbarkeit für den Mittelstand"). Gebaut mit Next.js (App Router),
 TypeScript, Tailwind CSS und Framer Motion.
 
+> **Interne Agentur-Software:** Im Ordner [`cockpit/`](cockpit/README.md) liegt das
+> SICHTWERK Cockpit (Kunden, Content, Performance, Rechnungen, Buchhaltung …) als
+> eigenständige Next.js-App mit eigener Anleitung.
+
 ## Tech-Stack
 
 - **Next.js 16** (App Router, React 19, Turbopack)

@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-fg: var(--sidebar-fg);
+  --color-sidebar-muted: var(--sidebar-muted);
+  --color-sidebar-active: var(--sidebar-active);
+}
+
+:root {
+  --bg: #f6f4ef;
+  --surface: #ffffff;
+  --surface-2: #faf9f6;
+  --surface-3: #f1eee7;
+  --line: #e8e3d9;
+  --line-strong: #d8d1c3;
+  --fg: #1e1a17;
+  --fg-2: #3a332d;
+  --muted: #6f665d;
+  --accent: #c1502e;
+  --accent-strong: #9c3f24;
+  --accent-soft: #fbece6;
+  --on-accent: #ffffff;
+  --sidebar: #1e1a17;
+  --sidebar-fg: #f5f1e8;
+  --sidebar-muted: #a89f93;
+  --sidebar-active: #2e2824;
+  /* Diagramm-Palette (validiert: CVD-sicher, feste Reihenfolge) */
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-grid: #ece8df;
+  --chart-axis: #8a8178;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #121010;
+  --surface: #1b1816;
+  --surface-2: #211d1a;
+  --surface-3: #2a2521;
+  --line: #2f2925;
+  --line-strong: #3d3631;
+  --fg: #f3efe8;
+  --fg-2: #d9d2c7;
+  --muted: #a1978b;
+  --accent: #e0683f;
+  --accent-strong: #f08a64;
+  --accent-soft: #3a211a;
+  --on-accent: #ffffff;
+  --sidebar: #0d0b0b;
+  --sidebar-fg: #f3efe8;
+  --sidebar-muted: #91877c;
+  --sidebar-active: #221d1a;
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-grid: #2c2724;
+  --chart-axis: #8f867c;
+  color-scheme: dark;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--line);
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+  }
+  ::selection {
+    background-color: var(--accent);
+    color: var(--on-accent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  input[type="month"]::-webkit-calendar-picker-indicator {
+    opacity: 0.6;
+    cursor: pointer;
+  }
+  .dark input[type="date"]::-webkit-calendar-picker-indicator,
+  .dark input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  .dark input[type="month"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
+
+@layer components {
+  .input {
+    @apply block w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-sm text-fg shadow-xs placeholder:text-muted/70 transition-colors;
+    @apply focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20;
+    @apply disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium text-fg-2;
+  }
+  .card {
+    @apply rounded-xl border border-line bg-surface shadow-xs;
+  }
+  .table {
+    @apply w-full text-sm;
+  }
+  .table th {
+    @apply border-b border-line px-4 py-2.5 text-left text-xs font-medium whitespace-nowrap text-muted;
+  }
+  .table td {
+    @apply border-b border-line px-4 py-3 align-middle;
+  }
+  .table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .table tbody tr.row-link {
+    @apply cursor-pointer transition-colors hover:bg-surface-2;
+  }
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+  .prose-notes {
+    @apply text-sm leading-relaxed whitespace-pre-wrap text-fg-2;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
