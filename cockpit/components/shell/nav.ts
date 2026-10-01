@@ -6,7 +6,7 @@ export const NAV: NavGroup[] = [
   {
     label: "Kunden",
     items: [
-      { href: "/kunden", label: "Kunden", icon: "users" },
+      { href: "/kunden", label: "Kunden", icon: "users", badgeKey: "leads" },
       { href: "/vertraege", label: "Verträge", icon: "contract", badgeKey: "contracts" },
     ],
   },

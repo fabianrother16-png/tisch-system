@@ -1,12 +1,12 @@
-import { and, count, eq, inArray, isNull, lt, lte, or } from "drizzle-orm";
+import { and, count, eq, gte, inArray, isNull, lt, lte, or } from "drizzle-orm";
 import { db } from "../db";
-import { contracts, emails, invoices, tasks } from "../db/schema";
+import { contracts, customers, emails, invoices, tasks } from "../db/schema";
 import { addDays, todayISO } from "../dates";
 import { contractTerm } from "./contracts";
 
 export async function getNavBadges(userId: number): Promise<Record<string, number>> {
   const today = todayISO();
-  const [[overdue], [openTasks], [unread], activeContracts] = await Promise.all([
+  const [[overdue], [openTasks], [unread], activeContracts, [newLeads]] = await Promise.all([
     db
       .select({ n: count() })
       .from(invoices)
@@ -23,6 +23,10 @@ export async function getNavBadges(userId: number): Promise<Record<string, numbe
       ),
     db.select({ n: count() }).from(emails).where(and(eq(emails.direction, "ein"), eq(emails.isRead, false))),
     db.select().from(contracts).where(eq(contracts.status, "aktiv")),
+    db
+      .select({ n: count() })
+      .from(customers)
+      .where(and(eq(customers.status, "lead"), eq(customers.source, "Website-Kontaktformular"), gte(customers.createdAt, new Date(Date.now() - 7 * 86400000).toISOString()))),
   ]);
   const soon = addDays(today, 30);
   const contractAlerts = activeContracts.filter((c) => {
@@ -34,5 +38,6 @@ export async function getNavBadges(userId: number): Promise<Record<string, numbe
     tasks: openTasks.n,
     mail: unread.n,
     contracts: contractAlerts,
+    leads: newLeads.n,
   };
 }

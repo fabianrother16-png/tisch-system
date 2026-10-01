@@ -41,7 +41,7 @@ export function CustomerMark({
   return (
     <span
       className={cn("inline-flex shrink-0 items-center justify-center font-semibold", sizes[size])}
-      style={{ backgroundColor: `${color || "#C1502E"}1f`, color: color || "#C1502E" }}
+      style={{ backgroundColor: `${color || "#7A5C33"}1f`, color: color || "#7A5C33" }}
     >
       {initials(name) || "?"}
     </span>

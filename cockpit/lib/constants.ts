@@ -232,25 +232,27 @@ export const ACTIVITY_KINDS: Option[] = [
   { value: "anruf", label: "Telefonat" },
   { value: "meeting", label: "Meeting" },
   { value: "email", label: "E-Mail" },
+  { value: "anfrage", label: "Website-Anfrage" },
   { value: "system", label: "System" },
 ];
 export const ACTIVITY_KIND_MAP = toMap(ACTIVITY_KINDS);
 
 export const CUSTOMER_COLORS = [
-  "#C1502E", "#2563EB", "#059669", "#7C3AED", "#DB2777",
-  "#D97706", "#0891B2", "#4F46E5", "#65A30D", "#475569",
+  "#7A5C33", "#2563EB", "#059669", "#7C3AED", "#DB2777",
+  "#B4533A", "#0891B2", "#4F46E5", "#65A30D", "#475569",
 ];
 
+/** Leistungskatalog – entspricht den Leistungen auf rother-marketing (lib/leistungen.ts der Website) */
 export const SERVICE_PRESETS = [
-  { name: "Rezensionsmanagement", category: "Google", unit: "Monat" },
-  { name: "Google-Unternehmensprofil Optimierung", category: "Google", unit: "Pauschale" },
+  { name: "Analyse und Fahrplan", category: "Strategie", unit: "Pauschale" },
+  { name: "Webdesign", category: "Website", unit: "Pauschale" },
+  { name: "SEO und Local SEO", category: "Website", unit: "Monat" },
+  { name: "Google-Profil und Bewertungen", category: "Google", unit: "Monat" },
   { name: "NFC-Bewertungskarten", category: "Google", unit: "Stück" },
-  { name: "Website", category: "Web", unit: "Pauschale" },
-  { name: "Social-Media-Betreuung", category: "Social Media", unit: "Monat" },
-  { name: "Meta-Ads-Betreuung", category: "Werbung", unit: "Monat" },
-  { name: "SEO-Optimierung", category: "Web", unit: "Monat" },
+  { name: "Social Media", category: "Social Media", unit: "Monat" },
+  { name: "Meta Ads und Google Ads", category: "Werbung", unit: "Monat" },
+  { name: "Foto und Video", category: "Foto & Video", unit: "Pauschale" },
   { name: "Videoproduktion (Reel/TikTok)", category: "Foto & Video", unit: "Video" },
-  { name: "Drohnenaufnahmen", category: "Foto & Video", unit: "Pauschale" },
   { name: "Drehtag vor Ort", category: "Foto & Video", unit: "Tag" },
   { name: "Fahrtkosten", category: "Sonstiges", unit: "km" },
 ];

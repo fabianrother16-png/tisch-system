@@ -1,6 +1,6 @@
-# SICHTWERK Cockpit
+# Rother Marketing Cockpit
 
-Die interne Agentur-Software für SICHTWERK: Kunden, Verträge, Content-Produktion,
+Die interne Agentur-Software für Rother Marketing („Marketing mit Gesicht.“): Kunden, Verträge, Content-Produktion,
 Kalender, Performance aller Kanäle, Angebote, Rechnungen, Ausgaben, Buchhaltung,
 Ablage und E-Mail – alles in einer Anwendung.
 
@@ -31,8 +31,9 @@ Next.js 16 (App Router, Server Actions) · TypeScript · Tailwind CSS 4 · Drizz
 mit SQLite/libSQL (lokal eine Datei, online [Turso](https://turso.tech)) ·
 Recharts · @react-pdf/renderer · Nodemailer/ImapFlow.
 
-Die Software ist ein eigenständiges Projekt im Ordner `cockpit/` und beeinflusst die
-Website im Hauptverzeichnis nicht.
+Die Software ist ein eigenständiges Projekt im Ordner `cockpit/`. Design (Farben,
+Schriften, RM-Logo) und Leistungskatalog entsprechen der Website von Rother Marketing
+(Repository `rother-marketing-website`).
 
 ## Lokal starten
 
@@ -69,10 +70,10 @@ npm run db:generate # neue Migration nach Schema-Änderung (lib/db/schema.ts)
 3. **Umgebungsvariablen** in Vercel setzen (Werte siehe `.env.example`):
    - `APP_SECRET` – langer Zufallswert (`openssl rand -base64 48`). Nicht mehr ändern,
      sonst können gespeicherte Passwörter/Tokens nicht mehr entschlüsselt werden.
-   - `APP_URL` – z. B. `https://cockpit.sichtwerk.de`
+   - `APP_URL` – z. B. `https://cockpit.rother-marketing.de`
    - `DATABASE_URL`, `DATABASE_AUTH_TOKEN` – von Turso
    - `CRON_SECRET` – Zufallswert; Vercel ruft damit täglich `/api/cron/daily` auf
-4. Deployen, Domain verbinden (z. B. `cockpit.sichtwerk.de`), Einrichtung durchlaufen.
+4. Deployen, Domain verbinden (z. B. `cockpit.rother-marketing.de`), Einrichtung durchlaufen.
 
 Der tägliche Job (siehe `vercel.json`) holt alle Kennzahlen der verbundenen Kanäle,
 bereitet fällige Serienrechnungen als Entwurf vor, setzt abgelaufene Angebote auf
@@ -103,6 +104,27 @@ per Klick dessen Konto.
 (Kundenakte → Performance → „Kennzahlen eintragen“ / „Beitrag“, Werbung → Kampagne).
 Diagramme, Vorher/Nachher und Kunden-Report funktionieren damit genauso.
 Tracking-Links und NFC-Karten-Klicks laufen sofort ohne jede Freigabe.
+
+## Verbindung zur Website (Kontaktformular → Cockpit)
+
+Anfragen aus dem Kontaktformular von **rother-marketing-website** landen automatisch
+im Cockpit: als neuer Interessent (Status „Interessent“, Quelle
+„Website-Kontaktformular“) mit Ansprechpartner, Verlaufseintrag mit allen Angaben
+und der Aufgabe „Rückmeldung an … per Telefon/E-Mail“ für den nächsten Werktag.
+Kommt dieselbe Person erneut (gleiche E-Mail oder gleicher Firmenname), wird die
+Anfrage dem bestehenden Kunden zugeordnet. Neue Anfragen erscheinen oben auf dem
+Dashboard und als Zähler bei „Kunden“.
+
+Einrichten:
+
+1. Cockpit → **Einstellungen → Anbindungen → Website-Anfragen** → „Verbindung einrichten“.
+2. Die angezeigten Werte `COCKPIT_URL` und `COCKPIT_SCHLUESSEL` im Vercel-Projekt der
+   Website eintragen und die Website neu deployen.
+
+Technisch: `POST /api/website/anfrage` mit `Authorization: Bearer <Schlüssel>`. Die
+Website prüft Pflichtfelder, Spam und Drosselung selbst; die Anfrage gilt dort als
+angekommen, sobald Mail **oder** Cockpit geklappt hat. Alternativ kann der Schlüssel
+im Cockpit auch über die Umgebungsvariable `WEBSITE_SCHLUESSEL` gesetzt werden.
 
 ## E-Mail
 

@@ -43,8 +43,10 @@ import {
   setUserActive,
   testMailConnection,
   updateProfile,
+  generateWebsiteKey,
 } from "@/lib/actions/settings";
 import { getSetting } from "@/lib/settings";
+import { decrypt } from "@/lib/crypto";
 import { appUrl } from "@/lib/env";
 import { eur, fmtTimestamp } from "@/lib/format";
 import { PROVIDERS, redirectUri } from "@/lib/integrations/config";
@@ -63,7 +65,7 @@ const ENV_KEYS: Record<string, [string, string]> = {
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
   const me = await requireUser();
   const { tab = "profil" } = await searchParams;
-  const [company, partners, invoicing, mail, templates, oauthApps, setup, team, serviceRows, demoCount] = await Promise.all([
+  const [company, partners, invoicing, mail, templates, oauthApps, setup, team, serviceRows, demoCount, website] = await Promise.all([
     getSetting("company"),
     getSetting("partners"),
     getSetting("invoicing"),
@@ -74,7 +76,10 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
     db.select().from(users).orderBy(asc(users.createdAt)),
     db.select().from(services).orderBy(asc(services.sortOrder), asc(services.name)),
     db.$count(customers, eq(customers.isDemo, true)),
+    getSetting("website"),
   ]);
+  const websiteKeyValue = decrypt(website.key) || "";
+  const websiteKeyFromEnv = !websiteKeyValue && !!process.env.WEBSITE_SCHLUESSEL;
   const href = (t: string) => `/einstellungen?tab=${t}`;
   const appsView = Object.fromEntries(
     Object.keys(ENV_KEYS).map((k) => {
@@ -234,6 +239,38 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             <CardBody><OAuthAppsForm action={saveOAuthApps} apps={appsView} redirects={redirects} /></CardBody>
           </Card>
           <div className="space-y-6 self-start">
+            <Card>
+              <CardHeader title="Website-Anfragen" description="Anfragen aus dem Kontaktformular eurer Website landen automatisch als Interessent im Cockpit – mit Aufgabe „Rückmeldung“." />
+              <CardBody className="space-y-3 text-sm">
+                {websiteKeyValue || websiteKeyFromEnv ? (
+                  <>
+                    <p className="text-xs text-muted">In Vercel beim Projekt <strong>rother-marketing-website</strong> unter Settings → Environment Variables eintragen und neu deployen:</p>
+                    <div>
+                      <p className="label">COCKPIT_URL</p>
+                      <CopyField value={appUrl()} />
+                    </div>
+                    {websiteKeyValue ? (
+                      <div>
+                        <p className="label">COCKPIT_SCHLUESSEL</p>
+                        <CopyField value={websiteKeyValue} />
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted">Schlüssel kommt aus der Umgebungsvariable WEBSITE_SCHLUESSEL.</p>
+                    )}
+                    <p className="text-xs text-muted">
+                      {website.received ? `${website.received} Anfrage${website.received === 1 ? "" : "n"} empfangen, zuletzt ${fmtTimestamp(website.lastReceivedAt)}.` : "Noch keine Anfrage empfangen."}
+                    </p>
+                    <ActionButton action={generateWebsiteKey} confirm="Neuen Schlüssel erzeugen? Der alte funktioniert dann nicht mehr – bitte danach bei der Website aktualisieren.">
+                      Neuen Schlüssel erzeugen
+                    </ActionButton>
+                  </>
+                ) : (
+                  <ActionButton action={generateWebsiteKey} variant="primary" size="md">
+                    Verbindung einrichten
+                  </ActionButton>
+                )}
+              </CardBody>
+            </Card>
             <Card>
               <CardHeader title="So funktioniert's" />
               <CardBody className="space-y-3 text-sm text-fg-2">

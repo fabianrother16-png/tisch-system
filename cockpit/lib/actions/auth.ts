@@ -56,7 +56,7 @@ export async function setupAction(_prev: ActionState, formData: FormData): Promi
       email: d.email.toLowerCase(),
       passwordHash: await hashPassword(d.password),
       role: "inhaber",
-      color: "#C1502E",
+      color: "#7A5C33",
       calendarToken: randomToken(),
     })
     .returning();

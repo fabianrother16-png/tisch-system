@@ -20,7 +20,8 @@ export function CompanyForm({ action, company }: { action: Action; company: Comp
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Firmenname" name="name" required><Input name="name" defaultValue={c.name} required /></Field>
         <Field label="Rechtsform" name="legalForm"><Input name="legalForm" defaultValue={c.legalForm} placeholder="GbR" /></Field>
-        <Field label="Gesellschafter (für Rechnungen & Signatur)" name="owners" className="sm:col-span-2"><Input name="owners" defaultValue={c.owners} placeholder="Max Mustermann & Moritz Mustermann" /></Field>
+        <Field label="Claim (Kunden-Report & PDF)" name="claim" className="sm:col-span-2"><Input name="claim" defaultValue={c.claim} placeholder="Marketing mit Gesicht." /></Field>
+        <Field label="Gesellschafter (für Rechnungen & Signatur)" name="owners" className="sm:col-span-2"><Input name="owners" defaultValue={c.owners} placeholder="Fabian Rother & … Rother" /></Field>
         <Field label="Straße & Hausnummer" name="street" className="sm:col-span-2"><Input name="street" defaultValue={c.street} /></Field>
         <div className="grid grid-cols-[110px_1fr] gap-3 sm:col-span-2">
           <Field label="PLZ" name="zip"><Input name="zip" defaultValue={c.zip} /></Field>
@@ -132,8 +133,8 @@ export function MailForm({
     <ActionForm action={action} keepOpen className="space-y-5">
       <fieldset className="grid gap-4 rounded-xl border border-line p-4 sm:grid-cols-2">
         <legend className="px-1 text-xs font-semibold text-muted">Absender</legend>
-        <Field label="Absendername" name="fromName"><Input name="fromName" defaultValue={m.fromName} placeholder="SICHTWERK" /></Field>
-        <Field label="Absenderadresse" name="fromAddress"><Input type="email" name="fromAddress" defaultValue={m.fromAddress} placeholder="hallo@sichtwerk.de" /></Field>
+        <Field label="Absendername" name="fromName"><Input name="fromName" defaultValue={m.fromName} placeholder="Rother Marketing" /></Field>
+        <Field label="Absenderadresse" name="fromAddress"><Input type="email" name="fromAddress" defaultValue={m.fromAddress} placeholder="hallo@rother-marketing.de" /></Field>
       </fieldset>
       <fieldset className="grid gap-4 rounded-xl border border-line p-4 sm:grid-cols-2">
         <legend className="px-1 text-xs font-semibold text-muted">Versand (SMTP)</legend>
@@ -156,7 +157,7 @@ export function MailForm({
           <Input type="password" name="imapPassword" autoComplete="new-password" placeholder={m.hasImapPassword ? "••••••••" : ""} />
         </Field>
       </fieldset>
-      <Field label="Signatur" name="signature"><Textarea name="signature" rows={5} defaultValue={m.signature} placeholder={"SICHTWERK GbR\nDigitale Sichtbarkeit für den Mittelstand\nTel. …"} /></Field>
+      <Field label="Signatur" name="signature"><Textarea name="signature" rows={5} defaultValue={m.signature} placeholder={"Rother Marketing GbR\nMarketing mit Gesicht.\nTel. …"} /></Field>
       <Checkbox name="bccSelf" defaultChecked={m.bccSelf} label="Kopie jeder gesendeten Mail an mich (BCC)" description="Damit die Mails auch im normalen Postfach unter „Gesendet“ auftauchen" />
       <FormActions><SubmitButton>Speichern</SubmitButton></FormActions>
     </ActionForm>

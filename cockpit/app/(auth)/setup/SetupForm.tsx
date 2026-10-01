@@ -8,7 +8,7 @@ export function SetupForm() {
   return (
     <ActionForm action={setupAction} className="mt-6 space-y-6">
       <Field label="Firmenname" name="companyName" required>
-        <Input name="companyName" defaultValue="SICHTWERK" required />
+        <Input name="companyName" defaultValue="Rother Marketing" required />
       </Field>
       <fieldset className="space-y-4">
         <legend className="mb-3 text-sm font-semibold">Dein Zugang</legend>

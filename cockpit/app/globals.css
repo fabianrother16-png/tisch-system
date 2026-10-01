@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --font-sans: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--ff-text), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--ff-titel), Georgia, "Times New Roman", serif;
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -23,60 +23,64 @@
   --color-sidebar-fg: var(--sidebar-fg);
   --color-sidebar-muted: var(--sidebar-muted);
   --color-sidebar-active: var(--sidebar-active);
+  --color-sidebar-accent: var(--sidebar-accent);
 }
 
 :root {
-  --bg: #f6f4ef;
+  /* Rother Marketing „Old Money“: Elfenbein, Espresso, Messing */
+  --bg: #f8f4ec;
   --surface: #ffffff;
-  --surface-2: #faf9f6;
-  --surface-3: #f1eee7;
-  --line: #e8e3d9;
-  --line-strong: #d8d1c3;
-  --fg: #1e1a17;
-  --fg-2: #3a332d;
-  --muted: #6f665d;
-  --accent: #c1502e;
-  --accent-strong: #9c3f24;
-  --accent-soft: #fbece6;
+  --surface-2: #fbf8f2;
+  --surface-3: #f1eadf;
+  --line: #e6ddcf;
+  --line-strong: #d6cab7;
+  --fg: #1b1814;
+  --fg-2: #3a332b;
+  --muted: #5e574d;
+  --accent: #7a5c33;
+  --accent-strong: #5f4627;
+  --accent-soft: #f3ebdc;
   --on-accent: #ffffff;
-  --sidebar: #1e1a17;
-  --sidebar-fg: #f5f1e8;
-  --sidebar-muted: #a89f93;
-  --sidebar-active: #2e2824;
+  --sidebar: #16130f;
+  --sidebar-fg: #f8f4ec;
+  --sidebar-muted: #b5ab9c;
+  --sidebar-active: #231f1a;
+  --sidebar-accent: #b08d57;
   /* Diagramm-Palette (validiert: CVD-sicher, feste Reihenfolge) */
   --chart-1: #2a78d6;
   --chart-2: #eb6834;
   --chart-3: #1baf7a;
   --chart-4: #eda100;
-  --chart-grid: #ece8df;
-  --chart-axis: #8a8178;
+  --chart-grid: #ece5d9;
+  --chart-axis: #8a8174;
   color-scheme: light;
 }
 
 .dark {
-  --bg: #121010;
-  --surface: #1b1816;
-  --surface-2: #211d1a;
-  --surface-3: #2a2521;
-  --line: #2f2925;
-  --line-strong: #3d3631;
-  --fg: #f3efe8;
-  --fg-2: #d9d2c7;
-  --muted: #a1978b;
-  --accent: #e0683f;
-  --accent-strong: #f08a64;
-  --accent-soft: #3a211a;
-  --on-accent: #ffffff;
-  --sidebar: #0d0b0b;
-  --sidebar-fg: #f3efe8;
-  --sidebar-muted: #91877c;
-  --sidebar-active: #221d1a;
+  --bg: #12100d;
+  --surface: #1b1814;
+  --surface-2: #211d18;
+  --surface-3: #2a251f;
+  --line: #322c25;
+  --line-strong: #423a31;
+  --fg: #f3eee4;
+  --fg-2: #d9d0c2;
+  --muted: #a99f90;
+  --accent: #b08d57;
+  --accent-strong: #c9a774;
+  --accent-soft: #2e261b;
+  --on-accent: #16130f;
+  --sidebar: #0c0a08;
+  --sidebar-fg: #f3eee4;
+  --sidebar-muted: #968c7e;
+  --sidebar-active: #1d1915;
+  --sidebar-accent: #b08d57;
   --chart-1: #3987e5;
   --chart-2: #d95926;
   --chart-3: #199e70;
   --chart-4: #c98500;
-  --chart-grid: #2c2724;
-  --chart-axis: #8f867c;
+  --chart-grid: #2c2721;
+  --chart-axis: #8f867b;
   color-scheme: dark;
 }
 

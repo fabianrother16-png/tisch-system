@@ -4,6 +4,7 @@ import { settings } from "./db/schema";
 
 export type CompanySettings = {
   name: string;
+  claim: string;
   legalForm: string;
   owners: string;
   street: string;
@@ -63,12 +64,13 @@ export type OAuthApps = Record<string, { clientId: string; clientSecret: string 
 
 export const DEFAULTS = {
   company: {
-    name: "SICHTWERK",
+    name: "Rother Marketing",
+    claim: "Marketing mit Gesicht.",
     legalForm: "GbR",
     owners: "",
     street: "",
     zip: "",
-    city: "Gütersloh",
+    city: "",
     country: "Deutschland",
     email: "",
     phone: "",
@@ -78,7 +80,7 @@ export const DEFAULTS = {
     bankName: "",
     iban: "",
     bic: "",
-    accentColor: "#C1502E",
+    accentColor: "#7A5C33",
   } as CompanySettings,
   invoicing: {
     kleinunternehmer: false,
@@ -134,6 +136,8 @@ export const DEFAULTS = {
     },
   } as MailTemplates,
   oauthApps: {} as OAuthApps,
+  /** Verbindung zur Website: geheimer Schlüssel (verschlüsselt) für eingehende Anfragen */
+  website: { key: "", lastReceivedAt: "", received: 0 } as { key: string; lastReceivedAt: string; received: number },
   setup: { demoLoaded: false, completedAt: "" },
 };
 

@@ -1,4 +1,4 @@
-import { Bot, Mail, MessageSquare, Phone, StickyNote, Users, Trash2 } from "lucide-react";
+import { Bot, Globe, Mail, MessageSquare, Phone, StickyNote, Users, Trash2 } from "lucide-react";
 import type { Activity } from "@/lib/db/schema";
 import { fmtTimestamp } from "@/lib/format";
 import { ActionButton } from "@/components/ui/form";
@@ -9,6 +9,7 @@ const ICON: Record<string, React.ReactNode> = {
   anruf: <Phone />,
   meeting: <Users />,
   email: <Mail />,
+  anfrage: <Globe />,
   system: <Bot />,
 };
 
@@ -43,7 +44,7 @@ export function Timeline({
                   {a.userId && userNames[a.userId] ? ` · ${userNames[a.userId]}` : ""}
                 </span>
               </p>
-              {a.kind !== "system" && (
+              {a.kind !== "system" && a.kind !== "anfrage" && (
                 <span className="opacity-0 transition-opacity group-hover:opacity-100">
                   <ActionButton action={deleteActivity.bind(null, customerId, a.id)} confirm="Eintrag löschen?" variant="ghost" size="sm" title="Löschen">
                     <Trash2 />

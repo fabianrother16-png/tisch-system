@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySession } from "./lib/session";
 
-const PUBLIC_PREFIXES = ["/login", "/setup", "/go/", "/report/", "/api/cron/", "/api/calendar/"];
+const PUBLIC_PREFIXES = ["/login", "/setup", "/go/", "/report/", "/api/cron/", "/api/calendar/", "/api/website/"];
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

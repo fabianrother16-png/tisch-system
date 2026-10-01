@@ -1,4 +1,4 @@
-import { Document, Page, StyleSheet, Text, View, renderToBuffer } from "@react-pdf/renderer";
+import { Document, Page, Path, StyleSheet, Svg, Text, View, renderToBuffer } from "@react-pdf/renderer";
 import type { CompanySettings, InvoicingSettings } from "../settings";
 import { computeTotals, lineNet, type LineItem } from "../domain/totals";
 import { eur, fmtDate } from "../format";
@@ -37,9 +37,10 @@ const mm = (v: number) => v * 2.8346;
 export function pdfStyles(accent: string) {
   return StyleSheet.create({
     page: { paddingTop: mm(18), paddingBottom: mm(32), paddingLeft: mm(25), paddingRight: mm(20), fontFamily: "Helvetica", fontSize: 9.5, color: "#1E1A17", lineHeight: 1.4 },
-    brand: { position: "absolute", top: mm(14), right: mm(20), textAlign: "right" },
-    brandName: { fontSize: 16, fontFamily: "Helvetica-Bold", color: accent, letterSpacing: 1 },
-    brandSub: { fontSize: 8, color: "#6F665D", marginTop: 2 },
+    brand: { position: "absolute", top: mm(13), right: mm(20), flexDirection: "row", alignItems: "center" },
+    brandText: { marginLeft: 8 },
+    brandName: { fontSize: 10.5, fontFamily: "Helvetica-Bold", color: "#1B1814", letterSpacing: 1.2 },
+    brandSub: { fontSize: 9, fontFamily: "Times-Italic", color: accent, marginTop: 2 },
     senderLine: { position: "absolute", top: mm(45), left: mm(25), fontSize: 7, color: "#6F665D", textDecoration: "underline" },
     address: { position: "absolute", top: mm(51), left: mm(25), width: mm(85), fontSize: 10 },
     info: { position: "absolute", top: mm(50), right: mm(20), width: mm(70) },
@@ -47,9 +48,9 @@ export function pdfStyles(accent: string) {
     infoLabel: { color: "#6F665D", fontSize: 8.5 },
     infoValue: { fontSize: 8.5, fontFamily: "Helvetica-Bold" },
     body: { marginTop: mm(85) },
-    title: { fontSize: 14, fontFamily: "Helvetica-Bold", marginBottom: 10 },
+    title: { fontSize: 19, fontFamily: "Times-Roman", marginBottom: 10, color: "#1B1814" },
     paragraph: { marginBottom: 10 },
-    tableHead: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#1E1A17", paddingBottom: 4, marginTop: 6, fontFamily: "Helvetica-Bold", fontSize: 8.5 },
+    tableHead: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: accent, paddingBottom: 4, marginTop: 6, fontFamily: "Helvetica-Bold", fontSize: 8.5 },
     row: { flexDirection: "row", borderBottomWidth: 0.5, borderBottomColor: "#D8D1C3", paddingVertical: 5 },
     cPos: { width: "6%" },
     cDesc: { width: "44%", paddingRight: 6 },
@@ -60,17 +61,17 @@ export function pdfStyles(accent: string) {
     itemDesc: { fontSize: 8, color: "#6F665D", marginTop: 1 },
     totals: { marginTop: 8, marginLeft: "auto", width: mm(75) },
     totalRow: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 2 },
-    grand: { flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: "#1E1A17", marginTop: 3, paddingTop: 4, fontFamily: "Helvetica-Bold", fontSize: 11 },
+    grand: { flexDirection: "row", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: accent, marginTop: 3, paddingTop: 4, fontFamily: "Helvetica-Bold", fontSize: 11 },
     footer: { position: "absolute", bottom: mm(10), left: mm(25), right: mm(20), borderTopWidth: 0.5, borderTopColor: "#D8D1C3", paddingTop: 6, flexDirection: "row", justifyContent: "space-between", fontSize: 7, color: "#6F665D" },
     footerCol: { width: "22%" },
     footerColWide: { width: "31%" },
-    draft: { position: "absolute", top: mm(130), left: mm(40), fontSize: 80, color: "#C1502E", opacity: 0.08, transform: "rotate(-30deg)", fontFamily: "Helvetica-Bold" },
+    draft: { position: "absolute", top: mm(130), left: mm(40), fontSize: 80, color: accent, opacity: 0.08, transform: "rotate(-30deg)", fontFamily: "Helvetica-Bold" },
     pageNumber: { position: "absolute", bottom: mm(5), right: mm(20), fontSize: 7, color: "#6F665D" },
   });
 }
 
 export function DocumentPdf({ data }: { data: PdfDocumentData }) {
-  const s = pdfStyles(data.company.accentColor || "#C1502E");
+  const s = pdfStyles(data.company.accentColor || "#7A5C33");
   const { company, invoicing, customer } = data;
   const sign = data.kind === "storno" ? -1 : 1;
   const totals = computeTotals(data.items, data.discountPercent, invoicing.kleinunternehmer);
@@ -85,8 +86,15 @@ export function DocumentPdf({ data }: { data: PdfDocumentData }) {
       <Page size="A4" style={s.page}>
         {data.draft && <Text style={s.draft} fixed>ENTWURF</Text>}
         <View style={s.brand} fixed>
-          <Text style={s.brandName}>{company.name}</Text>
-          {company.website ? <Text style={s.brandSub}>{company.website.replace(/^https?:\/\//, "")}</Text> : null}
+          <Svg viewBox="0 0 1012 573" style={{ width: 30, height: 17 }}>
+            <Path d="M0 10H402A187 187 0 0 1 455 374L644 573H484L190 266H402A71 71 0 0 0 402 124H95Z" fill={company.accentColor || "#7A5C33"} />
+            <Path d="M95 268L222 393V573H95Z" fill={company.accentColor || "#7A5C33"} />
+            <Path d="M610 219L695 300L1012 0V572H890V271L695 452L569 326A210 210 0 0 0 610 219Z" fill={company.accentColor || "#7A5C33"} />
+          </Svg>
+          <View style={s.brandText}>
+            <Text style={s.brandName}>{company.name.toUpperCase()}</Text>
+            {company.claim ? <Text style={s.brandSub}>{company.claim}</Text> : company.website ? <Text style={s.brandSub}>{company.website.replace(/^https?:\/\//, "")}</Text> : null}
+          </View>
         </View>
         <Text style={s.senderLine}>
           {[legalName, company.street, [company.zip, company.city].filter(Boolean).join(" ")].filter(Boolean).join(" · ")}

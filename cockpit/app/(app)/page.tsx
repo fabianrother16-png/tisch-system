@@ -9,6 +9,7 @@ import {
   FileSignature,
   FileText,
   Flame,
+  Globe,
   ListTodo,
   Mail,
   Paperclip,
@@ -33,6 +34,7 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { TaskCheck } from "@/components/tasks/TaskCheck";
 import { itemStyle } from "@/components/calendar/styles";
 import { getMonthlyQuota } from "@/lib/domain/quota";
+import { recentWebsiteInquiries } from "@/lib/domain/inquiries";
 import { getCalendarItems } from "@/lib/domain/calendar";
 import { contractTerm, monthlyValue } from "@/lib/domain/contracts";
 import { monthlyOverview } from "@/lib/domain/finance";
@@ -124,6 +126,7 @@ export default async function Dashboard() {
       .limit(1),
     db.select({ id: users.id, name: users.name }).from(users),
   ]);
+  const websiteInquiries = await recentWebsiteInquiries();
 
   const userNames = Object.fromEntries(team.map((u) => [u.id, u.name]));
   const mrr = activeContracts.reduce((s, c) => s + monthlyValue(c), 0);
@@ -136,6 +139,18 @@ export default async function Dashboard() {
 
   // ── Hinweise ──
   const alerts: Alert[] = [];
+  for (const { a, name } of websiteInquiries) {
+    alerts.push({
+      icon: <Globe />,
+      tone: "red",
+      href: `/kunden/${a.customerId}?tab=verlauf`,
+      text: (
+        <>
+          <strong>Neue Anfrage über die Website:</strong> {name} ({fmtTimestamp(a.createdAt)})
+        </>
+      ),
+    });
+  }
   for (const { invoice, name } of overdueInv) {
     alerts.push({
       icon: <Receipt />,
@@ -216,7 +231,7 @@ export default async function Dashboard() {
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm text-muted">{WEEKDAYS[dayOfWeek(today)]}, {fmtDateLong(today)}</p>
-          <h1 className="mt-1 font-serif text-3xl font-semibold tracking-tight">
+          <h1 className="mt-1 font-serif text-[38px] leading-tight font-semibold sm:text-[44px]">
             {greeting()}, {me.name.split(" ")[0]}.
           </h1>
           <p className="mt-1 text-sm text-muted">

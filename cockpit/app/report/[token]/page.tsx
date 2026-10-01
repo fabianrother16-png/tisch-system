@@ -38,10 +38,10 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-3">
-            <LogoMark className="size-9" />
+            <LogoMark className="h-7 w-auto text-accent" />
             <div>
-              <p className="font-serif text-lg font-semibold tracking-tight">{company.name}</p>
-              <p className="text-xs text-muted">Marketing-Report</p>
+              <p className="text-[13px] font-bold tracking-[0.08em] uppercase">{company.name}</p>
+              <p className="mt-0.5 font-serif text-[15px] text-muted italic">{company.claim || "Marketing-Report"}</p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -58,7 +58,8 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
           <div className="flex items-center gap-4">
             <CustomerMark name={customer.name} color={customer.color} size="lg" />
             <div>
-              <h1 className="font-serif text-3xl font-semibold tracking-tight">{customer.name}</h1>
+              <p className="text-xs font-semibold tracking-[0.2em] text-accent uppercase">Marketing-Report</p>
+              <h1 className="font-serif text-[40px] leading-tight font-semibold">{customer.name}</h1>
               <p className="mt-1 text-sm text-muted">
                 Zeitraum {fmtDate(data.range.from)} – {fmtDate(data.range.to)}
                 {customer.startDate && <> · Zusammenarbeit seit {fmtDateLong(customer.startDate)}</>}
@@ -98,6 +99,7 @@ export default async function ReportPage({ params, searchParams }: { params: Pro
               </>
             ) : null}
           </p>
+          <p className="mt-4 font-serif text-2xl text-fg italic">{company.claim || company.name}</p>
           <p className="mt-1 text-xs">Erstellt von {company.name} · Alle Zahlen stammen direkt von den Plattformen bzw. aus unserer Auswertung.</p>
         </footer>
       </main>

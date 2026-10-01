@@ -259,3 +259,12 @@ export async function loadDemoData(): Promise<ActionState> {
   revalidatePath("/", "layout");
   return success("Demo-Daten geladen");
 }
+
+// ─── Website-Anbindung ─────────────────────────────────────────────────────
+
+export async function generateWebsiteKey(): Promise<ActionState> {
+  await assertUser();
+  const s = await getSetting("website");
+  await setSetting("website", { ...s, key: encrypt(`rm_${randomToken(32)}`) });
+  return done("Neuer Schlüssel erzeugt – jetzt bei der Website (Vercel) als COCKPIT_SCHLUESSEL eintragen");
+}

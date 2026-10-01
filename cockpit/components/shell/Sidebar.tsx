@@ -99,10 +99,10 @@ export function Sidebar({
                             : "text-sidebar-muted hover:bg-sidebar-active/60 hover:text-sidebar-fg",
                         )}
                       >
-                        <Icon className={cn("size-4 shrink-0", active ? "text-accent" : "")} />
+                        <Icon className={cn("size-4 shrink-0", active ? "text-sidebar-accent" : "")} />
                         <span className="flex-1">{item.label}</span>
                         {badge > 0 && (
-                          <span className="rounded-full bg-accent px-1.5 py-px text-[11px] font-semibold text-white num">
+                          <span className="rounded-full bg-sidebar-accent px-1.5 py-px text-[11px] font-semibold text-sidebar num">
                             {badge}
                           </span>
                         )}
@@ -125,7 +125,7 @@ export function Sidebar({
                 : "text-sidebar-muted hover:bg-sidebar-active/60 hover:text-sidebar-fg",
             )}
           >
-            <Settings className={cn("size-4", isActive("/einstellungen") && "text-accent")} />
+            <Settings className={cn("size-4", isActive("/einstellungen") && "text-sidebar-accent")} />
             Einstellungen
           </Link>
         </div>
