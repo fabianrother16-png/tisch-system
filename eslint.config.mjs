@@ -1,5 +1,6 @@
 import nextConfig from "eslint-config-next";
 
-const eslintConfig = [...nextConfig];
+// studio/ ist eine eigenständige App mit eigener ESLint-Konfiguration.
+const eslintConfig = [...nextConfig, { ignores: ["studio/**"] }];
 
 export default eslintConfig;

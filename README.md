@@ -1,5 +1,9 @@
 # SICHTWERK — Website
 
+> **Neu:** Im Ordner [`studio/`](studio/README.md) liegt **SICHTWERK Studio** – das interne
+> Agentur-Werkzeug mit Spezial-Agenten für SEO, Videos, Websites, Google-Profil & mehr.
+> Es ist eine eigene App und wird separat gestartet bzw. deployt.
+
 One-Page-Business-Website für SICHTWERK, eine Marketing-Agentur aus Gütersloh
 ("Digitale Sichtbarkeit für den Mittelstand"). Gebaut mit Next.js (App Router),
 TypeScript, Tailwind CSS und Framer Motion.
