@@ -25,6 +25,15 @@ const config: Config = {
           dark: "#EAE3D3",
           darker: "#DCD2B8",
         },
+        // Studio-Oberfläche (dunkles Arbeitswerkzeug, gleiche Markenfarben)
+        ink: {
+          DEFAULT: "#131110",
+          900: "#131110",
+          800: "#1B1816",
+          700: "#24201D",
+          600: "#2F2925",
+          500: "#3D3631",
+        },
       },
       fontFamily: {
         serif: ["var(--font-fraunces)", "Georgia", "serif"],

@@ -95,7 +95,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="de" className={`${fraunces.variable} ${workSans.variable}`}>
+    <html lang="de" data-scroll-behavior="smooth" className={`${fraunces.variable} ${workSans.variable}`}>
       <body className="bg-cream font-sans text-anthracite antialiased">
         <a
           href="#main-content"

@@ -88,11 +88,86 @@ echten Launch ersetzt werden sollten:
 ## Deployment (Vercel)
 
 1. Repository zu Vercel importieren.
-2. Kein zusätzliches Environment-Setup nötig — die Seite braucht aktuell
-   keine Umgebungsvariablen.
+2. Die Website selbst braucht keine Umgebungsvariablen. Für das Studio die
+   Schlüssel aus `.env.example` eintragen (mindestens `STUDIO_PASSWORD`).
 3. Framework-Preset „Next.js" wird automatisch erkannt.
 4. `SITE.url` in `lib/constants.ts` auf die finale Domain anpassen, damit
    Sitemap, Robots, Canonical-URLs und Open-Graph-Daten korrekt sind.
+
+## SICHTWERK Studio (`/studio`)
+
+Internes Produktionswerkzeug für virale TikToks und Reels, mit mehreren Kunden.
+Läuft in derselben Next.js-App unter `/studio` und wird nicht indexiert.
+
+### Ablauf
+
+1. **Kunde anlegen:** Branche/Beruf, Zielgruppe („alle“ ist erlaubt), Ziel,
+   Tonalität, CTA und Brand-Kit (Farben, Logo-Wasserzeichen, Untertitel-Stil).
+2. **Recherche:** Die KI erstellt eine Suchstrategie. Danach durchsucht das
+   Studio TikTok (Suche) und Instagram (Hashtag-Reels) über Apify, rankt die
+   Accounts nach Reichweite, Spitzenwerten, Engagement und Konstanz und lässt
+   die KI die echten Konkurrenten auswählen.
+3. **Hauptkonkurrent:** Profil-Videos inklusive Transkripten laden und
+   analysieren: warum so viele Aufrufe, was richtig, was falsch, Hook-Muster,
+   Top- und Flop-Videos. Daraus entsteht der **Skript-Entwurf**.
+4. **Bis zu 10 weitere Konkurrenten** werden einzeln analysiert, danach die
+   Muster über alle hinweg (Erfolgsmuster, Fehler, Content-Lücken, Benchmarks).
+5. **Trends:** Die Plattform-Daten werden ausgewertet (Hashtags, Sounds,
+   Länge vs. Aufrufe, Wochentage, virale Videos der letzten Wochen). Dazu kommt
+   eine Web-Recherche über die Claude-Websuche mit Quellenangaben.
+6. **Finales Skript:** 3 Hooks, Szenen mit Sekunden, Sprechtext,
+   Text-Overlays, KI-Prompts je Szene, Caption, Hashtags für TikTok und
+   Instagram, Sound, Posting-Zeit. Dazu Teleprompter, Markdown- und Report-Export.
+7. **Video:**
+   - **KI-Video:** Voiceover (ElevenLabs) gibt das Timing vor. Jede Szene wird
+     per fal.ai (Kling 3 oder Veo 3.1) generiert oder durch einen eigenen Clip
+     ersetzt. Danach Schnitt mit Hook-Box, Untertiteln und Overlays.
+   - **Eigene Clips:** Hochladen, automatisch transkribieren, die KI schneidet
+     (stärkster Moment als Hook nach vorn, Pausen raus, Zooms, Texte).
+   - **Clip-Finder:** Aus einer langen Aufnahme mehrere Shorts machen und auf
+     Wunsch alle am Stück rendern und bewerten.
+8. **Viral-Check:** Die KI bewertet das fertige Video (Standbilder + Text):
+   Score 0–100, sieben Kategorien, priorisierte Verbesserungen, Caption,
+   Hashtags getrennt für TikTok und Instagram. „Verbesserungen umsetzen & neu
+   schneiden“ startet die nächste Version.
+9. **Content-Plan & Autopilot:** 30-Tage-Plan mit Kalender, alle Skripte auf
+   einmal schreiben, und der Autopilot produziert für die ausgewählten Ideen
+   komplette KI-Videos (Stimme → Szenen → Schnitt → Rating). Dazu gibt es das
+   **Hook-Lab** mit 10 bewerteten Hook-Varianten pro Thema.
+
+### Technik
+
+- **Daten bleiben im Browser** (IndexedDB): Kunden, Projekte und Videodateien.
+  Unter Einstellungen gibt es Export/Import als Backup oder zum Gerätewechsel.
+  Videos werden **im Browser gerendert** (WebCodecs via Mediabunny):
+  1080×1920, 30 fps, MP4 (H.264/AAC). Browser ohne H.264-Encoder bekommen WebM.
+  Empfohlen sind aktuelle Versionen von Chrome, Edge oder Safari.
+- **Lange Jobs** (Scraper, KI-Clips) laufen asynchron mit Polling. So gibt es
+  keine Serverless-Timeouts. Jeder Recherche-Schritt wird gespeichert und lässt
+  sich nach einem Fehler oder Neuladen fortsetzen.
+- **Claude** liefert strukturierte Ausgaben (Zod-Schemas in
+  `lib/studio/schemas.ts`) mit adaptivem Denken und serverseitigem
+  Refusal-Fallback. Die Prompts liegen in `lib/studio/server/tasks.ts`.
+- **Apify-Actors:** `clockworks~tiktok-scraper`,
+  `apify~instagram-hashtag-scraper`, `apify~instagram-reel-scraper`,
+  `apify~instagram-scraper` (per `APIFY_*_ACTOR` überschreibbar). Läufe sind
+  mit `maxItems` und `APIFY_MAX_CHARGE_USD` gedeckelt.
+
+### Einrichtung
+
+`.env.example` nach `.env.local` kopieren (bzw. in Vercel eintragen):
+
+| Variable | Wofür |
+| --- | --- |
+| `STUDIO_PASSWORD` | Zugangsschutz, in Produktion Pflicht |
+| `ANTHROPIC_API_KEY` | Analysen, Skripte, Websuche, Schnitt, Rating |
+| `APIFY_API_TOKEN` | TikTok-/Instagram-Daten |
+| `ELEVENLABS_API_KEY` | Sprecherstimme und automatische Untertitel |
+| `FAL_KEY` | KI-Videoszenen |
+
+Ohne einzelne Schlüssel bleibt der Rest nutzbar. Die Einstellungsseite zeigt,
+was fehlt. Vercel-Hinweis: Die API-Routen nutzen `maxDuration = 300` s
+(Fluid Compute).
 
 ## Design
 
